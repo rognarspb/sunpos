@@ -1,20 +1,50 @@
 <template>
   <div id="app">
-    <img src="./assets/sun.svg" width="100" height="100">
-    <h1 class="he">Cолнце</h1>
+    <div class="text-center">
+      <img src="./assets/sun.svg" width="100" height="100">
+      <h1 class="he">Cолнце</h1>
+    </div>
     <hr/>
     <div class="row">
       <div class="col-md-4">
       <h4>Наблюдатель</h4>
-        <div class="form-info">
-          <label>Широта</label>
-          <input type="number" v-model="lat" class="form-control" />
-          <label>Долгота</label>
-          <input type="number" v-model="lon" class="form-control"/>
-          <label>Дата</label>
-          <input type="date" v-model="userDate" class="form-control"/>
-          <label>Время</label>
-          <input type="time" v-model="userTime" class="form-control"/>
+        <div class="form form-info">
+          <div class="form-group">
+            <label>Широта</label>
+            <input type="number" v-model="lat" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Долгота</label>
+            <input type="number" v-model="lon" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label>Дата</label>
+            <div class="input-group">
+              <datepicker v-model="userDate"              
+                language="ru" 
+                :bootstrap-styling="true"
+                :full-month-name="true"
+                :calendar-button="true"
+                calendar-button-icon="far fa-calendar-alt" />
+                <span class="input-group-btn">
+                  <button class="btn btn-default btn-sm" v-on:click="setNow">Установить текущее время</button>
+                </span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Часы</label>
+              <input type="number" class="form-control" v-model="userHours" placeholder="HH">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Минуты</label>
+              <input type="number" class="form-control" v-model="userMinutes" placeholder="mm">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Секунды</label>
+              <input type="number" class="form-control" v-model="userSeconds" placeholder="ss">
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-4">
@@ -72,16 +102,23 @@
 
 <script>
 import moment from 'moment';
+import Datepicker from 'vuejs-datepicker';
+
 
 export default {
   name: 'app',
+  components: {
+    'datepicker':  Datepicker
+  },
   data () {
     return {
       msg: 'Where is the sun?',
       lat: 59.57,
       lon: 30.18,
       userDate: new Date(),
-      userTime: new Date()
+      userHours: 12,
+      userMinutes: 0, 
+      userSeconds: 0
     }
   },
   methods: {
@@ -205,7 +242,13 @@ export default {
     },
 
     // Jtransit = true solar transit or solar noon Julian date
-    GetSolarNoon: function(dt) {
+    GetSolarNoon: function() {
+      var dt = new Date();
+      var hourOffset = dt.getTimezoneOffset()/60;
+      dt.setHours(12 - hourOffset);
+      dt.setMinutes(0);
+      dt.setSeconds(0);
+      
       var jd = this.GetJD(dt);
       var n = jd - 2451545.0 + 0.0008;
 
@@ -226,6 +269,14 @@ export default {
       var parts = x.toString().split(".");
       parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return parts.join(".");
+    },
+
+    setNow: function(){
+      var now = new Date();
+      this.userDate = now;
+      this.userHours = now.getHours();
+      this.userMinutes = now.getMinutes();
+      this.userSeconds = now.getSeconds();
     }
 
   },
@@ -234,10 +285,16 @@ export default {
       var now = this.julianDate;
       var month = now.getMonth()+1;
       return  this.dayOfWeek + ", " + now.getDate() + "." +  month + "." + now.getFullYear() + ", " 
-            + now.getHours() + ":"  + now.getMinutes() + ":" + String(now.getSeconds()).padStart(2,'0');
+            + String(now.getHours()).padStart(2,'0') + ":"  
+            + String(now.getMinutes()).padStart(2,'0') + ":" 
+            + String(now.getSeconds()).padStart(2,'0');
     }, 
     julianDate: function(){
-      return moment(this.userDate).toDate();
+      var dt = moment(this.userDate).toDate();
+      dt.setHours(this.userHours);
+      dt.setMinutes(this.userMinutes);
+      dt.setSeconds(this.userSeconds);
+      return dt;
       // return new Date();
     },
     jdn: function(){
@@ -304,7 +361,7 @@ export default {
       return timeObj.hour + "h " + timeObj.minutes + "min";
     },
     solarNoonObject: function(){
-      var sn =  this.GetSolarNoon(this.julianDate);
+      var sn =  this.GetSolarNoon();
       var seconds = (sn % 1)*86400;
       var hour = Math.floor(seconds / 3600);
       var minutes = Math.floor((seconds - hour*3600)/60);
@@ -314,7 +371,7 @@ export default {
       }
     },
     solarNoon: function() {
-      var sn =  this.GetSolarNoon(this.julianDate);
+      var sn =  this.GetSolarNoon();
       return sn.toFixed(6);     
     },
     sunset: function(){
@@ -356,7 +413,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
