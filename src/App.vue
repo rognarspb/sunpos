@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <h4>Текущее время</h4>
+        <h4>Время</h4>
         <dl class="info">
           <dt>Дата</dt>
           <dd>{{ localTime }}</dd>
@@ -87,7 +87,8 @@
           <dt>Солнечный полдень (JD)</dt>
           <dd>{{solarNoon}} </dd>
           <dt>Солнечный полдень (локальное время)</dt>
-          <dd>{{solarNoonObject.hour}}:{{solarNoonObject.minutes}} </dd>
+          <dd>{{solarNoonObject.day}}.{{solarNoonObject.month}}.{{solarNoonObject.year}}
+             {{solarNoonObject.hours}}:{{solarNoonObject.minutes}} </dd>
           <dt>Восход</dt>
           <dd>{{sunrise}} </dd>
           <dt>Закат</dt>
@@ -103,6 +104,7 @@
 <script>
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
+import * as JD from './js/jd.js';
 
 
 export default {
@@ -121,38 +123,10 @@ export default {
       userSeconds: 0
     }
   },
-  methods: {
-    GetJDN : function (dt) {
-      var day = dt.getDate();
-      var month = dt.getMonth() + 1;
-      var year = dt.getFullYear();
-
-      var a = Math.floor((14 - month)/12);
-      var y = year + 4800 - a;
-      var m = month + 12*a - 3;
-
-      var jdn = day + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
-      return jdn;
-    },
-    GetJD : function (dt) {
-      var hour = dt.getHours();
-      var minute = dt.getMinutes();
-      var second = dt.getSeconds();
-
-      var jd = this.GetJDN(dt) + (hour-12)/24 + minute/1440 + second/86400;
-      return jd;
-    },
-    GetMJD : function (dt) {
-      var mjd = this.GetJD(dt) - 2400000.5;
-      return mjd;
-    },
-    GetDayOfWeek : function (dt) {
-      return this.GetJDN(dt) % 7;
-    },
-
+  methods: {  
     // sun ecliptic longitude in degrees
     GetEclipticLongitude: function(dt){
-      var jd = this.GetJD(dt);
+      var jd = JD.GetJD(dt);
       var n = jd - 2451545.0;
 
       // mean longitute in degrees:
@@ -173,7 +147,7 @@ export default {
       return lambda;
     },
     GetDistance: function(dt){
-      var jd = this.GetJD(dt);
+      var jd = JD.GetJD(dt);
       var n = jd - 2451545.0;
 
       // mean anomaly in degrees:
@@ -190,7 +164,7 @@ export default {
 
     // obliquity of the ecliptic:
     GetEps: function(dt){
-      var jd = this.GetJD(dt);
+      var jd = JD.GetJD(dt);
       var n = jd - 2451545.0;
 
       var eps = 23.439 - 0.0000004*n;
@@ -249,7 +223,7 @@ export default {
       dt.setMinutes(0);
       dt.setSeconds(0);
       
-      var jd = this.GetJD(dt);
+      var jd = JD.GetJD(dt);
       var n = jd - 2451545.0 + 0.0008;
 
       // approximation of mean solar time at longitude
@@ -259,7 +233,8 @@ export default {
       // equation of center:
       var C = 1.9148*Math.sin(this.rad(M)) + 0.02*Math.sin(this.rad(2*M)) + 0.0003*Math.sin(this.rad(3.0*M));
       // ecliptic longitude:
-      var lambda = (M + C + 180 + 102.9372) % 360;
+      var lambda1 = (M + C + 180 + 102.9372) % 360;
+      var lambda = this.GetEclipticLongitude(dt);
 
       var Jtransit = 2451545.5 + J + 0.0053 * Math.sin(this.rad(M)) - 0.0069*Math.sin(this.rad(2*lambda));
       return Jtransit;
@@ -298,18 +273,18 @@ export default {
       // return new Date();
     },
     jdn: function(){
-      return this.GetJDN(this.julianDate);
+      return JD.GetJDN(this.julianDate);
     },
     jd: function(){
-      return this.GetJD(this.julianDate).toFixed(6);
+      return JD.GetJD(this.julianDate).toFixed(6);
       //return Math.round(this.GetJD(this.julianDate) * 10000) / 10000;
     },
     mjd: function(){
-      return Math.round(this.GetMJD(this.julianDate) * 100) / 100;
+      return Math.round(JD.GetMJD(this.julianDate) * 100) / 100;
     },
     dayOfWeek: function(){
       var days = ["Понедельник","Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-      var index = this.GetDayOfWeek(this.julianDate)
+      var index = JD.GetDayOfWeek(this.julianDate)
       return days[index];
     },
     eclipticLongutude: function(){
@@ -351,24 +326,18 @@ export default {
       var ha =  this.GetHourAngle(this.julianDate);
       var x = ha/15; // 15 degree per hour
       var res = {
-        hour: Math.floor(x),
+        hours: Math.floor(x),
         minutes: Math.floor(60 * ((x % 1).toFixed(2)))
       }
       return res;
     },
     hourAngleValue: function(){
       var timeObj =  this.hourAngleObject;
-      return timeObj.hour + "h " + timeObj.minutes + "min";
+      return timeObj.hours + "h " + timeObj.minutes + "min";
     },
     solarNoonObject: function(){
       var sn =  this.GetSolarNoon();
-      var seconds = (sn % 1)*86400;
-      var hour = Math.floor(seconds / 3600);
-      var minutes = Math.floor((seconds - hour*3600)/60);
-      return  {
-        hour: hour,
-        minutes: minutes
-      }
+      return JD.GetDateObject(sn);
     },
     solarNoon: function() {
       var sn =  this.GetSolarNoon();
@@ -376,33 +345,33 @@ export default {
     },
     sunset: function(){
       var timeObj =  this.hourAngleObject;
-      var hour = this.solarNoonObject.hour + timeObj.hour;
+      var hours = this.solarNoonObject.hours + timeObj.hours;
       var minutes = timeObj.minutes + this.solarNoonObject.minutes;
       if (minutes > 60){
         minutes = minutes - 60;
-        hour++;
+        hours++;
       }
-      return hour + ":" + minutes;
+      return hours + ":" + minutes;
     },
     sunrise: function(){
       var timeObj =  this.hourAngleObject;
-      var hour = this.solarNoonObject.hour - timeObj.hour;
+      var hours = this.solarNoonObject.hours - timeObj.hours;
       var minutes = this.solarNoonObject.minutes - timeObj.minutes;
       if (minutes < 0){
         minutes = timeObj.minutes - this.solarNoonObject.minutes;
-        hour--;
+        hours--;
       }
-      return hour + ":" + minutes;
+      return hours + ":" + minutes;
     },
     daylength: function(){
       var timeObj =  this.hourAngleObject;
-      var hour = 2*timeObj.hour;
+      var hours = 2*timeObj.hours;
       var minutes = 2*timeObj.minutes;
       if (minutes > 60) {
         minutes = minutes - 60;
-        hour++;
+        hours++;
       }
-      return hour + "h " + minutes + "min";
+      return hours + "h " + minutes + "min";
     }
   }
 }
@@ -421,10 +390,14 @@ dl.info {
   background: #efefef;
   margin: 10px;
   padding: 10px;
+  :hover {
+    border: 1px solid lighgray;
+  }
 }
 .form-info {
   background: #efefef;
   margin: 10px;
-  padding: 20px;
+  padding: 20px;  
 }
+
 </style>
