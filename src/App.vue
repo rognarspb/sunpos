@@ -88,7 +88,7 @@
           <dd>{{solarNoon}} </dd>
           <dt>Солнечный полдень (локальное время)</dt>
           <dd>{{solarNoonObject.day}}.{{solarNoonObject.month}}.{{solarNoonObject.year}}
-             {{solarNoonObject.hours}}:{{solarNoonObject.minutes}} </dd>
+             {{solarNoonObject.hours}}:{{solarNoonObject.minutes}}:{{solarNoonObject.seconds}} </dd>
           <dt>Восход</dt>
           <dd>{{sunrise}} </dd>
           <dt>Закат</dt>
@@ -105,6 +105,7 @@
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
 import * as JD from './js/jd.js';
+import * as Sun from './js/sun.js';
 
 
 export default {
@@ -124,121 +125,7 @@ export default {
     }
   },
   methods: {  
-    // sun ecliptic longitude in degrees
-    GetEclipticLongitude: function(dt){
-      var jd = JD.GetJD(dt);
-      var n = jd - 2451545.0;
-
-      // mean longitute in degrees:
-      var L = 280.460 + 0.9856474*n; 
-
-      // mean anomaly in degrees:
-      var g = 357.528 + 0.9856003*n;
-
-      // TODO: limit to 360:
-      L = L % 360;
-      g = g % 360;
-
-      // convert to radians:
-      var g_rad = g * (Math.PI/180);
-
-      // ecliptic longutude (in degrees)
-      var lambda = L + 1.915*Math.sin(g_rad) + 0.02*Math.sin(2.0*g_rad);
-      return lambda;
-    },
-    GetDistance: function(dt){
-      var jd = JD.GetJD(dt);
-      var n = jd - 2451545.0;
-
-      // mean anomaly in degrees:
-      var g = 357.528 + 0.9856003*n;
-      g = g % 360;
-
-      // convert to radians:
-      var g_rad = (g * Math.PI)/180;
-
-      // distance in a.e.:
-      var R = 1.00014 - 0.01671*Math.cos(g_rad) - 0.00014*Math.cos(2*g_rad);
-      return R;
-    },
-
-    // obliquity of the ecliptic:
-    GetEps: function(dt){
-      var jd = JD.GetJD(dt);
-      var n = jd - 2451545.0;
-
-      var eps = 23.439 - 0.0000004*n;
-      return eps;
-    },
-
-    // equatorial coordinates:
-    // Right ascension (degrees)
-    GetAlpha: function(dt){
-      var eps = this.GetEps(dt);
-      var lambda = this.GetEclipticLongitude(dt);
-      var eps_rad = (eps * Math.PI)/180;
-      var lambda_rad = (lambda * Math.PI)/180;
-
-      var alpha = Math.atan2(Math.cos(eps_rad)*Math.sin(lambda_rad), Math.cos(lambda_rad));
-      return (alpha*180)/Math.PI;
-    },
-    // declination (degrees)
-    GetDelta: function(dt){
-      var eps = this.GetEps(dt);
-      var lambda = this.GetEclipticLongitude(dt);
-      var eps_rad = (eps * Math.PI)/180;
-      var lambda_rad = (lambda * Math.PI)/180;
-
-      var delta = Math.asin(Math.sin(eps_rad)*Math.sin(lambda_rad));
-      return (delta*180)/ Math.PI;
-    },
-
-    // sun declination:
-    GetDeclination: function(dt){
-      var N = moment(dt).dayOfYear();
-      var arg = (360/365)*(N + 10);
-      var arg_rad = arg * (Math.PI/180);
-      var delta = -23.44*Math.cos(arg_rad);
-      return delta;
-    },
-    GetHourAngle: function(dt){
-      // var N = moment(dt).dayOfYear();
-      var lat_rad = (this.lat * Math.PI)/180;
-      var dec_rad = (this.GetDeclination(dt) * Math.PI)/180;
-      var a_rad = (-0.83 * Math.PI)/180; // athmospheric refraction
-      var cosHourAngle = (Math.sin(a_rad) -  Math.sin(lat_rad) * Math.sin(dec_rad))/(Math.cos(lat_rad)*Math.cos(dec_rad));
-      var res = Math.acos(cosHourAngle);
-      return (res*180)/Math.PI;
-    },
-
-    rad: function(degree){
-      return (degree * Math.PI)/180;
-    },
-
-    // Jtransit = true solar transit or solar noon Julian date
-    GetSolarNoon: function() {
-      var dt = new Date();
-      var hourOffset = dt.getTimezoneOffset()/60;
-      dt.setHours(12 - hourOffset);
-      dt.setMinutes(0);
-      dt.setSeconds(0);
-      
-      var jd = JD.GetJD(dt);
-      var n = jd - 2451545.0 + 0.0008;
-
-      // approximation of mean solar time at longitude
-      var J = n - this.lon/360;
-      // solar mean anomaly:
-      var M = (357.5291 + 0.98560028*J) % 360;
-      // equation of center:
-      var C = 1.9148*Math.sin(this.rad(M)) + 0.02*Math.sin(this.rad(2*M)) + 0.0003*Math.sin(this.rad(3.0*M));
-      // ecliptic longitude:
-      var lambda1 = (M + C + 180 + 102.9372) % 360;
-      var lambda = this.GetEclipticLongitude(dt);
-
-      var Jtransit = 2451545.5 + J + 0.0053 * Math.sin(this.rad(M)) - 0.0069*Math.sin(this.rad(2*lambda));
-      return Jtransit;
-    },
+   
 
     NumberWithCommas: function (x) {
       var parts = x.toString().split(".");
@@ -288,42 +175,42 @@ export default {
       return days[index];
     },
     eclipticLongutude: function(){
-      var elon =  this.GetEclipticLongitude(this.julianDate);
+      var elon =  Sun.GetEclipticLongitude(this.julianDate);
       return Math.round(elon * 100) / 100;
     },
     eclipticLatitude: function(){
       return 0.0;
     },
     distance: function(){
-      var dist =  this.GetDistance(this.julianDate);
+      var dist =  Sun.GetDistance(this.julianDate);
       return Math.round(dist * 10000) / 10000;
     },
     distanceKm: function(){
-      var dist =  this.GetDistance(this.julianDate) * 149597870.691;
+      var dist =  Sun.GetDistance(this.julianDate) * 149597870.691;
       return this.NumberWithCommas(Math.round(dist * 10000) / 10000);
     },
     epsilon: function(){
-      var eps =  this.GetEps(this.julianDate);
+      var eps =  Sun.GetEps(this.julianDate);
       return Math.round(eps * 100) / 100;
     },
     alpha: function(){
-      var a =  this.GetAlpha(this.julianDate);
+      var a =  Sun.GetAlpha(this.julianDate);
       return Math.round(a * 100) / 100;
     },
     delta: function(){
-      var d =  this.GetDelta(this.julianDate);
+      var d =  Sun.GetDelta(this.julianDate);
       return Math.round(d * 1000) / 1000;
     },
     declination: function(){
-      var d =  this.GetDeclination(this.julianDate);
+      var d =  Sun.GetDeclination(this.julianDate);
       return Math.round(d * 100) / 100;
     },
     hourAngle: function(){
-      var ha =  this.GetHourAngle(this.julianDate);
+      var ha =  Sun.GetHourAngle(this.julianDate, this.lat);
       return Math.round(ha * 100) / 100;
     },
     hourAngleObject: function() {
-      var ha =  this.GetHourAngle(this.julianDate);
+      var ha =  Sun.GetHourAngle(this.julianDate, this.lat);
       var x = ha/15; // 15 degree per hour
       var res = {
         hours: Math.floor(x),
@@ -336,11 +223,11 @@ export default {
       return timeObj.hours + "h " + timeObj.minutes + "min";
     },
     solarNoonObject: function(){
-      var sn =  this.GetSolarNoon();
+      var sn =  Sun.GetSolarNoon(this.lon);
       return JD.GetDateObject(sn);
     },
     solarNoon: function() {
-      var sn =  this.GetSolarNoon();
+      var sn =  Sun.GetSolarNoon(this.lon);
       return sn.toFixed(6);     
     },
     sunset: function(){
@@ -388,16 +275,23 @@ export default {
 
 dl.info {
   background: #efefef;
+  border: 2px solid #efefef;
   margin: 10px;
-  padding: 10px;
-  :hover {
-    border: 1px solid lighgray;
+  padding: 20px;
+  min-height: 432px;
+  &:hover {
+    border: 2px solid lightgreen;
   }
 }
 .form-info {
   background: #efefef;
+  border: 2px solid #efefef;
   margin: 10px;
   padding: 20px;  
+  min-height: 432px;
+  &:hover {
+    border: 2px solid lightgreen;
+  }
 }
 
 </style>
