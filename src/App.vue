@@ -6,8 +6,8 @@
     </div>
     <hr/>
     <div class="row">
-      <div class="col-md-4">
-      <h4>Наблюдатель</h4>
+      <div class="col-md-3">
+        <h4>Наблюдатель</h4>
         <div class="form form-info">
           <div class="form-group">
             <label>Широта</label>
@@ -25,7 +25,7 @@
                 :bootstrap-styling="true"
                 :full-month-name="true"
                 :calendar-button="true"
-                calendar-button-icon="far fa-calendar-alt" />
+                calendar-button-icon="far fa-calendar-alt" ></datepicker>
                 <span class="input-group-btn">
                   <button class="btn btn-default btn-sm" v-on:click="setNow">Установить текущее время</button>
                 </span>
@@ -47,7 +47,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <h4>Время</h4>
         <dl class="info">
           <dt>Дата</dt>
@@ -60,7 +60,7 @@
           <dd>{{ mjd }}</dd>
         </dl>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <h4>Координаты</h4>
         <dl class="info">
           <dt>Эклиптические координаты</dt>
@@ -78,10 +78,7 @@
           <dd>{{hourAngle}}&deg; ({{hourAngleValue}})</dd>
         </dl>
       </div>
-    </div>
-    <hr/>
-    <div class="row">
-      <div class="col-md-4 offset-md-4">
+      <div class="col-md-3">
         <h4>Солнце</h4>
         <dl class="info">
           <dt>Солнечный полдень (JD)</dt>
@@ -97,6 +94,9 @@
           <dd>{{daylength}} </dd>
         </dl>
       </div>
+    </div>
+    <hr/>
+    <div class="row">
     </div>
   </div>
 </template>
@@ -273,12 +273,18 @@ export default {
   margin-top: 60px;
 }
 
+h4 {
+  margin: 0 auto;
+  text-align: center;
+}
+
 dl.info {
   background: #efefef;
   border: 2px solid #efefef;
   margin: 10px;
   padding: 20px;
   min-height: 432px;
+  box-shadow: 3px 3px 50px -5px  #888888;
   &:hover {
     border: 2px solid lightgreen;
   }
