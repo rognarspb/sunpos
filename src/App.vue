@@ -97,6 +97,9 @@
     </div>
     <hr/>
     <div class="row">
+      <div class="col-md-12">
+        <ecliptic :longitude="eclipticLongutude"></ecliptic>
+      </div>
     </div>
   </div>
 </template>
@@ -104,6 +107,7 @@
 <script>
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
+import Ecliptic from './components/ecliptic.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 
@@ -111,7 +115,8 @@ import * as Sun from './js/sun.js';
 export default {
   name: 'app',
   components: {
-    'datepicker':  Datepicker
+    'datepicker':  Datepicker,
+    'ecliptic': Ecliptic
   },
   data () {
     return {
