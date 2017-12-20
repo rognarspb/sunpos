@@ -6,7 +6,7 @@
     </div>
     <hr/>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-sm-12 col-md-6 col-lg-3">
         <h4>Наблюдатель</h4>
         <div class="form form-info">
           <div class="form-group">
@@ -47,7 +47,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-sm-12 col-md-6 col-lg-3">
         <h4>Время</h4>
         <dl class="info">
           <dt>Дата</dt>
@@ -60,7 +60,7 @@
           <dd>{{ mjd }}</dd>
         </dl>
       </div>
-      <div class="col-md-3">
+      <div class="col-sm-12 col-md-6 col-lg-3">
         <h4>Координаты</h4>
         <dl class="info">
           <dt>Эклиптические координаты</dt>
@@ -77,8 +77,11 @@
           <dt>Часовой угол (восход/закат)</dt>
           <dd>{{hourAngle}}&deg; ({{hourAngleValue}})</dd>
         </dl>
+        <div class="info">
+          <ecliptic :longitude="eclipticLongutude"></ecliptic>
+        </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-sm-12 col-md-6 col-lg-3">
         <h4>Солнце</h4>
         <dl class="info">
           <dt>Солнечный полдень (JD)</dt>
@@ -98,7 +101,6 @@
     <hr/>
     <div class="row">
       <div class="col-md-12">
-        <ecliptic :longitude="eclipticLongutude"></ecliptic>
       </div>
     </div>
   </div>
@@ -283,7 +285,7 @@ h4 {
   text-align: center;
 }
 
-dl.info {
+.info {
   background: #efefef;
   border: 2px solid #efefef;
   margin: 10px;
