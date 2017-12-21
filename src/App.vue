@@ -64,7 +64,7 @@
         <h4>Координаты</h4>
         <dl class="info">
           <dt>Эклиптические координаты</dt>
-          <dd>{{eclipticLongutude}}&deg;, {{eclipticLatitude}}&deg; </dd>
+          <dd>&beta;={{eclipticLatitude}}&deg;, &lambda;={{eclipticLongutude}}&deg; </dd>
           <dt>Экваториальные координаты</dt>
           <dd>&alpha;={{alpha}}&deg; , &delta;={{delta}}&deg; </dd>
           <dt>Расстояние</dt>
@@ -95,6 +95,13 @@
           <dd>{{sunset}} </dd>
           <dt>Длительность дня</dt>
           <dd>{{daylength}} </dd>
+          <dt>Закат</dt>
+          <dd>{{sunset}} </dd>
+          <hr/>
+          <dt>Высота</dt>
+          <dd>&theta;={{zenithAngle}}&deg; &alpha;={{elevationAngle}}&deg;</dd>
+          <dt>Азимут</dt>
+          <dd>{{azimuthAngle}}&deg; </dd>
         </dl>
       </div>
     </div>
@@ -266,7 +273,19 @@ export default {
         hours++;
       }
       return hours + "h " + minutes + "min";
-    }
+    },
+    zenithAngle: function(){
+      var teta =  Sun.GetZenithAngle(this.julianDate, this.lat);
+      return Math.round(teta * 100) / 100;
+    },
+    elevationAngle: function(){
+      var alpha =  Sun.GetElevationAngle(this.julianDate, this.lat);
+      return Math.round(alpha * 100) / 100;
+    },
+    azimuthAngle: function(){
+      var phita =  Sun.GetAzimuthAngle(this.julianDate, this.lat);
+      return Math.round(phita * 100) / 100;
+    }    
   }
 }
 </script>

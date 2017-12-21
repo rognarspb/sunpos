@@ -1,6 +1,6 @@
 
 <template>
-    <svg width="100%" height="100%" viewBox="0 0 480 480">
+    <svg width="100%" height="100%" viewBox="0 0 500 500">
         <circle cx="40" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
         <circle cx="440" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
         <circle cx="240" cy="40" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
@@ -13,11 +13,18 @@
         <line x1="240" y1="40" x2="240" y2="440" stroke="lightgray" stroke-width="2"></line>
 
         <line x1="240" y1="240" x2="440" y2="240" id="angle" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
+        <line x1="440" y1="0" x2="440" y2="480" id="vertical" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
+        <text x = "100" y = "230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">{{longitude}}&deg;</text>
 
         <circle cx="440" cy="240" r="20" id="earth" fill="steelblue"></circle>
         <circle cx="240" cy="240" r="35" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>
         <circle cx="240" cy="240" r="10" id="sun" fill="orange" ></circle>
-        <text x = "200" y = "80" font-family="Verdana" font-size="16">{{longitude}}</text>
+
+        <text x = "160" y = "475" font-family="Verdana" font-size="16">Весеннее равноденствие</text>
+        <text x = "340" y = "210" font-family="Verdana" font-size="16">Летнее солнцестояние</text>
+        <text x = "160" y = "15" font-family="Verdana" font-size="16">Осеннее равноденствие</text>
+        <text x = "10" y = "210" font-family="Verdana" font-size="16">Зимнее солнцестояние</text>
+
     </svg>
 </template>
 
@@ -53,6 +60,8 @@ export default {
         var earth = d3.select(this.$el).select("#earth");
         var sun = d3.select(this.$el).select("#sun");
         var angle = d3.select(this.$el).select("#angle");
+        var angleText = d3.select(this.$el).select("#angleText");
+        var vertical = d3.select(this.$el).select("#vertical");
 
         var r = Number(orbit.attr("r"));
         var cx0 = Number(sun.attr("cx"));
@@ -67,6 +76,14 @@ export default {
         earth.attr("cy", cy);
         angle.attr("x2", cx);
         angle.attr("y2", cy);
+
+        vertical.attr("x1", cx);
+        vertical.attr("x2", cx);
+
+        var cx1 = cx0 + x/2;
+        var cy1 = cy0 + y/2;
+        angleText.attr("x", cx1);
+        angleText.attr("y", cy1);       
     },
     update: function(){
         var delta = this.longitude > this.localLon ? 1.0 : -1.0; // one degree

@@ -90,39 +90,75 @@ export function GetDeclination(dt){
     return delta;
 }
 
+// hour angle of sunset:
 export function GetHourAngle(dt, lat){
     // var N = moment(dt).dayOfYear();
     var lat_rad = rad(lat);
-    var dec_rad = rad(GetDeclination(dt));
+    var dec_rad = rad(GetDelta(dt));
     var a_rad = rad(-0.83); // athmospheric refraction
     var cosHourAngle = (Math.sin(a_rad) -  Math.sin(lat_rad) * Math.sin(dec_rad))/(Math.cos(lat_rad)*Math.cos(dec_rad));
     var res = Math.acos(cosHourAngle);
     return (res*180)/Math.PI;
 }
   
-    // Jtransit = true solar transit or solar noon Julian date
-    export function GetSolarNoon(lon) {
-        var dt = new Date(); //now
-        var hourOffset = dt.getTimezoneOffset()/60;
-        dt.setHours(-hourOffset);
-        dt.setMinutes(0);
-        dt.setSeconds(0);
-        
-        var jd = JD.GetJD(dt);
-        var n = jd - 2451545.0 + 0.0008;
-  
-        // approximation of mean solar time at longitude
-        var J = n - lon/360;
-        // solar mean anomaly:
-        var M = (357.5291 + 0.98560028*J) % 360;
-        // equation of center:
-        var C = 1.9148*Math.sin(rad(M)) + 0.02*Math.sin(rad(2*M)) + 0.0003*Math.sin(rad(3.0*M));
-        // ecliptic longitude:
-        var lambdaApprox = (M + C + 180 + 102.9372) % 360;
-        var lambda = GetEclipticLongitude(dt);
-  
-        var Jtransit = 2451545.5 + J + 0.0053 * Math.sin(rad(M)) - 0.0069*Math.sin(rad(2*lambda));
-        return Jtransit;
-      }
+// Jtransit = true solar transit or solar noon Julian date
+export function GetSolarNoon(lon) {
+    var dt = new Date(); //now
+    var hourOffset = dt.getTimezoneOffset()/60;
+    dt.setHours(-hourOffset);
+    dt.setMinutes(0);
+    dt.setSeconds(0);
+    
+    var jd = JD.GetJD(dt);
+    var n = jd - 2451545.0 + 0.0008;
+
+    // approximation of mean solar time at longitude
+    var J = n - lon/360;
+    // solar mean anomaly:
+    var M = (357.5291 + 0.98560028*J) % 360;
+    // equation of center:
+    var C = 1.9148*Math.sin(rad(M)) + 0.02*Math.sin(rad(2*M)) + 0.0003*Math.sin(rad(3.0*M));
+    // ecliptic longitude:
+    var lambdaApprox = (M + C + 180 + 102.9372) % 360;
+    var lambda = GetEclipticLongitude(dt);
+
+    var Jtransit = 2451545.5 + J + 0.0053 * Math.sin(rad(M)) - 0.0069*Math.sin(rad(2*lambda));
+    return Jtransit;
+}
+
+export function GetCurrentHourAngle(dt){
+    var h = dt.getHours();
+    var mh = dt.getMinutes()/60;
+    var sec = dt.getSeconds()/3600;
+    var hourAngle = (h + mh + sec -12.0)*15.0;// 15 degree per hour
+    return hourAngle;
+}
+
+export function GetZenithAngle(dt, lat) {
+    var hourAngle = GetCurrentHourAngle(dt);// approximate
+    var PHI = rad(lat);
+    var delta = rad(GetDelta(dt)); // declination
+    var h = rad(hourAngle);
+
+    var z = Math.sin(PHI)*Math.sin(delta) + Math.cos(PHI)*Math.cos(delta)*Math.cos(h);
+    var theta = Math.acos(z);
+    return (theta*180.0)/Math.PI;
+}
+
+export function GetElevationAngle(dt, lat) {
+    var teta = GetZenithAngle(dt, lat);
+    return 90 - teta;
+}
+
+export function GetAzimuthAngle(dt, lat) {
+    var theta = rad(GetZenithAngle(dt, lat));
+    var delta = rad(GetDelta(dt));
+    var h = rad(GetCurrentHourAngle(dt));
+
+    var p = (-1.0*Math.sin(h)*Math.cos(delta))/Math.cos(theta);
+    var phita = Math.asin(p);
+    return (phita*180)/Math.PI;
+}
+
   
   
