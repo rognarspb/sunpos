@@ -102,8 +102,8 @@ export function GetHourAngle(dt, lat){
 }
   
 // Jtransit = true solar transit or solar noon Julian date
-export function GetSolarNoon(lon) {
-    var dt = new Date(); //now
+export function GetSolarNoon(dt, lon) {
+    // var dt = new Date(); //now
     var hourOffset = dt.getTimezoneOffset()/60;
     dt.setHours(-hourOffset);
     dt.setMinutes(0);
@@ -126,16 +126,22 @@ export function GetSolarNoon(lon) {
     return Jtransit;
 }
 
-export function GetCurrentHourAngle(dt){
+export function GetCurrentHourAngle(dt, lon){
     var h = dt.getHours();
-    var mh = dt.getMinutes()/60;
-    var sec = dt.getSeconds()/3600;
-    var hourAngle = (h + mh + sec -12.0)*15.0;// 15 degree per hour
+    var m = dt.getMinutes();
+    var sec = dt.getSeconds();
+    var solarNoon = GetSolarNoon(dt, lon);
+    var solarNoonObj = JD.GetDateObject(solarNoon);
+
+    var currentSeconds = h*3600 + m*60 + sec;
+    var noonSeconds = solarNoonObj.hours*3600 + solarNoonObj.minutes*60 + solarNoonObj.seconds;
+
+    var hourAngle = ((currentSeconds -noonSeconds)/3600.0)*15.0;// 15 degree per hour
     return hourAngle;
 }
 
-export function GetZenithAngle(dt, lat) {
-    var hourAngle = GetCurrentHourAngle(dt);// approximate
+export function GetZenithAngle(dt, lat, lon) {
+    var hourAngle = GetCurrentHourAngle(dt, lon);// approximate
     var PHI = rad(lat);
     var delta = rad(GetDelta(dt)); // declination
     var h = rad(hourAngle);
@@ -145,15 +151,15 @@ export function GetZenithAngle(dt, lat) {
     return (theta*180.0)/Math.PI;
 }
 
-export function GetElevationAngle(dt, lat) {
-    var teta = GetZenithAngle(dt, lat);
+export function GetElevationAngle(dt, lat, lon) {
+    var teta = GetZenithAngle(dt, lat, lon);
     return 90 - teta;
 }
 
-export function GetAzimuthAngle(dt, lat) {
+export function GetAzimuthAngle(dt, lat, lon) {
     var theta = rad(GetZenithAngle(dt, lat));
     var delta = rad(GetDelta(dt));
-    var h = rad(GetCurrentHourAngle(dt));
+    var h = rad(GetCurrentHourAngle(dt, lon));
 
     var p = (-1.0*Math.sin(h)*Math.cos(delta))/Math.cos(theta);
     var phita = Math.asin(p);

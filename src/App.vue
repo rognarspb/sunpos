@@ -237,11 +237,11 @@ export default {
       return timeObj.hours + "h " + timeObj.minutes + "min";
     },
     solarNoonObject: function(){
-      var sn =  Sun.GetSolarNoon(this.lon);
+      var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
       return JD.GetDateObject(sn);
     },
     solarNoon: function() {
-      var sn =  Sun.GetSolarNoon(this.lon);
+      var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
       return sn.toFixed(6);     
     },
     sunset: function(){
@@ -275,15 +275,15 @@ export default {
       return hours + "h " + minutes + "min";
     },
     zenithAngle: function(){
-      var teta =  Sun.GetZenithAngle(this.julianDate, this.lat);
+      var teta =  Sun.GetZenithAngle(this.julianDate, this.lat, this.lon);
       return Math.round(teta * 100) / 100;
     },
     elevationAngle: function(){
-      var alpha =  Sun.GetElevationAngle(this.julianDate, this.lat);
+      var alpha =  Sun.GetElevationAngle(this.julianDate, this.lat, this.lon);
       return Math.round(alpha * 100) / 100;
     },
     azimuthAngle: function(){
-      var phita =  Sun.GetAzimuthAngle(this.julianDate, this.lat);
+      var phita =  Sun.GetAzimuthAngle(this.julianDate, this.lat, this.lon);
       return Math.round(phita * 100) / 100;
     }    
   }
