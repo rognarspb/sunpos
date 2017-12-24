@@ -1,6 +1,6 @@
 {
-  "name": "vranger",
-  "description": "A Vue.js project",
+  "name": "sunpos",
+  "description": "Sun position calculation",
   "version": "1.0.0",
   "author": "PL",
   "private": true,
