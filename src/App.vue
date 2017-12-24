@@ -2,10 +2,10 @@
   <div id="app">
     <div class="text-center">
       <img src="./assets/sun.svg" width="100" height="100">
-      <h1 class="he">Cолнце</h1>
+      <h1 class="he">Cолнце: положение, восход и закат</h1>
     </div>
     <hr/>
-    <div class="row">
+    <div class="row sky-row">
       <div class="col-sm-12 col-md-6 col-lg-3">
         <h4>Наблюдатель</h4>
         <div class="form form-info">
@@ -26,9 +26,6 @@
                 :full-month-name="true"
                 :calendar-button="true"
                 calendar-button-icon="far fa-calendar-alt" ></datepicker>
-                <span class="input-group-btn">
-                  <button class="btn btn-default btn-sm" v-on:click="setNow">Установить текущее время</button>
-                </span>
             </div>
           </div>
           <div class="form-row">
@@ -44,6 +41,10 @@
               <label>Секунды</label>
               <input type="number" class="form-control" v-model="userSeconds" placeholder="ss">
             </div>
+          </div>
+          <div class="form-group">
+              <button class="btn btn-default btn-sm" v-on:click="setNow">Установить текущее время</button>
+              <button class="btn btn-default btn-sm" v-on:click="setNoon">Установить полдень</button>
           </div>
         </div>
       </div>
@@ -61,7 +62,7 @@
         </dl>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-3">
-        <h4>Координаты</h4>
+        <h4>Астрономические координаты</h4>
         <dl class="info">
           <dt>Эклиптические координаты</dt>
           <dd>&beta;={{eclipticLatitude}}&deg;, &lambda;={{eclipticLongutude}}&deg; </dd>
@@ -74,15 +75,18 @@
           <dd>{{epsilon}}&deg;</dd>
           <dt>Солнечное склонение (аппроксимация &delta;)</dt>
           <dd>{{declination}}&deg;</dd>
-          <dt>Часовой угол (восход/закат)</dt>
+          <dt>Часовой угол в момент (восход/закат)</dt>
           <dd>{{hourAngle}}&deg; ({{hourAngleValue}})</dd>
         </dl>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-3">
+        <h4>Плоскость эклиптики солнца</h4>
         <div class="info">
           <ecliptic :longitude="eclipticLongutude"></ecliptic>
         </div>
       </div>
       <div class="col-sm-12 col-md-6 col-lg-3">
-        <h4>Солнце</h4>
+        <h4>Закат и восход Солнца</h4>
         <dl class="info">
           <dt>Солнечный полдень (JD)</dt>
           <dd>{{solarNoon}} </dd>
@@ -97,13 +101,20 @@
           <dd>{{daylength}} </dd>
           <dt>Закат</dt>
           <dd>{{sunset}} </dd>
-          <hr/>
-          <dt>Высота</dt>
+        </dl>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-3">
+        <h4>Положение солнца в локальных координатах</h4>
+        <dl class="info">
+          <dt>Часовой угол</dt>
+          <dd>h={{sunHourAngle}}&deg;</dd>
+          <dt>Высота (угол зенита &theta; и высота &alpha;)</dt>
           <dd>&theta;={{zenithAngle}}&deg; &alpha;={{elevationAngle}}&deg;</dd>
           <dt>Азимут</dt>
           <dd>{{azimuthAngle}}&deg; </dd>
         </dl>
       </div>
+      
     </div>
     <hr/>
     <div class="row">
@@ -153,6 +164,13 @@ export default {
       this.userHours = now.getHours();
       this.userMinutes = now.getMinutes();
       this.userSeconds = now.getSeconds();
+    },
+    setNoon: function(){
+      var now = new Date();
+      this.userDate = now;
+      this.userHours = 12;
+      this.userMinutes = 0;
+      this.userSeconds = 0;
     }
 
   },
@@ -167,11 +185,12 @@ export default {
     }, 
     julianDate: function(){
       var dt = moment(this.userDate).toDate();
-      dt.setHours(this.userHours);
-      dt.setMinutes(this.userMinutes);
-      dt.setSeconds(this.userSeconds);
+      //var dt = new Date();
+      //dt.setFullYear(this.userDate.getFullYear());
+      //dt.setMonth(this.userDate.getMonth());
+      //dt.setDate(this.userDate.getDate());
+      var res = dt.setHours(this.userHours, this.userMinutes, this.userSeconds);
       return dt;
-      // return new Date();
     },
     jdn: function(){
       return JD.GetJDN(this.julianDate);
@@ -285,6 +304,10 @@ export default {
     azimuthAngle: function(){
       var phita =  Sun.GetAzimuthAngle(this.julianDate, this.lat, this.lon);
       return Math.round(phita * 100) / 100;
+    },
+    sunHourAngle: function(){
+      var phita =  Sun.GetCurrentHourAngle(this.julianDate, this.lon);
+      return Math.round(phita * 100) / 100;
     }    
   }
 }
@@ -326,4 +349,10 @@ h4 {
   }
 }
 
+.sky-row {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background: #c0dfff;
+}
+ 
 </style>

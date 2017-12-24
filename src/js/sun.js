@@ -102,12 +102,13 @@ export function GetHourAngle(dt, lat){
 }
   
 // Jtransit = true solar transit or solar noon Julian date
-export function GetSolarNoon(dt, lon) {
-    // var dt = new Date(); //now
+export function GetSolarNoon(currentDate, lon) {
+    var dt = new Date(); //now
     var hourOffset = dt.getTimezoneOffset()/60;
-    dt.setHours(-hourOffset);
-    dt.setMinutes(0);
-    dt.setSeconds(0);
+    dt.setDate(currentDate.getDate());
+    dt.setMonth(currentDate.getMonth());
+    dt.setFullYear(currentDate.getFullYear());
+    dt.setHours(-hourOffset, 0, 0);
     
     var jd = JD.GetJD(dt);
     var n = jd - 2451545.0 + 0.0008;
@@ -117,12 +118,12 @@ export function GetSolarNoon(dt, lon) {
     // solar mean anomaly:
     var M = (357.5291 + 0.98560028*J) % 360;
     // equation of center:
-    var C = 1.9148*Math.sin(rad(M)) + 0.02*Math.sin(rad(2*M)) + 0.0003*Math.sin(rad(3.0*M));
+    var C = 1.9148*Math.sin(rad(M)) + 0.02*Math.sin(2.0*rad(M)) + 0.0003*Math.sin(3.0*rad(M));
     // ecliptic longitude:
     var lambdaApprox = (M + C + 180 + 102.9372) % 360;
     var lambda = GetEclipticLongitude(dt);
 
-    var Jtransit = 2451545.5 + J + 0.0053 * Math.sin(rad(M)) - 0.0069*Math.sin(rad(2*lambda));
+    var Jtransit = 2451545.5 + J + 0.0053 * Math.sin(rad(M)) - 0.0069*Math.sin(2*rad(lambda));
     return Jtransit;
 }
 
@@ -157,12 +158,20 @@ export function GetElevationAngle(dt, lat, lon) {
 }
 
 export function GetAzimuthAngle(dt, lat, lon) {
-    var theta = rad(GetZenithAngle(dt, lat));
+    var theta = rad(GetZenithAngle(dt, lat, lon));
     var delta = rad(GetDelta(dt));
     var h = rad(GetCurrentHourAngle(dt, lon));
+    var PHI = rad(lat);
 
-    var p = (-1.0*Math.sin(h)*Math.cos(delta))/Math.cos(theta);
-    var phita = Math.asin(p);
+    var p = (-1.0*Math.sin(h)*Math.cos(delta))/Math.sin(theta);
+
+    var p1 = Math.sin(delta) - Math.cos(theta)*Math.sin(PHI);
+    var p2 = Math.sin(theta)*Math.cos(PHI);
+
+    var phita = Math.acos(p1/p2);
+    if (h > 0)
+        phita = 2.0*Math.PI -phita;
+
     return (phita*180)/Math.PI;
 }
 
