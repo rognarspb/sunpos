@@ -1,6 +1,6 @@
 
 <template>
-    <svg width="100%" height="100%" viewBox="0 0 500 500">
+    <svg width="100%" height="410" viewBox="0 0 500 500">
         <circle cx="40" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
         <circle cx="440" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
         <circle cx="240" cy="40" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
@@ -14,7 +14,7 @@
 
         <line x1="240" y1="240" x2="440" y2="240" id="angle" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
         <line x1="440" y1="0" x2="440" y2="480" id="vertical" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
-        <text x = "100" y = "230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">{{longitude}}&deg;</text>
+        <text x = "100" y = "230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">&lambda;={{longitude}}&deg;</text>
 
         <circle cx="440" cy="240" r="20" id="earth" fill="steelblue"></circle>
         <circle cx="240" cy="240" r="35" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>

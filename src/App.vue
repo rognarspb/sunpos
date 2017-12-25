@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" class="container-fluid">
     <div class="text-center">
       <img src="./assets/sun.svg" width="100" height="100">
       <h1 class="he">Cолнце: положение, восход и закат</h1>
     </div>
     <hr/>
     <div class="row sky-row">
-      <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Наблюдатель</h4>
         <div class="form form-info">
           <div class="form-group">
@@ -48,7 +48,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Время</h4>
         <dl class="info">
           <dt>Дата</dt>
@@ -61,7 +61,7 @@
           <dd>{{ mjd }}</dd>
         </dl>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Астрономические координаты</h4>
         <dl class="info">
           <dt>Эклиптические координаты</dt>
@@ -79,13 +79,13 @@
           <dd>{{hourAngle}}&deg; ({{hourAngleValue}})</dd>
         </dl>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Плоскость эклиптики солнца</h4>
         <div class="info">
           <ecliptic :longitude="eclipticLongutude"></ecliptic>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Закат и восход Солнца</h4>
         <dl class="info">
           <dt>Солнечный полдень (JD)</dt>
@@ -103,7 +103,7 @@
           <dd>{{sunset}} </dd>
         </dl>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-3">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Положение солнца в локальных координатах</h4>
         <dl class="info">
           <dt>Часовой угол</dt>
