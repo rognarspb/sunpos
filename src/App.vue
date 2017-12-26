@@ -117,8 +117,9 @@
       
     </div>
     <hr/>
+    <h3 class="text-center">Вспомогательные ресурсы</h3>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <jdcalc></jdcalc>
       </div>
     </div>
@@ -274,7 +275,7 @@ export default {
         minutes = minutes - 60;
         hours++;
       }
-      return hours + ":" + minutes;
+      return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
     },
     sunrise: function(){
       var timeObj =  this.hourAngleObject;
@@ -284,7 +285,7 @@ export default {
         minutes = timeObj.minutes - this.solarNoonObject.minutes;
         hours--;
       }
-      return hours + ":" + minutes;
+      return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
     },
     daylength: function(){
       var timeObj =  this.hourAngleObject;
@@ -294,7 +295,7 @@ export default {
         minutes = minutes - 60;
         hours++;
       }
-      return hours + "h " + minutes + "min";
+      return String(hours).padStart(2,'0') + "h " + String(minutes).padStart(2,'0') + "min";
     },
     zenithAngle: function(){
       var teta =  Sun.GetZenithAngle(this.julianDate, this.lat, this.lon);

@@ -112,11 +112,5 @@ export function GetDateObject(jd) {
 
 export function GetDate(jd) {
     var dateObj = GetDateObject(jd);
-    return new Date(dateObj.year, 
-                    dateObj.month, 
-                    null, 
-                    dateObj.hour, 
-                    dateObj.minutes, 
-                    dateObj.seconds, 
-                    0);
+    return new Date(dateObj.year, dateObj.month-1, dateObj.day, dateObj.hours, dateObj.minutes, dateObj.seconds);
 }
