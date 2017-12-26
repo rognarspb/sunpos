@@ -119,6 +119,7 @@
     <hr/>
     <div class="row">
       <div class="col-md-12">
+        <jdcalc></jdcalc>
       </div>
     </div>
   </div>
@@ -128,6 +129,7 @@
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
 import Ecliptic from './components/ecliptic.vue';
+import JDCalc from './components/jdcalc.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 
@@ -136,7 +138,8 @@ export default {
   name: 'app',
   components: {
     'datepicker':  Datepicker,
-    'ecliptic': Ecliptic
+    'ecliptic': Ecliptic,
+    'jdcalc': JDCalc
   },
   data () {
     return {
