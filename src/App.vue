@@ -91,7 +91,7 @@
           <dt>Солнечный полдень (JD)</dt>
           <dd>{{solarNoon}} </dd>
           <dt>Солнечный полдень (локальное время)</dt>
-          <dd>{{solarNoonObject.day}}.{{solarNoonObject.month}}.{{solarNoonObject.year}}
+          <dd>{{solarNoonObject.day}}.{{solarNoonObject.month}}.{{solarNoonObject.year}},
              {{solarNoonObject.hours}}:{{solarNoonObject.minutes}}:{{solarNoonObject.seconds}} </dd>
           <dt>Восход</dt>
           <dd>{{sunrise}} </dd>
@@ -118,11 +118,32 @@
     </div>
     <hr/>
     <h3 class="text-center">Вспомогательные ресурсы</h3>
-    <div class="row">
+    <div class="row justify-content-center">
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <jdcalc></jdcalc>
       </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="jdModal" tabindex="-1" role="dialog" aria-labelledby="jdCalculator" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="jdCalculator">Калькулятор юлианской даты</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <jdcalc></jdcalc>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>    
+
   </div>
 </template>
 
@@ -247,6 +268,7 @@ export default {
       return Math.round(ha * 100) / 100;
     },
     hourAngleObject: function() {
+      // var dt = new Date()
       var ha =  Sun.GetHourAngle(this.julianDate, this.lat);
       var x = ha/15; // 15 degree per hour
       var res = {
@@ -318,13 +340,21 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
+#app-default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
 }
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
 
 h4 {
   margin: 0 auto;

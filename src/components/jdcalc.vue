@@ -34,7 +34,7 @@
         <hr/>
         <div class="row justify-content-center">
             <div class="col-4">
-              <button class="btn btn-default btn-block" v-on:click="toggleDirection">
+              <button class="btn btn-default btn-block" v-on:click="toggleDirection" title="Направление конвертации">
                 <i v-if="direction == 'toJD'" class="fa fa-arrow-down"></i>
                 <i v-if="direction == 'toDate'" class="fa fa-arrow-up"></i>
               </button>
@@ -48,6 +48,12 @@
         <div class="form-group">
             <label>Юлианский день (JDN)</label>
             <input type="number" class="form-control" v-model="jdn" placeholder="JDN" readonly="readonly">
+        </div>
+        <br/>
+        <div class="alert alert-info">
+            <strong>Вычисление Юлианской даты:</strong><br/> для вычисления Юлианской даты JD введите нужную дату и время, результат будет отображать автоматически в полях JD и JDN ниже.
+            Используйте кнопку "Направление конвертации" <span class="fa fa-arrow-down"></span> чтобы включить обратный перевод Юлианской даты в дату по Григорианскому календарю. 
+            При этом поле JD будет доступно для ввода информации.
         </div>
     </div>
 </template>
