@@ -92,15 +92,13 @@
           <dd>{{solarNoon}} </dd>
           <dt>Солнечный полдень (локальное время)</dt>
           <dd>{{solarNoonObject.day}}.{{solarNoonObject.month}}.{{solarNoonObject.year}},
-             {{solarNoonObject.hours}}:{{solarNoonObject.minutes}}:{{solarNoonObject.seconds}} </dd>
+             {{solarNoonObject.hours}}:{{String(solarNoonObject.minutes).padStart(2,'0')}}:{{String(solarNoonObject.seconds).padStart(2,'0')}} </dd>
           <dt>Восход</dt>
           <dd>{{sunrise}} </dd>
           <dt>Закат</dt>
           <dd>{{sunset}} </dd>
           <dt>Длительность дня</dt>
           <dd>{{daylength}} </dd>
-          <dt>Закат</dt>
-          <dd>{{sunset}} </dd>
         </dl>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
@@ -270,16 +268,23 @@ export default {
     hourAngleObject: function() {
       // var dt = new Date()
       var ha =  Sun.GetHourAngle(this.julianDate, this.lat);
-      var x = ha/15; // 15 degree per hour
+      var hours = ha/15.0; // 15 degree per hour
+      var mins  = (hours % 1) *60.0;
+      var seconds = (mins % 1)*60;
+
       var res = {
-        hours: Math.floor(x),
-        minutes: Math.floor(60 * ((x % 1).toFixed(2)))
-      }
+        hours: Math.floor(hours),
+        minutes: Math.floor(mins),
+        seconds: Math.floor(seconds)
+      };
+
       return res;
     },
     hourAngleValue: function(){
       var timeObj =  this.hourAngleObject;
-      return timeObj.hours + "h " + timeObj.minutes + "min";
+      return String(timeObj.hours).padStart(2, '0') + "h " 
+        + String(timeObj.minutes).padStart(2, '0') + "min "
+        + String(timeObj.seconds).padStart(2, '0') + "sec";
     },
     solarNoonObject: function(){
       var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
@@ -304,8 +309,8 @@ export default {
       var hours = this.solarNoonObject.hours - timeObj.hours;
       var minutes = this.solarNoonObject.minutes - timeObj.minutes;
       if (minutes < 0){
-        minutes = timeObj.minutes - this.solarNoonObject.minutes;
-        hours--;
+         minutes = 60 + minutes;
+         hours--;
       }
       return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
     },
