@@ -1,6 +1,7 @@
 
 import moment from 'moment';
 import * as JD from './jd.js';
+import * as Util from './util.js';
 
 
 // degree to radians:
@@ -90,16 +91,25 @@ export function GetDeclination(dt){
     return delta;
 }
 
-// hour angle of sunset:
-export function GetHourAngle(dt, lat){
-    // var N = moment(dt).dayOfYear();
+
+// alpha - elevation angle
+// dt - date (to determine delta)
+// lat - latitude
+export function GetHourAngle(alpha, dt, lat){
     var lat_rad = rad(lat);
     var dec_rad = rad(GetDelta(dt));
-    var a_rad = rad(-0.83); // athmospheric refraction
+    var a_rad = rad(alpha); 
     var cosHourAngle = (Math.sin(a_rad) -  Math.sin(lat_rad) * Math.sin(dec_rad))/(Math.cos(lat_rad)*Math.cos(dec_rad));
     var res = Math.acos(cosHourAngle);
-    return (res*180)/Math.PI;
+    return Util.degree(res);
 }
+
+// hour angle of sunrise/sunset:
+export function GetSunriseHourAngle(dt, lat){
+    var alpha = -0.83; // athmospheric refraction
+    return GetHourAngle(alpha, dt, lat);
+}
+
   
 // Jtransit = true solar transit or solar noon Julian date
 export function GetSolarNoon(currentDate, lon) {
@@ -127,6 +137,7 @@ export function GetSolarNoon(currentDate, lon) {
     return Jtransit;
 }
 
+// returns hour angle relative solar noon
 export function GetCurrentHourAngle(dt, lon){
     var h = dt.getHours();
     var m = dt.getMinutes();
@@ -174,6 +185,46 @@ export function GetAzimuthAngle(dt, lat, lon) {
 
     return (phita*180)/Math.PI;
 }
+
+export function GetTwilightTime(alpha, dt, lat, lon){
+
+    var ha = GetHourAngle(alpha, dt, lat);
+    var timeObj = Util.degreeToTime(ha);
+    var sn =  GetSolarNoon(dt, lon);
+    var solarNoonObj = JD.GetDateObject(sn);
+  
+    var hours = solarNoonObj.hours - timeObj.hours;
+    var minutes = solarNoonObj.minutes - timeObj.minutes;
+    if (minutes < 0){
+       minutes = 60 + minutes;
+       hours--;
+    }
+
+    var morning  = {
+        hours: hours,
+        minutes: minutes
+    }
+
+    var hours2 = solarNoonObj.hours + timeObj.hours;
+    var minutes2 = solarNoonObj.minutes + timeObj.minutes;
+    if (minutes2 > 60){
+       minutes2 = 60 - minutes2;
+       hours2--;
+    }
+    
+    var evening  = {
+        hours: hours2,
+        minutes: minutes2
+    }
+
+    var res = {
+        hourAngle: ha,
+        morningTwilight: morning,
+        eveningTwilight: evening
+    };
+    return res;
+}
+
 
   
   

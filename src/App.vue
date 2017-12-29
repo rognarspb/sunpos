@@ -91,14 +91,17 @@
           <dt>Солнечный полдень (JD)</dt>
           <dd>{{solarNoon}} </dd>
           <dt>Солнечный полдень (локальное время)</dt>
-          <dd>{{solarNoonObject.day}}.{{solarNoonObject.month}}.{{solarNoonObject.year}},
-             {{solarNoonObject.hours}}:{{String(solarNoonObject.minutes).padStart(2,'0')}}:{{String(solarNoonObject.seconds).padStart(2,'0')}} </dd>
+          <dd>{{solarNoonString}} </dd>
           <dt>Восход</dt>
           <dd>{{sunrise}} </dd>
           <dt>Закат</dt>
           <dd>{{sunset}} </dd>
           <dt>Длительность дня</dt>
           <dd>{{daylength}} </dd>
+          <dt>Астрономические сумерки (утренние)</dt>
+          <dd>{{astronomicalTwilightMorning}}&deg; </dd>
+          <dt>Астрономические сумерки (вечерние)</dt>
+          <dd>{{astronomicalTwilightEvening}}&deg; </dd>
         </dl>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
@@ -152,6 +155,7 @@ import Ecliptic from './components/ecliptic.vue';
 import JDCalc from './components/jdcalc.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
+import * as Util from './js/util.js';
 
 
 export default {
@@ -262,33 +266,26 @@ export default {
       return Math.round(d * 100) / 100;
     },
     hourAngle: function(){
-      var ha =  Sun.GetHourAngle(this.julianDate, this.lat);
+      var ha =  Sun.GetSunriseHourAngle(this.julianDate, this.lat);
       return Math.round(ha * 100) / 100;
     },
     hourAngleObject: function() {
       // var dt = new Date()
-      var ha =  Sun.GetHourAngle(this.julianDate, this.lat);
-      var hours = ha/15.0; // 15 degree per hour
-      var mins  = (hours % 1) *60.0;
-      var seconds = (mins % 1)*60;
-
-      var res = {
-        hours: Math.floor(hours),
-        minutes: Math.floor(mins),
-        seconds: Math.floor(seconds)
-      };
-
-      return res;
+      var ha =  Sun.GetSunriseHourAngle(this.julianDate, this.lat);
+      return Util.degreeToTime(ha);
     },
     hourAngleValue: function(){
       var timeObj =  this.hourAngleObject;
-      return String(timeObj.hours).padStart(2, '0') + "h " 
-        + String(timeObj.minutes).padStart(2, '0') + "min "
-        + String(timeObj.seconds).padStart(2, '0') + "sec";
+      return Util.timeObjToString(timeObj);
     },
     solarNoonObject: function(){
       var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
       return JD.GetDateObject(sn);
+    },
+    solarNoonString: function(){
+      var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
+      var dateObj = JD.GetDateObject(sn);
+      return Util.dateObjToString(dateObj);
     },
     solarNoon: function() {
       var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
@@ -339,7 +336,20 @@ export default {
     sunHourAngle: function(){
       var phita =  Sun.GetCurrentHourAngle(this.julianDate, this.lon);
       return Math.round(phita * 100) / 100;
-    }    
+    },
+    
+    astronomicalTwilightMorning: function(){
+      var alpha = -18; // 12-18 degree
+      var twilight = Sun.GetTwilightTime(alpha, this.julianDate, this.lat, this.lon);
+      return String(twilight.morningTwilight.hours).padStart(2,'0') + ":" + String(twilight.morningTwilight.minutes).padStart(2,'0') 
+            + " h=-" + twilight.hourAngle.toFixed(2);
+    },
+    astronomicalTwilightEvening: function(){
+      var alpha = -18; // 12-18 degree
+      var twilight = Sun.GetTwilightTime(alpha, this.julianDate, this.lat, this.lon);
+      return String(twilight.eveningTwilight.hours).padStart(2,'0') + ":" + String(twilight.eveningTwilight.minutes).padStart(2,'0')
+            + " h=+" + twilight.hourAngle.toFixed(2);
+    }
   }
 }
 </script>
