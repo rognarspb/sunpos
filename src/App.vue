@@ -5,6 +5,10 @@
       <h1 class="he">Cолнце: положение, восход и закат</h1>
     </div>
     <hr/>
+    <div class="container" style="height: 400px; padding-top: 20px;">
+      <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
+    </div>
+    <hr/>
     <div class="row sky-row">
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Наблюдатель</h4>
@@ -152,6 +156,7 @@
 import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
 import Ecliptic from './components/ecliptic.vue';
+import SunStatus from './components/sunstatus.vue';
 import JDCalc from './components/jdcalc.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
@@ -163,7 +168,8 @@ export default {
   components: {
     'datepicker':  Datepicker,
     'ecliptic': Ecliptic,
-    'jdcalc': JDCalc
+    'jdcalc': JDCalc,
+    'sunstatus': SunStatus
   },
   data () {
     return {
