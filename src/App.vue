@@ -5,12 +5,14 @@
       <h1 class="he">Cолнце: положение, восход и закат</h1>
     </div>
     <hr/>
-    <div class="container" style="height: 400px; padding-top: 20px;">
-      <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
-    </div>
-    <hr/>
-    <div class="row sky-row">
-      <div class="col-sm-12 col-lg-6 col-xl-4">
+    <div class="row">
+      <div class="col-sm-12 col-lg-8 col-xl-8">
+        <h4>Высота солнца над горизонтом</h4>
+        <div style="height: 440px; padding-top: 20px;">
+          <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
+        </div>
+      </div>
+      <div class="col-sm-12 col-lg-4 col-xl-4">
         <h4>Наблюдатель</h4>
         <div class="form form-info">
           <div class="form-group">
@@ -51,7 +53,10 @@
               <button class="btn btn-default btn-sm" v-on:click="setNoon">Установить полдень</button>
           </div>
         </div>
-      </div>
+      </div>       
+    </div>
+    <hr/>
+    <div class="row sky-row">
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Время</h4>
         <dl class="info">
@@ -209,12 +214,7 @@ export default {
   },
   computed:{
     localTime: function(){
-      var now = this.julianDate;
-      var month = now.getMonth()+1;
-      return  this.dayOfWeek + ", " + now.getDate() + "." +  month + "." + now.getFullYear() + ", " 
-            + String(now.getHours()).padStart(2,'0') + ":"  
-            + String(now.getMinutes()).padStart(2,'0') + ":" 
-            + String(now.getSeconds()).padStart(2,'0');
+      return  this.dayOfWeek + ", " + Util.dateToString(this.julianDate);
     }, 
     julianDate: function(){
       var dt = moment(this.userDate).toDate();
@@ -297,25 +297,17 @@ export default {
       var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
       return sn.toFixed(6);     
     },
-    sunset: function(){
-      var timeObj =  this.hourAngleObject;
-      var hours = this.solarNoonObject.hours + timeObj.hours;
-      var minutes = timeObj.minutes + this.solarNoonObject.minutes;
-      if (minutes > 60){
-        minutes = minutes - 60;
-        hours++;
-      }
-      return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
-    },
     sunrise: function(){
-      var timeObj =  this.hourAngleObject;
-      var hours = this.solarNoonObject.hours - timeObj.hours;
-      var minutes = this.solarNoonObject.minutes - timeObj.minutes;
-      if (minutes < 0){
-         minutes = 60 + minutes;
-         hours--;
-      }
-      return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
+        var sunriseTime = Sun.GetSunriseTime(this.julianDate, this.lat, this.lon);
+        return String(sunriseTime.hours).padStart(2,'0') + ":" 
+              + String(sunriseTime.minutes).padStart(2,'0') + ":" 
+              + String(sunriseTime.seconds).padStart(2,'0');
+    },
+    sunset: function(){
+        var sunsetTime = Sun.GetSunsetTime(this.julianDate, this.lat, this.lon);
+        return String(sunsetTime.hours).padStart(2,'0') + ":" 
+              + String(sunsetTime.minutes).padStart(2,'0') + ":" 
+              + String(sunsetTime.seconds).padStart(2,'0');
     },
     daylength: function(){
       var timeObj =  this.hourAngleObject;

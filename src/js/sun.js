@@ -110,6 +110,40 @@ export function GetSunriseHourAngle(dt, lat){
     return GetHourAngle(alpha, dt, lat);
 }
 
+export function GetSunsetHourAngle(dt, lat){
+    return GetSunriseHourAngle(dt, lat);
+}
+
+export function GetSunriseTime(dt, lat, lon) {
+    var ha =  GetSunriseHourAngle(dt, lat);
+    var sn =  GetSolarNoon(dt, lon);
+
+    var solarNoonObj = JD.GetDateObject(sn); 
+    var solarNoonSeconds = Util.getTotalSeconds(solarNoonObj);
+    var timeObj = Util.degreeToTime(ha);
+    var diffSeconds = Util.getTotalSeconds(timeObj);
+   
+    var sunriseSeconds = solarNoonSeconds - diffSeconds;
+    var resTime = Util.getTimeFromSeconds(sunriseSeconds);
+    return resTime;
+}
+
+export function GetSunsetTime(dt, lat, lon) {
+
+    var ha =  GetSunriseHourAngle(dt, lat);
+    var sn =  GetSolarNoon(dt, lon);
+
+    var solarNoonObj = JD.GetDateObject(sn); 
+    var solarNoonSeconds = Util.getTotalSeconds(solarNoonObj);
+    var timeObj = Util.degreeToTime(ha);
+    var diffSeconds = Util.getTotalSeconds(timeObj);
+   
+    var sunsetSeconds = solarNoonSeconds + diffSeconds;
+    var resTime = Util.getTimeFromSeconds(sunsetSeconds);
+    return resTime;   
+}
+
+
   
 // Jtransit = true solar transit or solar noon Julian date
 export function GetSolarNoon(currentDate, lon) {

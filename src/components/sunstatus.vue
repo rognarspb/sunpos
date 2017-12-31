@@ -4,10 +4,12 @@
         <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
         <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
         <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
+        <line x1="410" y1="0" x2="410" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
         <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
-        <text x = "180" y = "100" font-family="Arial" font-size="24" fill="orange">Восход: {{sunrise}}</text>
-        <text x = "540" y = "100" font-family="Arial" font-size="24" fill="steelblue">Закат: {{sunset}}</text>
+        <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">Восход: {{sunrise}}</text>
+        <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">Закат: {{sunset}}</text>
         <text x = "30" y = "200" font-family="Arial" font-size="16" fill="gray">00:00</text>
+        <text x = "390" y = "200" font-family="Arial" font-size="16" fill="gray">12:00</text>
         <text x = "750" y = "200" font-family="Arial" font-size="16" fill="gray">23:59</text>
         <text x = "680" y = "170" font-family="Arial" font-size="14" fill="gray">Линия горизонта</text>
         <circle cx="410" cy="180" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>       
@@ -116,31 +118,17 @@ export default {
     }
   },
   computed: {
-        sunrise: function(){
-            var ha =  Sun.GetSunriseHourAngle(this.date, this.latitude);
-            var timeObj = Util.degreeToTime(ha);
-            var sn =  Sun.GetSolarNoon(this.date, this.longitude);
-            var solarNoonObj = JD.GetDateObject(sn);          
-            var hours = solarNoonObj.hours - timeObj.hours;
-            var minutes = solarNoonObj.minutes - timeObj.minutes;
-            if (minutes < 0){
-              minutes = 60 + minutes;
-              hours--;
-            }
-            return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
+          sunrise: function(){
+            var sunriseTime = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+            return String(sunriseTime.hours).padStart(2,'0') + ":" 
+                 + String(sunriseTime.minutes).padStart(2,'0') + ":" 
+                 + String(sunriseTime.seconds).padStart(2,'0');
           },
           sunset: function(){
-            var ha =  Sun.GetSunriseHourAngle(this.date, this.latitude);
-            var timeObj = Util.degreeToTime(ha);
-            var sn =  Sun.GetSolarNoon(this.date, this.longitude);
-            var solarNoonObj = JD.GetDateObject(sn);          
-            var hours = solarNoonObj.hours + timeObj.hours;
-            var minutes = solarNoonObj.minutes + timeObj.minutes;
-            if (minutes > 60){
-              minutes = minutes - 60;
-              hours++;
-            }
-            return String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0');
+            var sunsetTime = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+            return String(sunsetTime.hours).padStart(2,'0') + ":" 
+                 + String(sunsetTime.minutes).padStart(2,'0') + ":" 
+                 + String(sunsetTime.seconds).padStart(2,'0');
           },
 
   }
