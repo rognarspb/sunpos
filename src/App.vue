@@ -187,6 +187,9 @@ export default {
       userSeconds: 0
     }
   },
+  created: function() {
+      this.setNow();
+  },
   methods: {  
    
 
@@ -379,7 +382,7 @@ h4 {
   border: 2px solid #efefef;
   margin: 10px;
   padding: 20px;
-  min-height: 432px;
+  min-height: 460px;
   box-shadow: 3px 3px 50px -5px  #888888;
   &:hover {
     border: 2px solid lightgreen;

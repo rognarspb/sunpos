@@ -113,5 +113,8 @@ export default {
   .earth{
     fill: "steelblue";
   }
+  svg{
+    background: white;
+  }
 </style>
 

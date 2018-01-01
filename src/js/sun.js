@@ -171,6 +171,13 @@ export function GetSolarNoon(currentDate, lon) {
     return Jtransit;
 }
 
+export function GetSolarNoonTime(currentDate, lat, lon) {
+    var jd = GetSolarNoon(currentDate, lon);
+    var date = JD.GetDateObject(jd);
+  
+    return date;
+}
+
 // returns hour angle relative solar noon
 export function GetCurrentHourAngle(dt, lon){
     var h = dt.getHours();

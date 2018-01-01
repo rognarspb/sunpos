@@ -5,9 +5,15 @@
         <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
         <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
         <line x1="410" y1="0" x2="410" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
+
+        <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
+        <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
+        <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
+
         <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
         <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">Восход: {{sunrise}}</text>
         <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">Закат: {{sunset}}</text>
+        <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">Истинный полдень: {{solarnoon}}</text>
         <text x = "30" y = "200" font-family="Arial" font-size="16" fill="gray">00:00</text>
         <text x = "390" y = "200" font-family="Arial" font-size="16" fill="gray">12:00</text>
         <text x = "750" y = "200" font-family="Arial" font-size="16" fill="gray">23:59</text>
@@ -86,24 +92,44 @@ export default {
                             .attr("fill", "none")
                             .attr("fill", "#a9c1ff") 
                             .attr("fill-opacity", "0.1");
+
+        // mark sunset and sunrise
+        var dtSunrise = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+        var dtSunset  = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+        var dtSolarNoon = Sun.GetSolarNoonTime(this.date, this.latitude, this.longitude);
+
+        var minsSunrise = Math.floor(Util.getTotalSeconds(dtSunrise)/60);
+        svgElem.select("#sunrisePoint")
+               .attr("cx", 50 + minsSunrise/2);
+
+        var minsSunset = Math.floor(Util.getTotalSeconds(dtSunset)/60);
+         svgElem.select("#sunsetPoint")
+                .attr("cx", 50 + minsSunset/2);
+
+        var minsSolarNoon = Math.floor(Util.getTotalSeconds(dtSolarNoon)/60);
+        svgElem.select("#solarNoonLine")
+            .attr("x1", 50 + minsSolarNoon/2)
+            .attr("x2", 50 + minsSolarNoon/2);
+        svgElem.select("#solarNoonText")
+            .attr("x", 55 + minsSolarNoon/2)
+        
                             
         // calc sun "position":
         var totalMin = this.date.getHours()*60 + this.date.getMinutes();
         var elevation = Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
+       
         var cx = 50 + totalMin/2;
         var cy = 180 - 2*elevation;
 
         var sun = svgElem.select("#sun").remove();
-        //sun.attr("cx", cx);
-        //sun.attr("cy", cy);
-        var sun = svgElem.append("circle")
-                            .attr("id", "sun")
-                            .attr("cx", cx)
-                            .attr("cy", cy)
-                            .attr("r", 20)
-                            .attr("stroke", "orange")
-                            .attr("stroke-width", 2)
-                            .attr("fill", "yellow");                                                            
+        sun = svgElem.append("circle")
+                          .attr("id", "sun")
+                          .attr("cx", cx)
+                          .attr("cy", cy)
+                          .attr("r", 20)
+                          .attr("stroke", "orange")
+                          .attr("stroke-width", 4)
+                          .attr("fill", "yellow");                                                            
     }
   },
   watch:{
@@ -129,6 +155,12 @@ export default {
             return String(sunsetTime.hours).padStart(2,'0') + ":" 
                  + String(sunsetTime.minutes).padStart(2,'0') + ":" 
                  + String(sunsetTime.seconds).padStart(2,'0');
+          },
+          solarnoon: function(){
+            var solarNoonTime = Sun.GetSolarNoonTime(this.date, this.latitude, this.longitude);
+            return String(solarNoonTime.hours).padStart(2,'0') + ":" 
+                 + String(solarNoonTime.minutes).padStart(2,'0') + ":" 
+                 + String(solarNoonTime.seconds).padStart(2,'0');
           },
 
   }
