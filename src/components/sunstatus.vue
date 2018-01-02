@@ -1,4 +1,19 @@
-
+<i18n>
+{
+  "en": {
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "solarnoon": "Solar noon",
+    "horizont": "Skyline"
+  },
+  "ru": {
+    "sunrise": "Восход",
+    "sunset": "Закат",
+    "solarnoon": "Истинный полдень",
+    "horizont": "Линия горизонта"
+  }
+}
+</i18n>
 <template>
     <svg width="100%" height="100%" viewBox="0 0 820 360">       
         <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
@@ -11,13 +26,13 @@
         <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
 
         <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
-        <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">Восход: {{sunrise}}</text>
-        <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">Закат: {{sunset}}</text>
-        <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">Истинный полдень: {{solarnoon}}</text>
+        <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
+        <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
+        <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">{{$t('solarnoon')}}: {{solarnoon}}</text>
         <text x = "30" y = "200" font-family="Arial" font-size="16" fill="gray">00:00</text>
         <text x = "390" y = "200" font-family="Arial" font-size="16" fill="gray">12:00</text>
         <text x = "750" y = "200" font-family="Arial" font-size="16" fill="gray">23:59</text>
-        <text x = "680" y = "170" font-family="Arial" font-size="14" fill="gray">Линия горизонта</text>
+        <text x = "680" y = "170" font-family="Arial" font-size="14" fill="gray">{{$t('horizont')}}</text>
         <circle cx="410" cy="180" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>       
     </svg>
 </template>

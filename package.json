@@ -14,9 +14,11 @@
     "d3": "^4.12.0",
     "moment": "^2.19.4",
     "vue": "^2.4.4",
+    "vue-i18n": "^7.3.3",
     "vuejs-datepicker": "^0.9.21"
   },
   "devDependencies": {
+    "@kazupon/vue-i18n-loader": "^0.2.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",

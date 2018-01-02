@@ -1,13 +1,29 @@
+<i18n>
+{
+  "en": {
+    "sunStatusTitle": "Sun elevation angle"
+  },
+  "ru": {
+    "sunStatusTitle": "Высота солнца над горизонтом"
+  }
+}
+</i18n>
+
 <template>
   <div id="app" class="container-fluid">
     <div class="text-center">
       <img src="./assets/sun.svg" width="100" height="100">
       <h1 class="he">Cолнце: положение, восход и закат</h1>
+      <br/>
+      <div class="btn-group btn-group-toggle">
+        <button class="btn btn-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'en'}" v-on:click="setEnglish">English</button>
+        <button class="btn btn-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'ru'}" v-on:click="setRussian">Русский</button>
+      </div>
     </div>
     <hr/>
     <div class="row">
       <div class="col-sm-12 col-lg-8 col-xl-8">
-        <h4>Высота солнца над горизонтом</h4>
+        <h4>{{$t('sunStatusTitle')}}</h4>
         <div style="height: 440px; padding-top: 20px;">
           <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
         </div>
@@ -56,7 +72,11 @@
       </div>       
     </div>
     <hr/>
-    <div class="row sky-row">
+    <h3 class="text-center"><a href="#details">Детальная информация</a></h3>
+    <br/>
+    <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
+    <br/>    
+    <div class="row sky-row" id="details">
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Время</h4>
         <dl class="info">
@@ -127,10 +147,25 @@
       
     </div>
     <hr/>
-    <h3 class="text-center">Вспомогательные ресурсы</h3>
-    <div class="row justify-content-center">
+    <h3 class="text-center"><a href="#addons">Вспомогательные ресурсы</a></h3>
+    <br/>
+    <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
+    <br/>
+    <div class="row" id="addons">
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <jdcalc></jdcalc>
+      </div>
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <div class="info text-center">
+          <h4>Фото солнца <a href="https://sdo.gsfc.nasa.gov/data/">SDO</a></h4>
+          <img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg"/>
+        </div>
+      </div>    
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <div class="info text-center">
+          <h4>Фото короны солнца <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
+          <img width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
+        </div>
       </div>
     </div>
     <!-- Modal -->
@@ -212,6 +247,12 @@ export default {
       this.userHours = 12;
       this.userMinutes = 0;
       this.userSeconds = 0;
+    },
+    setEnglish: function(){
+      this.$root.$options.i18n.locale = 'en';
+    },
+    setRussian: function(){
+      this.$root.$options.i18n.locale = 'ru';
     }
 
   },
