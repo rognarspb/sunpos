@@ -1,10 +1,35 @@
 <i18n>
 {
   "en": {
-    "sunStatusTitle": "Sun elevation angle"
+    "title": "Sun: coordinates, sunrise and sunset",
+    "sunStatusTitle": "Sun elevation angle",
+    "observer": "Observer",
+    "detailedTitle": "Detailed information",
+
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "date": "Date",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "setNow": "Set now",
+    "setNoon": "Set noon"
   },
   "ru": {
-    "sunStatusTitle": "Высота солнца над горизонтом"
+    "title": "Cолнце: положение, восход и закат",
+    "sunStatusTitle": "Высота солнца над горизонтом",
+    "observer": "Наблюдатель",
+    "detailedTitle": "Детальная информация",
+
+    "latitude": "Широта",
+    "longitude": "Долгота",
+    "date": "Дата",
+    "hours": "Часы",
+    "minutes": "Минуты",
+    "seconds": "Секунды",
+    "setNow": "Установить текущее время",
+    "setNoon": "Установить полдень"
+    
   }
 }
 </i18n>
@@ -13,7 +38,7 @@
   <div id="app" class="container-fluid">
     <div class="text-center">
       <img src="./assets/sun.svg" width="100" height="100">
-      <h1 class="he">Cолнце: положение, восход и закат</h1>
+      <h1 class="he">{{$t('title')}}</h1>
       <br/>
       <div class="btn-group btn-group-toggle">
         <button class="btn btn-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'en'}" v-on:click="setEnglish">English</button>
@@ -21,7 +46,7 @@
       </div>
     </div>
     <hr/>
-    <div class="row">
+    <div class="row top-row">
       <div class="col-sm-12 col-lg-8 col-xl-8">
         <h4>{{$t('sunStatusTitle')}}</h4>
         <div style="height: 440px; padding-top: 20px;">
@@ -29,18 +54,18 @@
         </div>
       </div>
       <div class="col-sm-12 col-lg-4 col-xl-4">
-        <h4>Наблюдатель</h4>
+        <h4>{{$t('observer')}}</h4>
         <div class="form form-info">
           <div class="form-group">
-            <label>Широта</label>
+            <label>{{$t('latitude')}}</label>
             <input type="number" v-model="lat" class="form-control" />
           </div>
           <div class="form-group">
-            <label>Долгота</label>
+            <label>{{$t('longitude')}}</label>
             <input type="number" v-model="lon" class="form-control"/>
           </div>
           <div class="form-group">
-            <label>Дата</label>
+            <label>{{$t('date')}}</label>
             <div class="input-group">
               <datepicker v-model="userDate"              
                 language="ru" 
@@ -52,66 +77,41 @@
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
-              <label>Часы</label>
+              <label>{{$t('hours')}}</label>
               <input type="number" class="form-control" v-model="userHours" placeholder="HH">
             </div>
             <div class="form-group col-md-4">
-              <label>Минуты</label>
+              <label>{{$t('minutes')}}</label>
               <input type="number" class="form-control" v-model="userMinutes" placeholder="mm">
             </div>
             <div class="form-group col-md-4">
-              <label>Секунды</label>
+              <label>{{$t('seconds')}}</label>
               <input type="number" class="form-control" v-model="userSeconds" placeholder="ss">
             </div>
           </div>
           <div class="form-group">
-              <button class="btn btn-default btn-sm" v-on:click="setNow">Установить текущее время</button>
-              <button class="btn btn-default btn-sm" v-on:click="setNoon">Установить полдень</button>
+              <button class="btn btn-secondary btn-sm" v-on:click="setNow">{{$t('setNow')}}</button>
+              <button class="btn btn-secondary btn-sm" v-on:click="setNoon">{{$t('setNoon')}}</button>
           </div>
         </div>
       </div>       
     </div>
     <hr/>
-    <h3 class="text-center"><a href="#details">Детальная информация</a></h3>
+    <h3 class="text-center"><a href="#details">{{$t('detailedTitle')}}</a></h3>
     <br/>
     <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
     <br/>    
     <div class="row sky-row" id="details">
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <h4>Время</h4>
-        <dl class="info">
-          <dt>Дата</dt>
-          <dd>{{ localTime }}</dd>
-          <dt>Юлианский день(JDN)</dt>
-          <dd>{{ jdn }}</dd>
-          <dt>Юлианская дата (JD)</dt>
-          <dd>{{ jd }}</dd>
-          <dt>Модифицированная Юлианская дата (MJD)</dt>
-          <dd>{{ mjd }}</dd>
-        </dl>
+        <dateinfo :date="julianDate"></dateinfo>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <h4>Астрономические координаты</h4>
-        <dl class="info">
-          <dt>Эклиптические координаты</dt>
-          <dd>&beta;={{eclipticLatitude}}&deg;, &lambda;={{eclipticLongutude}}&deg; </dd>
-          <dt>Экваториальные координаты</dt>
-          <dd>&alpha;={{alpha}}&deg; , &delta;={{delta}}&deg; </dd>
-          <dt>Расстояние</dt>
-          <dd>{{distance}} а.е.</dd>
-          <dd>{{distanceKm}} km</dd>
-          <dt>Наклон эклиптики</dt>
-          <dd>{{epsilon}}&deg;</dd>
-          <dt>Солнечное склонение (аппроксимация &delta;)</dt>
-          <dd>{{declination}}&deg;</dd>
-          <dt>Часовой угол в момент (восход/закат)</dt>
-          <dd>{{hourAngle}}&deg; ({{hourAngleValue}})</dd>
-        </dl>
+        <coordinates :date="julianDate" :latitude="lat" :longitude="lon"></coordinates>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>Плоскость эклиптики солнца</h4>
         <div class="info">
-          <ecliptic :longitude="eclipticLongutude"></ecliptic>
+          <ecliptic :longitude="eclipticLongitude"></ecliptic>
         </div>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
@@ -158,13 +158,13 @@
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <div class="info text-center">
           <h4>Фото солнца <a href="https://sdo.gsfc.nasa.gov/data/">SDO</a></h4>
-          <img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg"/>
+          <img class="img-fluid" src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg"/>
         </div>
       </div>    
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <div class="info text-center">
           <h4>Фото короны солнца <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
-          <img width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
+          <img class="img-fluid" width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
         </div>
       </div>
     </div>
@@ -198,6 +198,8 @@ import Datepicker from 'vuejs-datepicker';
 import Ecliptic from './components/ecliptic.vue';
 import SunStatus from './components/sunstatus.vue';
 import JDCalc from './components/jdcalc.vue';
+import DateInfo from './components/dateinfo.vue';
+import Coordinates from './components/coordinates.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 import * as Util from './js/util.js';
@@ -209,7 +211,9 @@ export default {
     'datepicker':  Datepicker,
     'ecliptic': Ecliptic,
     'jdcalc': JDCalc,
-    'sunstatus': SunStatus
+    'sunstatus': SunStatus,
+    'dateinfo': DateInfo,
+    'coordinates': Coordinates
   },
   data () {
     return {
@@ -228,11 +232,6 @@ export default {
   methods: {  
    
 
-    NumberWithCommas: function (x) {
-      var parts = x.toString().split(".");
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      return parts.join(".");
-    },
 
     setNow: function(){
       var now = new Date();
@@ -256,10 +255,7 @@ export default {
     }
 
   },
-  computed:{
-    localTime: function(){
-      return  this.dayOfWeek + ", " + Util.dateToString(this.julianDate);
-    }, 
+  computed:{   
     julianDate: function(){
       var dt = moment(this.userDate).toDate();
       //var dt = new Date();
@@ -269,65 +265,11 @@ export default {
       var res = dt.setHours(this.userHours, this.userMinutes, this.userSeconds);
       return dt;
     },
-    jdn: function(){
-      return JD.GetJDN(this.julianDate);
-    },
-    jd: function(){
-      return JD.GetJD(this.julianDate).toFixed(6);
-      //return Math.round(this.GetJD(this.julianDate) * 10000) / 10000;
-    },
-    mjd: function(){
-      return Math.round(JD.GetMJD(this.julianDate) * 100) / 100;
-    },
-    dayOfWeek: function(){
-      var days = ["Понедельник","Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
-      var index = JD.GetDayOfWeek(this.julianDate)
-      return days[index];
-    },
-    eclipticLongutude: function(){
+    eclipticLongitude: function(){
       var elon =  Sun.GetEclipticLongitude(this.julianDate);
       return Math.round(elon * 100) / 100;
     },
-    eclipticLatitude: function(){
-      return 0.0;
-    },
-    distance: function(){
-      var dist =  Sun.GetDistance(this.julianDate);
-      return Math.round(dist * 10000) / 10000;
-    },
-    distanceKm: function(){
-      var dist =  Sun.GetDistance(this.julianDate) * 149597870.691;
-      return this.NumberWithCommas(Math.round(dist * 10000) / 10000);
-    },
-    epsilon: function(){
-      var eps =  Sun.GetEps(this.julianDate);
-      return Math.round(eps * 100) / 100;
-    },
-    alpha: function(){
-      var a =  Sun.GetAlpha(this.julianDate);
-      return Math.round(a * 100) / 100;
-    },
-    delta: function(){
-      var d =  Sun.GetDelta(this.julianDate);
-      return Math.round(d * 1000) / 1000;
-    },
-    declination: function(){
-      var d =  Sun.GetDeclination(this.julianDate);
-      return Math.round(d * 100) / 100;
-    },
-    hourAngle: function(){
-      var ha =  Sun.GetSunriseHourAngle(this.julianDate, this.lat);
-      return Math.round(ha * 100) / 100;
-    },
-    hourAngleObject: function() {
-      // var dt = new Date()
-      var ha =  Sun.GetSunriseHourAngle(this.julianDate, this.lat);
-      return Util.degreeToTime(ha);
-    },
-    hourAngleValue: function(){
-      var timeObj =  this.hourAngleObject;
-      return Util.timeObjToString(timeObj);
-    },
+    
     solarNoonObject: function(){
       var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
       return JD.GetDateObject(sn);
@@ -354,14 +296,21 @@ export default {
               + String(sunsetTime.seconds).padStart(2,'0');
     },
     daylength: function(){
-      var timeObj =  this.hourAngleObject;
+      var ha =  Sun.GetSunriseHourAngle(this.julianDate, this.lat, this.lon);
+      var timeObj = Util.degreeToTime(ha);
       var hours = 2*timeObj.hours;
       var minutes = 2*timeObj.minutes;
       if (minutes > 60) {
         minutes = minutes - 60;
         hours++;
       }
-      return String(hours).padStart(2,'0') + "h " + String(minutes).padStart(2,'0') + "min";
+      var seconds = 2*timeObj.seconds;
+      if (seconds > 60) {
+        seconds = seconds - 60;
+        minutes++;
+      }
+      
+      return String(hours).padStart(2,'0') + "h " + String(minutes).padStart(2,'0') + "min " + String(seconds).padStart(2,'0') + "sec";
     },
     zenithAngle: function(){
       var teta =  Sun.GetZenithAngle(this.julianDate, this.lat, this.lon);
@@ -443,7 +392,14 @@ h4 {
 .sky-row {
   padding-top: 50px;
   padding-bottom: 50px;
-  background: #c0dfff;
+  background: linear-gradient(white,#c0dfff);
 }
+
+.top-row {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  background: linear-gradient(#c0dfff, white);
+}
+
  
 </style>

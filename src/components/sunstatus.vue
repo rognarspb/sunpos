@@ -49,14 +49,15 @@ export default {
   name: 'sunstatus',
   props: {
       date: {
+          required: true,
           default: new Date()
       },
       latitude: {
-          type: Number,
+          required: true,
           default: 60
       },
       longitude: {
-          type: Number,
+          required: true,
           default: 30
       }
   },

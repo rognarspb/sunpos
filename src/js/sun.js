@@ -129,7 +129,6 @@ export function GetSunriseTime(dt, lat, lon) {
 }
 
 export function GetSunsetTime(dt, lat, lon) {
-
     var ha =  GetSunriseHourAngle(dt, lat);
     var sn =  GetSolarNoon(dt, lon);
 
