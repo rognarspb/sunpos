@@ -1,4 +1,19 @@
-
+<i18n>
+{
+  "en": {
+    "vernalEquinox": "Vernal equinox",
+    "summerSolstice": "Summer solstice",
+    "autumnalEquinox": "Autumnal equinox",
+    "winterSolstice": "Winter solstice"
+  },
+  "ru": {
+    "vernalEquinox": "Весеннее равноденствие",
+    "summerSolstice": "Летнее солнцестояние",
+    "autumnalEquinox": "Осеннее равноденствие",
+    "winterSolstice": "Зимнее солнцестояние"
+  }
+}
+</i18n>
 <template>
     <svg width="100%" height="410" viewBox="0 0 500 500">
         <circle cx="40" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
@@ -20,10 +35,10 @@
         <circle cx="240" cy="240" r="35" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>
         <circle cx="240" cy="240" r="10" id="sun" fill="orange" ></circle>
 
-        <text x = "160" y = "475" font-family="Verdana" font-size="16">Весеннее равноденствие</text>
-        <text x = "340" y = "210" font-family="Verdana" font-size="16">Летнее солнцестояние</text>
-        <text x = "160" y = "15" font-family="Verdana" font-size="16">Осеннее равноденствие</text>
-        <text x = "10" y = "210" font-family="Verdana" font-size="16">Зимнее солнцестояние</text>
+        <text x = "160" y = "475" font-family="Verdana" font-size="16">{{$t('vernalEquinox')}}</text>
+        <text x = "340" y = "210" font-family="Verdana" font-size="16">{{$t('summerSolstice')}}</text>
+        <text x = "160" y = "15" font-family="Verdana" font-size="16">{{$t('autumnalEquinox')}}</text>
+        <text x = "10" y = "210" font-family="Verdana" font-size="16">{{$t('winterSolstice')}}</text>
 
     </svg>
 </template>

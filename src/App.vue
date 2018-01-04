@@ -13,7 +13,10 @@
     "minutes": "Minutes",
     "seconds": "Seconds",
     "setNow": "Set now",
-    "setNoon": "Set noon"
+    "setNoon": "Set noon",
+
+    "ecliptiTitle": "Ecliptic plane",
+    "addonTitle": "Additional information"
   },
   "ru": {
     "title": "Cолнце: положение, восход и закат",
@@ -28,8 +31,10 @@
     "minutes": "Минуты",
     "seconds": "Секунды",
     "setNow": "Установить текущее время",
-    "setNoon": "Установить полдень"
+    "setNoon": "Установить полдень",
     
+    "ecliptiTitle": "Плоскость эклиптики солнца",
+    "addonTitle": "Вспомогательные ресурсы"
   }
 }
 </i18n>
@@ -109,45 +114,21 @@
         <coordinates :date="julianDate" :latitude="lat" :longitude="lon"></coordinates>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <h4>Плоскость эклиптики солнца</h4>
+        <h4>{{$t('ecliptiTitle')}}</h4>
         <div class="info">
           <ecliptic :longitude="eclipticLongitude"></ecliptic>
         </div>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <h4>Закат и восход Солнца</h4>
-        <dl class="info">
-          <dt>Солнечный полдень (JD)</dt>
-          <dd>{{solarNoon}} </dd>
-          <dt>Солнечный полдень (локальное время)</dt>
-          <dd>{{solarNoonString}} </dd>
-          <dt>Восход</dt>
-          <dd>{{sunrise}} </dd>
-          <dt>Закат</dt>
-          <dd>{{sunset}} </dd>
-          <dt>Длительность дня</dt>
-          <dd>{{daylength}} </dd>
-          <dt>Астрономические сумерки (утренние)</dt>
-          <dd>{{astronomicalTwilightMorning}}&deg; </dd>
-          <dt>Астрономические сумерки (вечерние)</dt>
-          <dd>{{astronomicalTwilightEvening}}&deg; </dd>
-        </dl>
+        <suntime :date="julianDate" :latitude="lat" :longitude="lon"></suntime>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <h4>Положение солнца в локальных координатах</h4>
-        <dl class="info">
-          <dt>Часовой угол</dt>
-          <dd>h={{sunHourAngle}}&deg;</dd>
-          <dt>Высота (угол зенита &theta; и высота &alpha;)</dt>
-          <dd>&theta;={{zenithAngle}}&deg; &alpha;={{elevationAngle}}&deg;</dd>
-          <dt>Азимут</dt>
-          <dd>{{azimuthAngle}}&deg; </dd>
-        </dl>
+        <localcoordinates :date="julianDate" :latitude="lat" :longitude="lon"></localcoordinates>
       </div>
       
     </div>
     <hr/>
-    <h3 class="text-center"><a href="#addons">Вспомогательные ресурсы</a></h3>
+    <h3 class="text-center"><a href="#addons">{{$t('addonTitle')}}</a></h3>
     <br/>
     <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
     <br/>
@@ -197,9 +178,11 @@ import moment from 'moment';
 import Datepicker from 'vuejs-datepicker';
 import Ecliptic from './components/ecliptic.vue';
 import SunStatus from './components/sunstatus.vue';
+import SunTime from './components/suntime.vue';
 import JDCalc from './components/jdcalc.vue';
 import DateInfo from './components/dateinfo.vue';
 import Coordinates from './components/coordinates.vue';
+import LocalCoordinates from './components/localcoordinates.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 import * as Util from './js/util.js';
@@ -212,8 +195,10 @@ export default {
     'ecliptic': Ecliptic,
     'jdcalc': JDCalc,
     'sunstatus': SunStatus,
+    'suntime': SunTime,
     'dateinfo': DateInfo,
-    'coordinates': Coordinates
+    'coordinates': Coordinates,
+    'localcoordinates': LocalCoordinates
   },
   data () {
     return {
@@ -229,10 +214,7 @@ export default {
   created: function() {
       this.setNow();
   },
-  methods: {  
-   
-
-
+  methods: {      
     setNow: function(){
       var now = new Date();
       this.userDate = now;
@@ -273,73 +255,6 @@ export default {
     solarNoonObject: function(){
       var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
       return JD.GetDateObject(sn);
-    },
-    solarNoonString: function(){
-      var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
-      var dateObj = JD.GetDateObject(sn);
-      return Util.dateObjToString(dateObj);
-    },
-    solarNoon: function() {
-      var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
-      return sn.toFixed(6);     
-    },
-    sunrise: function(){
-        var sunriseTime = Sun.GetSunriseTime(this.julianDate, this.lat, this.lon);
-        return String(sunriseTime.hours).padStart(2,'0') + ":" 
-              + String(sunriseTime.minutes).padStart(2,'0') + ":" 
-              + String(sunriseTime.seconds).padStart(2,'0');
-    },
-    sunset: function(){
-        var sunsetTime = Sun.GetSunsetTime(this.julianDate, this.lat, this.lon);
-        return String(sunsetTime.hours).padStart(2,'0') + ":" 
-              + String(sunsetTime.minutes).padStart(2,'0') + ":" 
-              + String(sunsetTime.seconds).padStart(2,'0');
-    },
-    daylength: function(){
-      var ha =  Sun.GetSunriseHourAngle(this.julianDate, this.lat, this.lon);
-      var timeObj = Util.degreeToTime(ha);
-      var hours = 2*timeObj.hours;
-      var minutes = 2*timeObj.minutes;
-      if (minutes > 60) {
-        minutes = minutes - 60;
-        hours++;
-      }
-      var seconds = 2*timeObj.seconds;
-      if (seconds > 60) {
-        seconds = seconds - 60;
-        minutes++;
-      }
-      
-      return String(hours).padStart(2,'0') + "h " + String(minutes).padStart(2,'0') + "min " + String(seconds).padStart(2,'0') + "sec";
-    },
-    zenithAngle: function(){
-      var teta =  Sun.GetZenithAngle(this.julianDate, this.lat, this.lon);
-      return Math.round(teta * 100) / 100;
-    },
-    elevationAngle: function(){
-      var alpha =  Sun.GetElevationAngle(this.julianDate, this.lat, this.lon);
-      return Math.round(alpha * 100) / 100;
-    },
-    azimuthAngle: function(){
-      var phita =  Sun.GetAzimuthAngle(this.julianDate, this.lat, this.lon);
-      return Math.round(phita * 100) / 100;
-    },
-    sunHourAngle: function(){
-      var phita =  Sun.GetCurrentHourAngle(this.julianDate, this.lon);
-      return Math.round(phita * 100) / 100;
-    },
-    
-    astronomicalTwilightMorning: function(){
-      var alpha = -18; // 12-18 degree
-      var twilight = Sun.GetTwilightTime(alpha, this.julianDate, this.lat, this.lon);
-      return String(twilight.morningTwilight.hours).padStart(2,'0') + ":" + String(twilight.morningTwilight.minutes).padStart(2,'0') 
-            + " h=-" + twilight.hourAngle.toFixed(2);
-    },
-    astronomicalTwilightEvening: function(){
-      var alpha = -18; // 12-18 degree
-      var twilight = Sun.GetTwilightTime(alpha, this.julianDate, this.lat, this.lon);
-      return String(twilight.eveningTwilight.hours).padStart(2,'0') + ":" + String(twilight.eveningTwilight.minutes).padStart(2,'0')
-            + " h=+" + twilight.hourAngle.toFixed(2);
     }
   }
 }
@@ -359,6 +274,16 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
+  @media only screen and (min-resolution:96dpi) and (max-resolution:264dpi) and (min-width:768px) and (max-width:1024px),
+       only screen and (-webkit-min-device-pixel-ratio: 1) and (-webkit-max-device-pixel-ratio:2) and (min-width:768px) and (max-width:1024px) {
+    font-size: 2rem;
+    h1, h2, h3, h4{
+      font-size: 3rem;
+    }
+    button, input{
+      font-size: 2rem;
+    }
+  }
 }
 
 
@@ -398,7 +323,7 @@ h4 {
 .top-row {
   padding-top: 50px;
   padding-bottom: 50px;
-  background: linear-gradient(#c0dfff, white);
+  background: white;
 }
 
  
