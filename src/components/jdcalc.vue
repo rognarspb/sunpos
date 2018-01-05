@@ -1,9 +1,42 @@
+<i18n>
+{
+  "en": {
+    "title": "Julian date (JD) calculator",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "date": "Date",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "setNow": "Set now",
+    "direction": "Conversion direction",   
+    "julianDay": "Julian day (JD)",   
+    "julianDayNumber": "Julian day number (JDN)",   
+    "help": "<strong>Calculation of Julian day:</strong><br/> To calculate Julian day (JD) enter date and time into appropriate input fields, result is displayed automatically via JD and JDN fields. Use \"Conversion direction\" button <span class=\"fa fa-arrow-down\"></span> to enable conversion of Julian day to Gregorian date. Use JD input field to enter desired julian day (day number)."
+  },
+  "ru": {
+    "title": "Калькулятор Юлианской даты (JD)",
+    "latitude": "Широта",
+    "longitude": "Долгота",
+    "date": "Дата",
+    "hours": "Часы",
+    "minutes": "Минуты",
+    "seconds": "Секунды",
+    "setNow": "Установить текущее время",
+    "direction": "Направление конвертации",   
+    "julianDay": "Юлианская дата (JD)",   
+    "julianDayNumber": "Юлианский день (JDN)",   
+    "help": "<strong>Вычисление Юлианской даты:</strong><br/> для вычисления Юлианской даты JD введите нужную дату и время, результат будет отображать автоматически в полях JD и JDN ниже. Используйте кнопку \"Направление конвертации\" <span class=\"fa fa-arrow-down\"></span> чтобы включить обратный перевод Юлианской даты в дату по Григорианскому календарю. При этом поле JD будет доступно для ввода информации."
+  }
+}
+</i18n>
+
 
 <template>
     <div class="form form-calc">
-        <h4>Калькулятор Юлианской даты (JD)</h4>
+        <h4>{{$t('title')}}</h4>
         <div class="form-group">
-            <label>Дата</label>
+            <label>{{$t('date')}}</label>
             <div class="input-group">
               <datepicker v-model="userDate"              
                 language="ru" 
@@ -16,25 +49,25 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-4">
-              <label>Часы</label>
+              <label>{{$t('hours')}}</label>
               <input type="number" class="form-control" v-model="userHours" placeholder="HH" :readonly="direction=='toDate'">
             </div>
             <div class="form-group col-md-4">
-              <label>Минуты</label>
+              <label>{{$t('minutes')}}</label>
               <input type="number" class="form-control" v-model="userMinutes" placeholder="mm" :readonly="direction=='toDate'">
             </div>
             <div class="form-group col-md-4">
-              <label>Секунды</label>
+              <label>{{$t('seconds')}}</label>
               <input type="number" class="form-control" v-model="userSeconds" placeholder="ss" :readonly="direction=='toDate'">
             </div>
           </div>
         <div class="form-group" v-if="direction=='toJD'">
-            <button class="btn btn-default btn-sm" v-on:click="setNow">Установить текущее время</button>
+            <button class="btn btn-default btn-sm" v-on:click="setNow">{{$t('setNow')}}</button>
         </div>
         <hr/>
         <div class="row justify-content-center">
             <div class="col-4">
-              <button class="btn btn-default btn-block" v-on:click="toggleDirection" title="Направление конвертации">
+              <button class="btn btn-default btn-block" v-on:click="toggleDirection" :title="$t('direction')">
                 <i v-if="direction == 'toJD'" class="fa fa-arrow-down"></i>
                 <i v-if="direction == 'toDate'" class="fa fa-arrow-up"></i>
               </button>
@@ -42,18 +75,15 @@
         </div>
         <hr/>
         <div class="form-group">
-            <label>Юлианская дата (JD)</label>
+            <label>{{$t('julianDay')}}</label>
             <input type="number" class="form-control" v-model="jd" placeholder="JD" :readonly="direction == 'toJD'">
         </div>
         <div class="form-group">
-            <label>Юлианский день (JDN)</label>
+            <label>{{$t('julianDayNumber')}}</label>
             <input type="number" class="form-control" v-model="jdn" placeholder="JDN" readonly="readonly">
         </div>
         <br/>
-        <div class="alert alert-info">
-            <strong>Вычисление Юлианской даты:</strong><br/> для вычисления Юлианской даты JD введите нужную дату и время, результат будет отображать автоматически в полях JD и JDN ниже.
-            Используйте кнопку "Направление конвертации" <span class="fa fa-arrow-down"></span> чтобы включить обратный перевод Юлианской даты в дату по Григорианскому календарю. 
-            При этом поле JD будет доступно для ввода информации.
+        <div class="alert alert-info" v-html="$t('help')">
         </div>
     </div>
 </template>

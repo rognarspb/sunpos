@@ -14,6 +14,7 @@
     "seconds": "Seconds",
     "setNow": "Set now",
     "setNoon": "Set noon",
+    "currentCoordinates": "Reset coordinates",
 
     "ecliptiTitle": "Ecliptic plane",
     "addonTitle": "Additional information"
@@ -32,6 +33,7 @@
     "seconds": "Секунды",
     "setNow": "Установить текущее время",
     "setNoon": "Установить полдень",
+    "currentCoordinates": "Текущие координаты",
     
     "ecliptiTitle": "Плоскость эклиптики солнца",
     "addonTitle": "Вспомогательные ресурсы"
@@ -69,6 +71,9 @@
             <label>{{$t('longitude')}}</label>
             <input type="number" v-model="lon" class="form-control"/>
           </div>
+          <div class="form-group">
+              <button class="btn btn-secondary btn-sm" v-on:click="getLocation">{{$t('currentCoordinates')}}</button>
+          </div>         
           <div class="form-group">
             <label>{{$t('date')}}</label>
             <div class="input-group">
@@ -213,6 +218,7 @@ export default {
   },
   created: function() {
       this.setNow();
+      this.getLocation();
   },
   methods: {      
     setNow: function(){
@@ -234,8 +240,26 @@ export default {
     },
     setRussian: function(){
       this.$root.$options.i18n.locale = 'ru';
-    }
+    },
+    getLocation: function(){
+      var self = this;
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
 
+      if ("geolocation" in navigator) {
+        // try get current coordinates
+        navigator.geolocation.getCurrentPosition(function(pos){
+            var coords = pos.coords;
+            self.lat = coords.latitude;
+            self.lon = coords.longitude;
+        }, function(err) {
+          console.warn("ERROR(${err.code}): ${err.message}");
+        }, options);
+      }
+    }
   },
   computed:{   
     julianDate: function(){
@@ -275,7 +299,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
   @media only screen and (min-resolution:96dpi) and (max-resolution:264dpi) and (min-width:768px) and (max-width:1024px),
-       only screen and (-webkit-min-device-pixel-ratio: 1) and (-webkit-max-device-pixel-ratio:2) and (min-width:768px) and (max-width:1024px) {
+       only screen and (-webkit-min-device-pixel-ratio: 1) and (-webkit-max-device-pixel-ratio:3) and (min-width:768px) and (max-width:1024px) {
     font-size: 2rem;
     h1, h2, h3, h4{
       font-size: 3rem;

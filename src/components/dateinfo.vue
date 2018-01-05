@@ -4,7 +4,7 @@
     "title": "Time and date",
     "datestr": "Date",
     "julianDay": "Julian day number (JDN)",
-    "julianDate": "Julian date (JD)",
+    "julianDate": "Julian day (JD)",
     "modifiedJulianDate": "Modified Julian date"
   },
   "ru": {
