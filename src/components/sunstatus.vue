@@ -15,6 +15,7 @@
 }
 </i18n>
 <template>
+<transition appear name="fade">
     <svg width="100%" height="100%" viewBox="0 0 820 360">       
         <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
         <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
@@ -35,6 +36,7 @@
         <text x = "680" y = "170" font-family="Arial" font-size="14" fill="gray">{{$t('horizont')}}</text>
         <circle cx="410" cy="180" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>       
     </svg>
+</transition>
 </template>
 
 <script>
@@ -184,8 +186,11 @@ export default {
 </script>
 
 <style lang="scss">
-  .earth{
-    fill: "steelblue";
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 1s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0
   }
 </style>
 

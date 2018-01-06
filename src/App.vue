@@ -43,16 +43,20 @@
 
 <template>
   <div id="app" class="container-fluid">
-    <div class="text-center">
-      <img src="./assets/sun.svg" width="100" height="100">
-      <h1 class="he">{{$t('title')}}</h1>
-      <br/>
-      <div class="btn-group btn-group-toggle">
-        <button class="btn btn-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'en'}" v-on:click="setEnglish">English</button>
-        <button class="btn btn-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'ru'}" v-on:click="setRussian">Русский</button>
+    <div class="row title-row">
+      <div class="col-12 text-center">
+        <img src="./assets/sunm.svg" width="100" height="100">
+        <h1 class="he">{{$t('title')}}</h1>
       </div>
     </div>
-    <hr/>
+    <div class="row lang-row">
+      <div class="col-12 text-center">
+        <div class="btn-group btn-group-toggle">
+          <button class="btn btn-outline-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'en'}" v-on:click="setEnglish">Eng</button>
+          <button class="btn btn-outline-secondary btn-sm" v-bind:class="{ 'active': $i18n.locale == 'ru'}" v-on:click="setRussian">Рус</button>
+        </div>
+      </div>
+    </div>
     <div class="row top-row">
       <div class="col-sm-12 col-lg-8 col-xl-8">
         <h4>{{$t('sunStatusTitle')}}</h4>
@@ -297,7 +301,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
   @media only screen and (min-resolution:96dpi) and (max-resolution:264dpi) and (min-width:768px) and (max-width:1024px),
        only screen and (-webkit-min-device-pixel-ratio: 1) and (-webkit-max-device-pixel-ratio:3) and (min-width:768px) and (max-width:1024px) {
     font-size: 2rem;
@@ -348,6 +351,23 @@ h4 {
   padding-top: 50px;
   padding-bottom: 50px;
   background: white;
+}
+
+.title-row {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  background: #4181ca;
+  color: whitesmoke;
+  border-bottom: 10px solid #bedcfb;
+  h1 {
+    text-shadow: 0 0 3px #efefef;
+  }
+}
+
+.lang-row {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: #d2e2f8;
 }
 
  
