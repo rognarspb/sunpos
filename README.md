@@ -1,6 +1,8 @@
+![sun](https://raw.githubusercontent.com/rognarspb/sunpos/master/src/assets/sunm.svg?sanitize=true)
+
 # SUNPOS (Sunrise and sunset)
 
-> "SUNPOS" sun is the Vue-powered sun position calculation project. Most of the code is written using vue 2.0 and implemented as single-page application that can be hosted on any server without additional setup. Currently the following information is calculated and displayed:
+"SUNPOS" sun is the Vue-powered sun position calculation project. Most of the code is written using vue 2.0 and implemented as single-page application that can be hosted on any server without additional setup. Currently the following information is calculated and displayed:
 
 - local time and date as a Julian date
 - sun azimuth, elevation and zenith angle
