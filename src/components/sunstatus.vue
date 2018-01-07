@@ -15,28 +15,31 @@
 }
 </i18n>
 <template>
-<transition appear name="fade">
-    <svg width="100%" height="100%" viewBox="0 0 820 360">       
-        <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
-        <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
-        <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
-        <line x1="410" y1="0" x2="410" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
+  <transition appear name="fade">
+      <div>
+        <div class="tooltip" style="opacity: 0" id="infoTooltip"></div>
+        <svg width="100%" height="100%" viewBox="0 0 820 360">       
+            <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
+            <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
+            <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
+            <line x1="410" y1="0" x2="410" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
 
-        <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
-        <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
-        <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
+            <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
+            <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
+            <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
 
-        <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
-        <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
-        <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
-        <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">{{$t('solarnoon')}}: {{solarnoon}}</text>
-        <text x = "30" y = "200" font-family="Arial" font-size="16" fill="gray">00:00</text>
-        <text x = "390" y = "200" font-family="Arial" font-size="16" fill="gray">12:00</text>
-        <text x = "750" y = "200" font-family="Arial" font-size="16" fill="gray">23:59</text>
-        <text x = "680" y = "170" font-family="Arial" font-size="14" fill="gray">{{$t('horizont')}}</text>
-        <circle cx="410" cy="180" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>       
-    </svg>
-</transition>
+            <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
+            <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
+            <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
+            <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">{{$t('solarnoon')}}: {{solarnoon}}</text>
+            <text x = "30" y = "200" font-family="Arial" font-size="16" fill="gray">00:00</text>
+            <text x = "390" y = "200" font-family="Arial" font-size="16" fill="gray">12:00</text>
+            <text x = "750" y = "200" font-family="Arial" font-size="16" fill="gray">23:59</text>
+            <text x = "680" y = "170" font-family="Arial" font-size="14" fill="gray">{{$t('horizont')}}</text>
+            <circle cx="410" cy="180" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>       
+        </svg>
+      </div>
+  </transition>
 </template>
 
 <script>
@@ -89,11 +92,20 @@ export default {
         var val = Sun.GetElevationAngle(dt, this.latitude, this.longitude);
         return {
             x: ix,
-            y: 2*val
+            y: 2*val,
+            value: val,
+            date: dt
         };
     },
+    displayHtml: function(ix){
+        var data = this.displayFunction(ix);
+        var dateStr = Util.timeToString(data.date);
+        return "Time: " + dateStr + "<br/>" + "&alpha;=" + data.value.toFixed(2) + "&deg;"
+    },
     update: function(){
-        var svgElem = d3.select(this.$el);
+        var self = this;
+        var svgElem = d3.select(this.$el).select("svg");
+        var tooltip = d3.select(this.$el).select("#infoTooltip");
 
         var functionData = d3.range(719).map(this.displayFunction);
 
@@ -109,7 +121,24 @@ export default {
                             .attr("stroke-width", 2)
                             .attr("fill", "none")
                             .attr("fill", "#a9c1ff") 
-                            .attr("fill-opacity", "0.1");
+                            .attr("fill-opacity", "0.1")
+                            .on("mouseover", function(d) {		
+                                tooltip.transition()		
+                                    .duration(200)		
+                                    .style("opacity", .9);		
+                                tooltip.html(function(){
+                                      var w = event.path[1].clientWidth;
+                                      var ix = Math.floor(event.clientX * (820.0/w));
+                                      return self.displayHtml(ix - 50);
+                                    })	
+                                   .style("left", (event.pageX) + "px")		
+                                   .style("top", (event.pageY - 300) + "px");	
+                                })					
+                            .on("mouseout", function(d) {		
+                                tooltip.transition()		
+                                    .duration(500)		
+                                    .style("opacity", 0);	
+                            });;
 
         // mark sunset and sunrise
         var dtSunrise = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
@@ -192,5 +221,16 @@ export default {
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0
   }
+  div.tooltip {	
+    position: absolute;			
+    width: 160px;					
+    height: 36px;					
+    padding: 5px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 2px;			
+    pointer-events: none;			
+}
 </style>
 
