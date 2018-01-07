@@ -1,4 +1,4 @@
-![sun](https://raw.githubusercontent.com/rognarspb/sunpos/master/src/assets/logo.png)
+![sun](https://raw.githubusercontent.com/rognarspb/sunpos/master/src/assets/sunm.svg?sanitize=true)
 
 # SUNPOS (Sunrise and sunset)
 
