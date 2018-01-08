@@ -45,7 +45,7 @@
   <div id="app" class="container-fluid">
     <div class="row title-row">
       <div class="col-12 text-center">
-        <img src="./assets/sunm.svg" width="100" height="100">
+        <img src="./assets/sunm.svg" width="100" height="100" class="sun">
         <h1 class="he">{{$t('title')}}</h1>
       </div>
     </div>
@@ -370,5 +370,34 @@ h4 {
   background: #d2e2f8;
 }
 
+
+@-webkit-keyframes rotation {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}
+
+@keyframes rotation {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}
+
+.sun{
+  -webkit-animation: rotation 20s infinite linear;
+  animation: rotation 20s infinite linear;
+}
  
 </style>

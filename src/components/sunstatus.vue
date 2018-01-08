@@ -23,6 +23,7 @@
             <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="410" y1="0" x2="410" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
+            <line x1="0" y1="0" x2="0" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="3,3" id="cursorline"></line>
 
             <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
             <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
@@ -106,6 +107,7 @@ export default {
         var self = this;
         var svgElem = d3.select(this.$el).select("svg");
         var tooltip = d3.select(this.$el).select("#infoTooltip");
+        var cursorline = d3.select(this.$el).select("#cursorline");
 
         var functionData = d3.range(719).map(this.displayFunction);
 
@@ -121,24 +123,37 @@ export default {
                             .attr("stroke-width", 2)
                             .attr("fill", "none")
                             .attr("fill", "#a9c1ff") 
-                            .attr("fill-opacity", "0.1")
-                            .on("mouseover", function(d) {		
-                                tooltip.transition()		
-                                    .duration(200)		
-                                    .style("opacity", .9);		
-                                tooltip.html(function(){
-                                      var w = event.path[1].clientWidth;
-                                      var ix = Math.floor(event.clientX * (820.0/w));
-                                      return self.displayHtml(ix - 50);
-                                    })	
-                                   .style("left", (event.pageX) + "px")		
-                                   .style("top", (event.pageY - 300) + "px");	
-                                })					
-                            .on("mouseout", function(d) {		
-                                tooltip.transition()		
-                                    .duration(500)		
-                                    .style("opacity", 0);	
-                            });;
+                            .attr("fill-opacity", "0.1");
+
+        // scatterplot data:
+
+        svgElem.selectAll("circle").remove();
+        svgElem.selectAll("dot")	
+          .data(functionData.filter(function(d){
+              return d.x % 20 == 0;
+          }))		
+        .enter().append("circle")						
+          .attr("r", 2)		
+          .attr("cx", function(d) { return 50 + d.x; })		 
+          .attr("cy", function(d) { return 180 - d.y; })
+          .attr("stroke", "steelblue")
+          .attr("fill", "steelblue")
+          .on("mouseover", function(d) {		
+              tooltip.transition()		
+                  .duration(200)		
+                  .style("opacity", .9);		
+              tooltip.html(self.displayHtml(d.x))	
+                  .style("left", (event.pageX) + "px")		
+                  .style("top", (event.pageY - 300) + "px");	
+              cursorline.attr("x1", 50 + d.x)
+                        .attr("x2", 50 + d.x);
+              })					
+          .on("mouseout", function(d) {		
+              tooltip.transition()		
+                  .duration(500)		
+                  .style("opacity", 0);	
+          });
+          ;                    
 
         // mark sunset and sunrise
         var dtSunrise = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
