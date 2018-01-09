@@ -227,9 +227,17 @@ export default {
   },
   created: function() {
       this.setNow();
+      this.selectLocale();
       this.getLocation();
   },
-  methods: {      
+  methods: {
+    getLanguages: function()
+    {
+      if (navigator.languages != undefined) 
+        return navigator.languages; 
+      else 
+        return [navigator.language];
+    },
     setNow: function(){
       var now = new Date();
       this.userDate = now;
@@ -267,6 +275,23 @@ export default {
         }, function(err) {
           console.warn("ERROR(${err.code}): ${err.message}");
         }, options);
+      }
+    },
+    selectLocale: function(){
+      var lngs = this.getLanguages();
+      if (lngs && lngs.length > 0) {
+          for(var key in lngs){
+            if (lngs[key] == 'ru' || lngs[key] == 'ru-RU'){
+              this.setRussian();
+              break;
+            }
+            if (lngs[key] == 'en' || lngs[key] == 'en-GB' || lngs[key] == 'en-US'){
+              this.setRussian();
+              break;
+            }
+          }
+      } else {
+        setEnglish();
       }
     }
   },
