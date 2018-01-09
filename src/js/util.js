@@ -56,6 +56,14 @@ export function timeToString(dt) {
             + String(dt.getSeconds()).padStart(2,'0');
 }
 
+export function timeToShortString(dt) {  
+    if (!dt){
+        return '';
+    }
+    return  String(dt.getHours()).padStart(2,'0') + ":"  
+            + String(dt.getMinutes()).padStart(2,'0');
+}
+
 
 export function dateObjToString(dateObj) {  
     if (!dateObj){

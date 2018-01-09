@@ -87,21 +87,28 @@ export default {
         dt.setFullYear(this.date.getFullYear());
         dt.setMonth(this.date.getMonth());
         dt.setDate(this.date.getDate());
-        dt.setHours(hours, minutes);
+        dt.setHours(hours, minutes, 0);
 
         // calculate hour:
         var val = Sun.GetElevationAngle(dt, this.latitude, this.longitude);
+        var azimuth = Sun.GetAzimuthAngle(dt, this.latitude, this.longitude);
         return {
             x: ix,
             y: 2*val,
             value: val,
+            azimuth: azimuth,
             date: dt
         };
     },
     displayHtml: function(ix){
         var data = this.displayFunction(ix);
-        var dateStr = Util.timeToString(data.date);
-        return "Time: " + dateStr + "<br/>" + "&alpha;=" + data.value.toFixed(2) + "&deg;"
+        var dateStr = Util.timeToShortString(data.date);
+        return  "Time: " + dateStr + 
+                "<br/>" + 
+                "&alpha;=" + data.value.toFixed(2) + "&deg; (elevation)" +
+                "<br/>" + 
+                "f=" + data.azimuth.toFixed(2) + "&deg; (azimuth)";
+
     },
     update: function(){
         var self = this;
@@ -128,32 +135,49 @@ export default {
         // scatterplot data:
 
         svgElem.selectAll("circle").remove();
+        var cursorcircle = svgElem.append("circle")
+          .attr("r", 20)
+          .attr("cx",0)
+          .attr("cy",0)
+          .attr("fill", "yellow")
+          .attr("stroke","orange")
+          .style("opacity", 0)
+          .attr("id","cursor");
+
+        //  var cursorcircle = svgElem.select("#cursor");
         svgElem.selectAll("dot")	
           .data(functionData.filter(function(d){
-              return d.x % 20 == 0;
+              return (2*d.x) % 20 == 0;
           }))		
         .enter().append("circle")						
-          .attr("r", 2)		
+          .attr("r", 3)		
           .attr("cx", function(d) { return 50 + d.x; })		 
           .attr("cy", function(d) { return 180 - d.y; })
           .attr("stroke", "steelblue")
           .attr("fill", "steelblue")
+          .style("opacity", .3)
           .on("mouseover", function(d) {		
               tooltip.transition()		
                   .duration(200)		
                   .style("opacity", .9);		
               tooltip.html(self.displayHtml(d.x))	
-                  .style("left", (event.pageX) + "px")		
-                  .style("top", (event.pageY - 300) + "px");	
+                  .style("left", (event.pageX + 15) + "px")		
+                  .style("top", (event.pageY - 340) + "px");	
+              cursorcircle.attr("cx", 50 + d.x)
+                        .attr("cy", 180 - d.y)
+                        .style("opacity", 0.5);
               cursorline.attr("x1", 50 + d.x)
-                        .attr("x2", 50 + d.x);
+                        .attr("x2", 50 + d.x)
+                        .style("opacity", 1);
               })					
           .on("mouseout", function(d) {		
               tooltip.transition()		
                   .duration(500)		
                   .style("opacity", 0);	
+              cursorline.style("opacity", 0);
+              cursorcircle.style("opacity", 0);
           });
-          ;                    
+                           
 
         // mark sunset and sunrise
         var dtSunrise = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
@@ -175,23 +199,35 @@ export default {
         svgElem.select("#solarNoonText")
             .attr("x", 55 + minsSolarNoon/2)
         
-                            
         // calc sun "position":
-        var totalMin = this.date.getHours()*60 + this.date.getMinutes();
-        var elevation = Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
+        if (this.date.getHours() > 1) {
+          this.updateSun(moment(this.date).subtract(60, "minutes").toDate(), 'sun2', 0.1);
+        }
+        if (this.date.getHours() > 0) {
+          this.updateSun(moment(this.date).subtract(30, "minutes").toDate(), 'sun1', 0.3);
+        }
+        this.updateSun(moment(this.date).toDate(), 'sun', 1.0);   
+    },
+
+
+    updateSun: function(datetime, id, opacity) {
+        var totalMin = datetime.getHours()*60 + datetime.getMinutes();
+        var elevation = Sun.GetElevationAngle(datetime, this.latitude, this.longitude);
        
         var cx = 50 + totalMin/2;
         var cy = 180 - 2*elevation;
 
-        var sun = svgElem.select("#sun").remove();
+        var svgElem = d3.select(this.$el).select("svg");
+        var sun = svgElem.select('#' + id).remove();
         sun = svgElem.append("circle")
-                          .attr("id", "sun")
+                          .attr("id", id)
                           .attr("cx", cx)
                           .attr("cy", cy)
                           .attr("r", 20)
                           .attr("stroke", "orange")
                           .attr("stroke-width", 4)
-                          .attr("fill", "yellow");                                                            
+                          .attr("fill", "yellow")
+                          .attr("opacity", opacity);    
     }
   },
   watch:{
@@ -239,7 +275,7 @@ export default {
   div.tooltip {	
     position: absolute;			
     width: 160px;					
-    height: 36px;					
+    height: 50px;					
     padding: 5px;				
     font: 12px sans-serif;		
     background: lightsteelblue;	

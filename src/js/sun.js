@@ -82,7 +82,7 @@ export function GetDelta(dt){
     return (delta*180)/ Math.PI;
 }
   
-      // sun declination:
+// sun declination (approximation):
 export function GetDeclination(dt){
     var N = moment(dt).dayOfYear();
     var arg = (360/365)*(N + 10);
@@ -107,7 +107,12 @@ export function GetHourAngle(alpha, dt, lat){
 // hour angle of sunrise/sunset:
 export function GetSunriseHourAngle(dt, lat){
     var alpha = -0.83; // athmospheric refraction
-    return GetHourAngle(alpha, dt, lat);
+    var date = new Date();
+    date.setFullYear(dt.getFullYear());
+    date.setMonth(dt.getMonth());
+    date.setDate(dt.getDate()); 
+    date.setHours(12,0,0);
+    return GetHourAngle(alpha, date, lat);
 }
 
 export function GetSunsetHourAngle(dt, lat){

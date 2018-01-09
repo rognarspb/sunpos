@@ -39,7 +39,7 @@
             <label>{{$t('date')}}</label>
             <div class="input-group">
               <datepicker v-model="userDate"              
-                language="ru" 
+                :language="globalLocale" 
                 :disabled-picker="direction == 'toDate'"
                 :bootstrap-styling="true"
                 :full-month-name="true"
@@ -161,6 +161,9 @@ export default {
         var dt = moment(this.userDate).toDate();
         var res = dt.setHours(this.userHours, this.userMinutes, this.userSeconds);
         return dt;
+    },
+    globalLocale: function(){
+      return this.$root.$options.i18n.locale;
     }
   },
   watch:{

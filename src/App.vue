@@ -17,7 +17,10 @@
     "currentCoordinates": "Reset coordinates",
 
     "ecliptiTitle": "Ecliptic plane",
-    "addonTitle": "Additional information"
+    "addonTitle": "Additional information",
+
+    "sdoLink": "Sun photo",
+    "sohoLink": "Sun's corona photo"
   },
   "ru": {
     "title": "Cолнце: положение, восход и закат",
@@ -36,7 +39,9 @@
     "currentCoordinates": "Текущие координаты",
     
     "ecliptiTitle": "Плоскость эклиптики солнца",
-    "addonTitle": "Вспомогательные ресурсы"
+    "addonTitle": "Вспомогательные ресурсы",
+    "sdoLink": "Фото солнца",
+    "sohoLink": "Фото короны солнца"
   }
 }
 </i18n>
@@ -82,7 +87,7 @@
             <label>{{$t('date')}}</label>
             <div class="input-group">
               <datepicker v-model="userDate"              
-                language="ru" 
+                :language="globalLocale" 
                 :bootstrap-styling="true"
                 :full-month-name="true"
                 :calendar-button="true"
@@ -147,13 +152,13 @@
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <div class="info text-center">
-          <h4>Фото солнца <a href="https://sdo.gsfc.nasa.gov/data/">SDO</a></h4>
+          <h4>{{$t('sdoLink')}} <a href="https://sdo.gsfc.nasa.gov/data/">SDO</a></h4>
           <img class="img-fluid" src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg"/>
         </div>
       </div>    
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <div class="info text-center">
-          <h4>Фото короны солнца <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
+          <h4>{{$t('sohoLink')}} <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
           <img class="img-fluid" width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
         </div>
       </div>
@@ -244,7 +249,7 @@ export default {
     },
     setRussian: function(){
       this.$root.$options.i18n.locale = 'ru';
-    },
+    },    
     getLocation: function(){
       var self = this;
       var options = {
@@ -279,10 +284,31 @@ export default {
       var elon =  Sun.GetEclipticLongitude(this.julianDate);
       return Math.round(elon * 100) / 100;
     },
-    
-    solarNoonObject: function(){
-      var sn =  Sun.GetSolarNoon(this.julianDate, this.lon);
-      return JD.GetDateObject(sn);
+    globalLocale: function(){
+      return this.$root.$options.i18n.locale;
+    }
+  },
+  watch: {
+    userHours: function(){
+        if (this.userHours >= 24)
+          this.userHours = 0;
+        if (this.userHours < 0){
+          this.userHours = 23;
+        }
+    },
+    userMinutes: function(){
+        if (this.userMinutes >= 60)
+          this.userMinutes = 0;
+        if (this.userMinutes < 0){
+          this.userMinutes = 59;
+        }
+    },
+    userSeconds: function(){
+        if (this.userSeconds >= 60)
+          this.userSeconds = 0;
+        if (this.userSeconds < 0){
+          this.userSeconds = 59;
+        }
     }
   }
 }
@@ -336,6 +362,7 @@ h4 {
   margin: 10px;
   padding: 20px;  
   min-height: 432px;
+  box-shadow: 3px 3px 50px -5px  #888888;
   &:hover {
     border: 2px solid lightgreen;
   }
