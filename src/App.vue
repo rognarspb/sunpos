@@ -20,7 +20,9 @@
     "addonTitle": "Additional information",
 
     "sdoLink": "Sun photo",
-    "sohoLink": "Sun's corona photo"
+    "sohoLink": "Sun's corona photo",
+    "jdcalc": "Julian day(JD) calculator"
+
   },
   "ru": {
     "title": "Cолнце: положение, восход и закат",
@@ -41,7 +43,9 @@
     "ecliptiTitle": "Плоскость эклиптики солнца",
     "addonTitle": "Вспомогательные ресурсы",
     "sdoLink": "Фото солнца",
-    "sohoLink": "Фото короны солнца"
+    "sohoLink": "Фото короны солнца",
+
+    "jdcalc": "Калькулятор юлианской даты"
   }
 }
 </i18n>
@@ -163,26 +167,10 @@
         </div>
       </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="jdModal" tabindex="-1" role="dialog" aria-labelledby="jdCalculator" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="jdCalculator">Калькулятор юлианской даты</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <jdcalc></jdcalc>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>    
+           
+
+
+   
 
   </div>
 </template>

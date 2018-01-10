@@ -5,14 +5,16 @@
     "datestr": "Date",
     "julianDay": "Julian day number (JDN)",
     "julianDate": "Julian day (JD)",
-    "modifiedJulianDate": "Modified Julian date"
+    "modifiedJulianDate": "Modified Julian date",
+    "jdcalc": "Julian day(JD) calculator"
   },
   "ru": {
     "title": "Время и дата",
     "datestr": "Дата",
     "julianDay": "Юлианский день(JDN)",
     "julianDate": "Юлианская дата (JD)",
-    "modifiedJulianDate": "Модифицированная Юлианская дата (MJD)"
+    "modifiedJulianDate": "Модифицированная Юлианская дата (MJD)",
+    "jdcalc": "Калькулятор юлианской даты"
   }
 }
 </i18n>
@@ -28,7 +30,16 @@
             <dd>{{ jd }}</dd>
             <dt>{{$t('modifiedJulianDate')}}</dt>
             <dd>{{ mjd }}</dd>
+            <br/>
+            <dd>
+              <b-btn v-b-modal.jdModal><i class="fa fa-calculator"></i>&nbsp;{{$t('jdcalc')}}</b-btn>
+            </dd>
         </dl>
+        
+        <!-- Modal Component -->
+        <b-modal id="jdModal" :title="$t('jdcalc')" size="lg" ok-only>
+            <jdcalc :show-title="false"></jdcalc>
+        </b-modal>
     </div>
 </template>
 
@@ -36,6 +47,7 @@
 import moment from 'moment';
 import * as JD from '../js/jd.js';
 import * as Util from '../js/util.js';
+import JDCalc from './jdcalc.vue';
 
 
 export default {
@@ -46,6 +58,7 @@ export default {
       }
   },
   components: {
+    'jdcalc': JDCalc
   },
   data () {
     return {

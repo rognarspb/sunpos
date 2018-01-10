@@ -1,7 +1,7 @@
 <i18n>
 {
   "en": {
-    "title": "Julian date (JD) calculator",
+    "title": "Julian day (JD) calculator",
     "latitude": "Latitude",
     "longitude": "Longitude",
     "date": "Date",
@@ -34,7 +34,7 @@
 
 <template>
     <div class="form form-calc">
-        <h4>{{$t('title')}}</h4>
+        <h4 v-if="showTitle">{{$t('title')}}</h4>
         <div class="form-group">
             <label>{{$t('date')}}</label>
             <div class="input-group">
@@ -100,7 +100,11 @@ export default {
     date:{
         default: null,
         required: false
-    } 
+    },
+    showTitle:{
+        default: true,
+        required: false
+    }
   },
   components: {
     'datepicker':  Datepicker,
