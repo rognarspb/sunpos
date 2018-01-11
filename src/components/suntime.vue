@@ -30,16 +30,14 @@
           <dd>{{solarNoon}} </dd>
           <dt>{{$t('solarNoonLocal')}}</dt>
           <dd>{{solarNoonString}} </dd>
+          <hr/>
           <dt>{{$t('sunrise')}}</dt>
           <dd>{{sunrise}} </dd>
           <dt>{{$t('sunset')}}</dt>
           <dd>{{sunset}} </dd>
+          <hr/>
           <dt>{{$t('daylength')}}</dt>
           <dd>{{daylength}} </dd>
-          <dt>{{$t('twilightMorning')}}</dt>
-          <dd>{{astronomicalTwilightMorning}}&deg; </dd>
-          <dt>{{$t('twilightEvening')}}</dt>
-          <dd>{{astronomicalTwilightEvening}}&deg; </dd>
         </dl>
     </div>
 </template>

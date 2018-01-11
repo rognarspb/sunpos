@@ -54,7 +54,7 @@
   <div id="app" class="container-fluid">
     <div class="row title-row">
       <div class="col-12 text-center">
-        <img src="./assets/sunm.svg" width="100" height="100" class="sun">
+        <img src="./assets/sunm.svg" width="100" height="100" class="sunimage">
         <h1 class="he">{{$t('title')}}</h1>
       </div>
     </div>
@@ -129,7 +129,10 @@
         <dateinfo :date="julianDate"></dateinfo>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <coordinates :date="julianDate" :latitude="lat" :longitude="lon"></coordinates>
+        <suntime :date="julianDate" :latitude="lat" :longitude="lon"></suntime>
+      </div>
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <twilight :date="julianDate" :latitude="lat" :longitude="lon"></twilight>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>{{$t('ecliptiTitle')}}</h4>
@@ -138,7 +141,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <suntime :date="julianDate" :latitude="lat" :longitude="lon"></suntime>
+        <coordinates :date="julianDate" :latitude="lat" :longitude="lon"></coordinates>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <localcoordinates :date="julianDate" :latitude="lat" :longitude="lon"></localcoordinates>
@@ -185,6 +188,7 @@ import JDCalc from './components/jdcalc.vue';
 import DateInfo from './components/dateinfo.vue';
 import Coordinates from './components/coordinates.vue';
 import LocalCoordinates from './components/localcoordinates.vue';
+import Twilight from './components/twilight.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 import * as Util from './js/util.js';
@@ -200,7 +204,8 @@ export default {
     'suntime': SunTime,
     'dateinfo': DateInfo,
     'coordinates': Coordinates,
-    'localcoordinates': LocalCoordinates
+    'localcoordinates': LocalCoordinates,
+    'twilight': Twilight
   },
   data () {
     return {
@@ -435,7 +440,7 @@ h4 {
     }
 }
 
-.sun{
+.sunimage{
   -webkit-animation: rotation 20s infinite linear;
   animation: rotation 20s infinite linear;
 }
