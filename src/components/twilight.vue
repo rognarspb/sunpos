@@ -29,8 +29,8 @@
                 <tbody>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="darkblue"></circle>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="darkblue"></circle>
                             </svg>
                         </td>
                         <td>{{$t('astroTwilight')}}</td>
@@ -40,8 +40,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="#585daf"></circle>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#585daf"></circle>
                             </svg>
                         </td>
                         <td>{{$t('nauticalTwilight')}}</td>
@@ -51,8 +51,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="#8386af"></circle>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#8386af"></circle>
                             </svg>
                         </td>
                         <td>{{$t('civilTwilight')}}</td>
@@ -62,9 +62,9 @@
                     </tr>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="#eae811"></circle>
-                            </svg>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#eae811"></circle>
+                            </svg>                            
                         </td>
                         <td>{{$t('goldenHour')}}</td>
                         <td>{{goldenHourM1}}</td>
@@ -79,9 +79,9 @@
                 <tbody>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="darkblue"></circle>
-                            </svg>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="darkblue"></circle>
+                            </svg>                             
                         </td>
                         <td>{{$t('astroTwilight')}}</td>
                         <td>{{astronomicalTwilightE1}}</td>
@@ -90,8 +90,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="#585daf"></circle>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#585daf"></circle>
                             </svg>
                         </td>
                         <td>{{$t('nauticalTwilight')}}</td>
@@ -101,8 +101,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="#8386af"></circle>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#8386af"></circle>
                             </svg>
                         </td>
                         <td>{{$t('civilTwilight')}}</td>
@@ -112,9 +112,9 @@
                     </tr>
                     <tr>
                         <td>
-                            <svg width="40" height="40" style="background:none">
-                                <circle cx="20" cy="20" r="20" stroke="#afafaf" stroke-width="1" fill="#ffdf2a"></circle>
-                            </svg>
+                            <svg width="36" height="36" style="background:none">
+                                <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ffdf2a"></circle>
+                            </svg>                            
                         </td>
                         <td>{{$t('goldenHour')}}</td>
                         <td>{{goldenHourE1}}</td>

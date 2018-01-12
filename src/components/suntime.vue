@@ -8,7 +8,10 @@
     "sunset": "Sunset",
     "daylength": "Day length",
     "twilightMorning": "Astronomical twilight (morning)",
-    "twilightEvening": "Astronomical twilight (evening)"
+    "twilightEvening": "Astronomical twilight (evening)",
+    "hourangle": "Hour angle (sunrise/sunset)",
+    "sunriseAzimuth": "Azimuth (sunrise)",
+    "sunsetAzimuth": "Azimuth (sunset)"
   },
   "ru": {
     "title": "Закат и восход Солнца",
@@ -18,27 +21,76 @@
     "sunset": "Закат",
     "daylength": "Длительность дня",
     "twilightMorning": "Астрономические сумерки (утренние)",
-    "twilightEvening": "Астрономические сумерки (вечерние)"
+    "twilightEvening": "Астрономические сумерки (вечерние)",
+    "hourangle": "Часовой угол (восход/закат)",
+    "sunriseAzimuth": "Азимут (восход)",
+    "sunsetAzimuth": "Азимут (закат)"
   }
 }
 </i18n>
 <template>
     <div>
         <h4>{{$t('title')}}</h4>
-        <dl class="info">
-          <dt>{{$t('solarNoon')}}</dt>
-          <dd>{{solarNoon}} </dd>
-          <dt>{{$t('solarNoonLocal')}}</dt>
-          <dd>{{solarNoonString}} </dd>
+        <div class="info">
+          <!-- <h5>Восход и закат</h5> -->
+          <dl class="row row-img">
+            <dt class="col-1">
+              <svg width="36" height="36" style="background:none">
+                  <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff9431"></circle>
+              </svg>
+            </dt>
+            <dd class="col-2">{{$t('sunrise')}}</dd>
+            <dd class="col-6">{{sunrise}} </dd>
+          </dl>
+          <dl class="row row-img">
+            <dt class="col-1">
+              <svg width="36" height="36" style="background:none">
+                  <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff6e31"></circle>
+              </svg>
+            </dt>
+            <dd class="col-2">{{$t('sunset')}}</dd>
+            <dd class="col-6">{{sunset}} </dd>
+          </dl>
           <hr/>
-          <dt>{{$t('sunrise')}}</dt>
-          <dd>{{sunrise}} </dd>
-          <dt>{{$t('sunset')}}</dt>
-          <dd>{{sunset}} </dd>
+          <div class="row">
+            <div class="col-1">
+              <svg width="36" height="36" style="background:none">
+                  <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ffe92b"></circle>
+              </svg>
+            </div>
+            <div class="col">
+              <dl>
+                <dt>
+                  {{$t('solarNoon')}}
+                </dt>
+                <dd>{{solarNoon}} </dd>
+                <dt>{{$t('solarNoonLocal')}}</dt>
+                <dd>{{solarNoonString}} </dd>
+              </dl>
+            </div>
+          </div>
           <hr/>
-          <dt>{{$t('daylength')}}</dt>
-          <dd>{{daylength}} </dd>
-        </dl>
+          <div class="row">
+            <div class="col-1">
+              <svg width="36" height="36" style="background:none">
+                  <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="whitesmoke"></circle>
+              </svg>
+            </div>
+            <div class="col">
+              <dl>
+                  <dt>{{$t('daylength')}}</dt>
+                  <dd>{{daylength}} </dd>
+                  <dt>{{$t('hourangle')}}</dt>
+                  <dd>{{sunriseHourAngle}}&deg; </dd>
+                  <dt>{{$t('sunriseAzimuth')}}</dt>
+                  <dd>{{sunriseAzimuth}}&deg; </dd>
+                  <dt>{{$t('sunsetAzimuth')}}</dt>
+                  <dd>{{sunsetAzimuth}}&deg; </dd>
+                </dl>
+              </dl>
+             </div>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -79,6 +131,10 @@ export default {
       var sn =  Sun.GetSolarNoon(this.date, this.longitude);
       return sn.toFixed(6);     
     },
+    sunriseHourAngle: function() {
+      var ha =  Sun.GetSunriseHourAngle(this.date, this.latitude, this.longitude);
+      return ha.toFixed(2);     
+    },
     sunrise: function(){
         var sunriseTime = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
         return String(sunriseTime.hours).padStart(2,'0') + ":" 
@@ -90,6 +146,18 @@ export default {
         return String(sunsetTime.hours).padStart(2,'0') + ":" 
               + String(sunsetTime.minutes).padStart(2,'0') + ":" 
               + String(sunsetTime.seconds).padStart(2,'0');
+    },
+    sunriseAzimuth: function(){
+        var sunriseTime = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+        var dt = Util.timeObjToDate(this.date, sunriseTime);
+        var a = Sun.GetAzimuthAngle(dt, this.latitude, this.longitude);
+        return a.toFixed(2);
+    },
+    sunsetAzimuth: function(){
+        var sunsetTime = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+        var dt = Util.timeObjToDate(this.date, sunsetTime);
+        var a = Sun.GetAzimuthAngle(dt, this.latitude, this.longitude);
+        return a.toFixed(2);
     },
     daylength: function(){
       var ha =  Sun.GetSunriseHourAngle(this.date, this.latitude, this.longitude);
@@ -107,24 +175,16 @@ export default {
       }
       
       return String(hours).padStart(2,'0') + "h " + String(minutes).padStart(2,'0') + "min " + String(seconds).padStart(2,'0') + "sec";
-    },
-    astronomicalTwilightMorning: function(){
-      var alpha = -18; // 12-18 degree
-      var twilight = Sun.GetTwilightTime(alpha, this.date, this.latitude, this.longitude);
-      return String(twilight.morningTwilight.hours).padStart(2,'0') + ":" + String(twilight.morningTwilight.minutes).padStart(2,'0') 
-            + " h=-" + twilight.hourAngle.toFixed(2);
-    },
-    astronomicalTwilightEvening: function(){
-      var alpha = -18; // 12-18 degree
-      var twilight = Sun.GetTwilightTime(alpha, this.date, this.latitude, this.longitude);
-      return String(twilight.eveningTwilight.hours).padStart(2,'0') + ":" + String(twilight.eveningTwilight.minutes).padStart(2,'0')
-            + " h=+" + twilight.hourAngle.toFixed(2);
     }
-    
   }
 }
 </script>
 
 <style lang="scss">
+
+.row-img dd {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 </style>
 

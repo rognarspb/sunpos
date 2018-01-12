@@ -87,3 +87,12 @@ export function timeObjToString(timeObj) {
     + String(timeObj.seconds).padStart(2, '0') + "sec";
 }
 
+export function timeObjToDate(dt, timeObj) {
+    var date = new Date();
+    date.setFullYear(dt.getFullYear());
+    date.setMonth(dt.getMonth());
+    date.setDate(dt.getDate());
+    date.setHours(timeObj.hours, timeObj.minutes, timeObj.seconds);
+
+    return date;
+}
