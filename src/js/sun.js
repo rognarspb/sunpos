@@ -237,30 +237,14 @@ export function GetTwilightTime(alpha, dt, lat, lon){
     var timeObj = Util.degreeToTime(ha);
     var sn =  GetSolarNoon(dt, lon);
     var solarNoonObj = JD.GetDateObject(sn);
-  
-    var hours = solarNoonObj.hours - timeObj.hours;
-    var minutes = solarNoonObj.minutes - timeObj.minutes;
-    if (minutes < 0){
-       minutes = 60 + minutes;
-       hours--;
-    }
 
-    var morning  = {
-        hours: hours,
-        minutes: minutes
-    }
+    var noonSeconds = Util.getTotalSeconds(solarNoonObj);
+    var twilightSeconds = Util.getTotalSeconds(timeObj);
 
-    var hours2 = solarNoonObj.hours + timeObj.hours;
-    var minutes2 = solarNoonObj.minutes + timeObj.minutes;
-    if (minutes2 > 60){
-       minutes2 = 60 - minutes2;
-       hours2--;
-    }
-    
-    var evening  = {
-        hours: hours2,
-        minutes: minutes2
-    }
+    var morningSeconds = noonSeconds - twilightSeconds;
+    var eveningSeconds = noonSeconds + twilightSeconds;
+    var morning = Util.getTimeFromSeconds(morningSeconds);
+    var evening = Util.getTimeFromSeconds(eveningSeconds);
 
     var res = {
         hourAngle: ha,

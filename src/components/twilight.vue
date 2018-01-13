@@ -211,17 +211,29 @@ export default {
       return this.getTwilightTimeE(-6.0);
     },
 
+    // Golden photography hours:
+    // a). +6.0 to +12.0 degrees
+    // b). -4.0 to +6.0 degrees
+    // c). 0.0 to +10 degrees (?)
     goldenHourM1: function(){
-      return this.getTwilightTimeM(10.0);
+      var hmax = this.getTwilightTimeM(10.0);
+      if (hmax == "--:--")
+        return "--:--";
+        
+      return this.getTwilightTimeM(-0.83);
     },
     goldenHourM2: function(){
-      return this.getTwilightTimeM(12.0);
+      return this.getTwilightTimeM(10.0);
     },
     goldenHourE1: function(){
-      return this.getTwilightTimeE(12.0);
+      return this.getTwilightTimeE(10.0);
     },
     goldenHourE2: function(){
-      return this.getTwilightTimeE(10.0);
+      var hmax = this.getTwilightTimeM(10.0);
+      if (hmax == "--:--")
+        return "--:--";
+        
+      return this.getTwilightTimeE(-0.83);
     }
   }
 }
