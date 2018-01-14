@@ -68,9 +68,24 @@
     </div>
     <div class="row top-row">
       <div class="col-sm-12 col-lg-8 col-xl-8">
-        <h4>{{$t('sunStatusTitle')}}</h4>
-        <div style="height: 440px; padding-top: 20px;">
+        <h4>{{$t('sunStatusTitle')}}&nbsp;<i class="fa fa-question-circle" role="link" v-on:click="toggleInfo"></i></h4>
+        <div style="height: 440px; padding-top: 20px;" v-if="!showInfo">
           <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
+        </div>
+        <div class="info" v-if="showInfo"> 
+          <p><strong>SunPos application allows to query various information about sun:</strong></p>
+          <ul>
+            <li>Where is the sun?</li>
+            <li>What time is solar noon?</li>
+            <li>Sunrise and sunset times</li>              
+            <li>Julian day number and normalized Julian day number</li>
+            <li>Ecliptic and equatorial coordinates</li>
+            <li>Sun azimuth, zenith and elevation angle</li>
+            <li>Twilight time at morning and evening</li>
+            <li>Photography golden hour</li>
+            <li>Day length and local sun coordinates</li>
+            <li>Sun solstice and equinox parameters</li>
+          </ul>
         </div>
       </div>
       <div class="col-sm-12 col-lg-4 col-xl-4">
@@ -169,12 +184,10 @@
           <img class="img-fluid" width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
         </div>
       </div>
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+
+      </div>
     </div>
-           
-
-
-   
-
   </div>
 </template>
 
@@ -215,7 +228,8 @@ export default {
       userDate: new Date(),
       userHours: 12,
       userMinutes: 0, 
-      userSeconds: 0
+      userSeconds: 0,
+      showInfo: false
     }
   },
   created: function() {
@@ -224,6 +238,9 @@ export default {
       this.getLocation();
   },
   methods: {
+    toggleInfo: function(){
+      this.showInfo = !this.showInfo;
+    },
     getLanguages: function()
     {
       if (navigator.languages != undefined) 

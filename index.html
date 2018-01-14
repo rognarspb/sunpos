@@ -10,35 +10,38 @@
     <meta property="og:type" content="article" />
     <meta property="og:locale" content="en_GB" />
     <meta property="og:locale:alternate" content="ru_RU" />
-    <title>SunPos: Положение солнца на небе, восход и закат</title>
+    <title>SunPos: Sunrise and sunset times, sun coordinates</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link href="https://use.fontawesome.com/releases/v5.0.1/css/all.css" rel="stylesheet">
   </head>
   <body>
     <div class="container-fluid" id="app">
-      <div class="card bg-light" >
-            <div class="card-body text-info">
-              <img src="/dist/sunm.svg" width="64" height="64">
-              <h4>Sunpos is loading...</h4>
-              <p><strong>SunPos application allows to query various information about sun:</strong></p>
-              <ul>
-                <li>Solar noon time and Julian day number</li>
-                <li>Ecliptic and equatorial coordinates</li>
-                <li>Azimuth, zenith and alevation angles</li>
-                <li>Sunrise and sunset time</li>
-                <li>Twilight and golden hour (photography) time</li>
-                <li>Day length and local sun coordinates</li>
-                <li>Sun solstice and equinox parameters</li>
-              </ul>
-            </div>
-          </div>
+      <div class="card bg-light"> 
+        <div class="card-body text-info">
+          <img src="/dist/sunm.svg" width="64" height="64">
+          <h4>SunPos is loading...</h4>
+          <br/>
+          <p><strong>SunPos application allows to query various information about sun:</strong></p>
+          <ul>
+            <li>Where is the sun?</li>
+            <li>What time is solar noon?</li>
+            <li>Sunrise and sunset times</li>              
+            <li>Julian day number and normalized Julian day number</li>
+            <li>Ecliptic and equatorial coordinates</li>
+            <li>Sun azimuth, zenith and elevation angle</li>
+            <li>Twilight time at morning and evening</li>
+            <li>Photography golden hour</li>
+            <li>Day length and local sun coordinates</li>
+            <li>Sun solstice and equinox parameters</li>
+          </ul>
+        </div>
       </div>
     </div>
     <footer>
       <div class="container-fluid">
         <br/>
         <div class="card bg-light">
-            <div class="card-header">SunPos: Sun coordinates, sunrise and sunset time</div>
+            <div class="card-header">SunPos: sunrise and sunset times, sun coordinates</div>
             <div class="card-body text-info">
                 <p>Designed and programmed by <a href="mailto:ipmonk@mail.ru">RognarSPB</a></p>
                 <p>Powered by <a href="https://vuejs.org/">Vue.js</a> and <a href="https://d3js.org/">D3js</a> projects</p>
