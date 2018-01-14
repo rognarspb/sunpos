@@ -33,24 +33,32 @@
         <h4>{{$t('title')}}</h4>
         <div class="info">
           <!-- <h5>Восход и закат</h5> -->
-          <dl class="row row-img">
-            <dt class="col-1">
-              <svg width="36" height="36" style="background:none">
-                  <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff9431"></circle>
-              </svg>
-            </dt>
-            <dd class="col-2">{{$t('sunrise')}}</dd>
-            <dd class="col-6">{{sunrise}} </dd>
-          </dl>
-          <dl class="row row-img">
-            <dt class="col-1">
-              <svg width="36" height="36" style="background:none">
+          <div class="row row-img">
+            <div class="col-1 vparent">
+                <svg width="36" height="36" style="background:none" class="vcenter">
+                    <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff9431"></circle>
+                </svg>
+            </div>
+            <div class="col-2 vparent">
+              <div class="vcenter">{{$t('sunrise')}}</div>
+            </div>
+            <div class="col-6 vparent">
+              <div class="vcenter">{{sunrise}}</div>
+            </div>
+          </div>
+          <div class="row row-img">
+            <div class="col-1 vparent">
+              <svg width="36" height="36" style="background:none" class="vcenter">
                   <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff6e31"></circle>
               </svg>
-            </dt>
-            <dd class="col-2">{{$t('sunset')}}</dd>
-            <dd class="col-6">{{sunset}} </dd>
-          </dl>
+            </div>
+            <div class="col-2 vparent">
+              <div class="vcenter">{{$t('sunset')}}</div>
+            </div>
+            <div class="col-6 vparent">
+              <div class="vcenter">{{sunset}}</div>
+            </div>
+          </div>
           <hr/>
           <div class="row">
             <div class="col-1">
@@ -182,9 +190,24 @@ export default {
 
 <style lang="scss">
 
-.row-img dd {
+.row-img {
   padding-top: 5px;
   padding-bottom: 5px;
+  height: 56px;
+  &:hover{
+    background: aliceblue;
+  }
 }
+
+.vparent{
+  position: relative;
+}
+
+.vcenter{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 </style>
 

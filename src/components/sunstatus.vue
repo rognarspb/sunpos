@@ -15,7 +15,6 @@
 }
 </i18n>
 <template>
-  <transition appear name="fade">
       <div>
         <div class="tooltip" style="opacity: 0" id="infoTooltip"></div>
         <svg width="100%" height="100%" viewBox="0 0 820 360">       
@@ -40,7 +39,6 @@
             <circle cx="410" cy="180" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>       
         </svg>
       </div>
-  </transition>
 </template>
 
 <script>
@@ -266,12 +264,6 @@ export default {
 </script>
 
 <style lang="scss">
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 1s
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0
-  }
   div.tooltip {	
     position: absolute;			
     width: 160px;					

@@ -68,25 +68,29 @@
     </div>
     <div class="row top-row">
       <div class="col-sm-12 col-lg-8 col-xl-8">
-        <h4>{{$t('sunStatusTitle')}}&nbsp;<i class="fa fa-question-circle" role="link" v-on:click="toggleInfo"></i></h4>
-        <div style="height: 440px; padding-top: 20px;" v-if="!showInfo">
-          <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
-        </div>
-        <div class="info" v-if="showInfo"> 
-          <p><strong>SunPos application allows to query various information about sun:</strong></p>
-          <ul>
-            <li>Where is the sun?</li>
-            <li>What time is solar noon?</li>
-            <li>Sunrise and sunset times</li>              
-            <li>Julian day number and normalized Julian day number</li>
-            <li>Ecliptic and equatorial coordinates</li>
-            <li>Sun azimuth, zenith and elevation angle</li>
-            <li>Twilight time at morning and evening</li>
-            <li>Photography golden hour</li>
-            <li>Day length and local sun coordinates</li>
-            <li>Sun solstice and equinox parameters</li>
-          </ul>
-        </div>
+        <h4>{{$t('sunStatusTitle')}}&nbsp;<span class="fa fa-question-circle" role="button" v-on:click="toggleInfo" style="cursor: pointer"></span></h4>
+
+          <div style="height: 440px; padding-top: 20px;" v-if="!showInfo">
+            <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
+          </div>
+
+        <transition name="fade">
+          <div class="info" v-if="showInfo"> 
+            <p><strong>SunPos application provides various information about sun:</strong></p>
+            <ul>
+              <li>Where is the sun?</li>
+              <li>What time is solar noon?</li>
+              <li>Sunrise and sunset times</li>              
+              <li>Julian day number and normalized Julian day number</li>
+              <li>Ecliptic and equatorial coordinates</li>
+              <li>Sun azimuth, zenith and elevation angle</li>
+              <li>Twilight time at morning and evening</li>
+              <li>Photography golden hour</li>
+              <li>Day length and local sun coordinates</li>
+              <li>Sun solstice and equinox parameters</li>
+            </ul>
+          </div>
+        </transition>
       </div>
       <div class="col-sm-12 col-lg-4 col-xl-4">
         <h4>{{$t('observer')}}</h4>
@@ -350,6 +354,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 #app-default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -462,4 +467,11 @@ h4 {
   animation: rotation 20s infinite linear;
 }
  
+.fade-enter-active {
+  transition: opacity 1s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
+
 </style>
