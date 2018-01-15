@@ -27,6 +27,33 @@ export function GetMJD(dt) {
     return mjd;
 }
 
+export function GetTruncatedJD(dt) {
+    var jd = GetJD(dt);
+    return Math.floor(jd - 2440000.5);
+}
+
+export function GetLilianDay(dt) {
+    var jd = GetJD(dt);
+    return Math.floor(jd - 2299159.5);
+}
+
+export function GetMarsSol(dt) {
+    var jd = GetJD(dt);
+    var k = 0.00014; //correction
+    var msd = (jd - 2451549.5 + k)/1.02749125 + 44796.0
+    var msd_alt = (jd - 2405522)/1.02749;
+    return msd;
+}
+
+export function GetUnixTime(dt) {
+    var jd = GetJD(dt);
+    return (jd - 2440587.5) * 86400;
+}
+
+
+
+
+
 export function GetDayOfWeek(dt) {
     return GetJDN(dt) % 7;
 }
