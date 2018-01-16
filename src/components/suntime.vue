@@ -11,7 +11,12 @@
     "twilightEvening": "Astronomical twilight (evening)",
     "hourangle": "Hour angle (sunrise/sunset)",
     "sunriseAzimuth": "Azimuth (sunrise)",
-    "sunsetAzimuth": "Azimuth (sunset)"
+    "sunsetAzimuth": "Azimuth (sunset)",
+    "daybefore": "Day before",
+    "yesterday": "Yesterday",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "dayafter": "Day after"
   },
   "ru": {
     "title": "Закат и восход Солнца",
@@ -24,7 +29,13 @@
     "twilightEvening": "Астрономические сумерки (вечерние)",
     "hourangle": "Часовой угол (восход/закат)",
     "sunriseAzimuth": "Азимут (восход)",
-    "sunsetAzimuth": "Азимут (закат)"
+    "sunsetAzimuth": "Азимут (закат)",
+
+    "daybefore": "Позавчера",
+    "yesterday": "Вчера",
+    "today": "Сегодня",
+    "tomorrow": "Завтра",
+    "dayafter": "Послезавтра"
   }
 }
 </i18n>
@@ -43,7 +54,7 @@
               <div class="vcenter">{{$t('sunrise')}}</div>
             </div>
             <div class="col-6 vparent">
-              <div class="vcenter">{{sunrise}}</div>
+              <div class="vcenter"><strong>{{sunrise}}</strong>&nbsp;({{sunriseAzimuth}}&deg;)</div>
             </div>
           </div>
           <div class="row row-img">
@@ -56,7 +67,7 @@
               <div class="vcenter">{{$t('sunset')}}</div>
             </div>
             <div class="col-6 vparent">
-              <div class="vcenter">{{sunset}}</div>
+              <div class="vcenter"><strong>{{sunset}}</strong>&nbsp;({{sunsetAzimuth}}&deg;)</div>
             </div>
           </div>
           <hr/>
@@ -74,6 +85,8 @@
                 <dd>{{solarNoon}} </dd>
                 <dt>{{$t('solarNoonLocal')}}</dt>
                 <dd>{{solarNoonString}} </dd>
+                <dt>{{$t('hourangle')}}</dt>
+                <dd>{{sunriseHourAngle}}&deg; </dd>
               </dl>
             </div>
           </div>
@@ -87,13 +100,32 @@
             <div class="col">
               <dl>
                   <dt>{{$t('daylength')}}</dt>
-                  <dd>{{daylength}} </dd>
-                  <dt>{{$t('hourangle')}}</dt>
-                  <dd>{{sunriseHourAngle}}&deg; </dd>
-                  <dt>{{$t('sunriseAzimuth')}}</dt>
-                  <dd>{{sunriseAzimuth}}&deg; </dd>
-                  <dt>{{$t('sunsetAzimuth')}}</dt>
-                  <dd>{{sunsetAzimuth}}&deg; </dd>
+                  <dd>
+                    <table class="table table-sm table-bordered table-daylen">
+                      <tbody>
+                        <tr>
+                            <td>{{getDate(-2)}}</td>
+                            <td>{{getDayLength(-2)}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{getDate(-1)}}</td>
+                            <td>{{getDayLength(-1)}}</td>
+                        </tr>
+                        <tr class="text-info">
+                            <td>{{getDate(0)}}</td>                          
+                            <td>{{getDayLength(0)}}</td>
+                        </tr>  
+                        <tr>
+                            <td>{{getDate(1)}}</td>                          
+                            <td>{{getDayLength(1)}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{getDate(2)}}</td>                          
+                            <td>{{getDayLength(2)}}</td>
+                        </tr>  
+                      </tbody>
+                    </table>
+                  </dd>
                 </dl>
               </dl>
              </div>
@@ -128,6 +160,34 @@ export default {
     }
   },
   methods: {
+    getDayLength: function(offset){
+        var dateWrapper = moment(this.date).add(offset, 'days');
+        var daylen = Sun.GetDayLength(dateWrapper.toDate(), this.latitude, this.longitude);
+        return Util.timeObjToString(daylen)
+    },
+    getDate: function(offset) {
+        var res = '';
+        var today = new Date();
+        if (today.getFullYear() == this.date.getFullYear() && 
+            today.getMonth() == this.date.getMonth() && 
+            today.getDate() == this.date.getDate()) {
+            
+            if (offset == -2)
+              res += this.$t('daybefore');
+            else if (offset == -1)
+              res += this.$t('yesterday');
+            else if (offset == 0)
+              res += this.$t('today');
+            else if (offset == 1)
+              res += this.$t('tomorrow');
+            else if (offset == 2)
+              res += this.$t('dayafter');
+            return res;              
+        }
+        var dateWrapper = moment(this.date).add(offset, 'days');
+        res += Util.dateToShortString(dateWrapper.toDate());
+        return res;
+    }
   },
   computed: {         
     solarNoonString: function(){
@@ -168,21 +228,8 @@ export default {
         return a.toFixed(2);
     },
     daylength: function(){
-      var ha =  Sun.GetSunriseHourAngle(this.date, this.latitude, this.longitude);
-      var timeObj = Util.degreeToTime(ha);
-      var hours = 2*timeObj.hours;
-      var minutes = 2*timeObj.minutes;
-      if (minutes > 60) {
-        minutes = minutes - 60;
-        hours++;
-      }
-      var seconds = 2*timeObj.seconds;
-      if (seconds > 60) {
-        seconds = seconds - 60;
-        minutes++;
-      }
-      
-      return String(hours).padStart(2,'0') + "h " + String(minutes).padStart(2,'0') + "min " + String(seconds).padStart(2,'0') + "sec";
+      var daylen = Sun.GetDayLength(this.date, this.latitude, this.longitude);
+      return Util.timeObjToString(daylen);
     }
   }
 }
@@ -207,6 +254,20 @@ export default {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+}
+
+
+.table-daylen{
+  margin-top: 10px; 
+  margin-bottom: 0px;
+}
+
+hr {
+  margin-top: 0px;
+}
+
+dl {
+  margin-bottom: 0px;
 }
 
 </style>

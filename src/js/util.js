@@ -47,6 +47,16 @@ export function dateToString(dt) {
             + String(dt.getSeconds()).padStart(2,'0');
 }
 
+
+export function dateToShortString(dt) {  
+    if (!dt){
+        return '';
+    }
+    var month = dt.getMonth()+1;
+    return  dt.getDate() + "." +  month + "." + dt.getFullYear();
+}
+
+
 export function timeToString(dt) {  
     if (!dt){
         return '';

@@ -49,8 +49,8 @@
             <dd>{{ lilianDay }}</dd>
             <dt>{{$t('unixTime')}}</dt>
             <dd>{{ unixTime }}</dd>
-            <dt>{{$t('marsSol')}}</dt>
-            <dd>{{ marsSol }}</dd>
+            <dt class="orange">{{$t('marsSol')}}</dt>
+            <dd class="orange">{{ marsSol }}</dd>
 
             <dd style="margin-top: 1rem;">
               <b-btn v-b-modal.jdModal><i class="fa fa-calculator"></i>&nbsp;{{$t('jdcalc')}}</b-btn>
@@ -127,5 +127,8 @@ export default {
 </script>
 
 <style lang="scss">
+.orange{
+  color: orangered;
+}
 </style>
 

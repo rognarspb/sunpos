@@ -147,7 +147,16 @@ export function GetSunsetTime(dt, lat, lon) {
     return resTime;   
 }
 
+export function GetDayLength(dt, lat, lon) {
+    // represents degrees from solar noon:
+    var ha =  GetSunriseHourAngle(dt, lat, lon);
 
+    // day length is sunrise angle multiplied by two and converted to time:
+    var timeObj = Util.degreeToTime(ha);
+    var totalSeconds = 2*Util.getTotalSeconds(timeObj);
+    var res = Util.getTimeFromSeconds(totalSeconds);
+    return res;
+}
   
 // Jtransit = true solar transit or solar noon Julian date
 export function GetSolarNoon(currentDate, lon) {

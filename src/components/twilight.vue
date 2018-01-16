@@ -240,5 +240,8 @@ export default {
 </script>
 
 <style lang="scss">
+    .table-sm{
+        margin-bottom: 0.5rem;
+    }
 </style>
 
