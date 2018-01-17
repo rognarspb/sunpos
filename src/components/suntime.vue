@@ -12,11 +12,14 @@
     "hourangle": "Hour angle (sunrise/sunset)",
     "sunriseAzimuth": "Azimuth (sunrise)",
     "sunsetAzimuth": "Azimuth (sunset)",
-    "daybefore": "Day before",
+    "daybefore": "Day before yesterday",
     "yesterday": "Yesterday",
     "today": "Today",
     "tomorrow": "Tomorrow",
-    "dayafter": "Day after"
+    "dayafter": "Day after tomorrow",
+
+    "dayIncrease": "Day increases",
+    "dayDecrease": "Day decreases"
   },
   "ru": {
     "title": "Закат и восход Солнца",
@@ -35,7 +38,10 @@
     "yesterday": "Вчера",
     "today": "Сегодня",
     "tomorrow": "Завтра",
-    "dayafter": "Послезавтра"
+    "dayafter": "Послезавтра",
+
+    "dayIncrease": "Длительность дня увеличивается",
+    "dayDecrease": "Длительность дня уменьшается"
   }
 }
 </i18n>
@@ -99,7 +105,11 @@
             </div>
             <div class="col">
               <dl>
-                  <dt>{{$t('daylength')}}</dt>
+                  <dt>
+                    <span>{{$t('daylength')}}</span>&nbsp;
+                    <i class="fa fa-arrow-up green" v-if="dayGrowthTrend" :title="$t('dayIncrease')"></i>
+                    <i class="fa fa-arrow-down orange" v-if="!dayGrowthTrend" :title="$t('dayDecrease')"></i>
+                  </dt>
                   <dd>
                     <table class="table table-sm table-bordered table-daylen">
                       <tbody>
@@ -230,6 +240,12 @@ export default {
     daylength: function(){
       var daylen = Sun.GetDayLength(this.date, this.latitude, this.longitude);
       return Util.timeObjToString(daylen);
+    },
+    dayGrowthTrend: function(){
+        var dateWrapper = moment(this.date).add(1, 'days');
+        var dayLenNext = Sun.GetDayLengthSeconds(dateWrapper.toDate(), this.latitude, this.longitude);
+        var dayLen = Sun.GetDayLengthSeconds(this.date, this.latitude, this.longitude);
+        return dayLenNext > dayLen;
     }
   }
 }
@@ -268,6 +284,14 @@ hr {
 
 dl {
   margin-bottom: 0px;
+}
+
+.green{
+  color: green;
+}
+
+.orange{
+  color: orangered;
 }
 
 </style>

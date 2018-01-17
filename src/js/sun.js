@@ -147,15 +147,19 @@ export function GetSunsetTime(dt, lat, lon) {
     return resTime;   
 }
 
-export function GetDayLength(dt, lat, lon) {
+export function GetDayLengthSeconds(dt, lat, lon) {
     // represents degrees from solar noon:
     var ha =  GetSunriseHourAngle(dt, lat, lon);
 
     // day length is sunrise angle multiplied by two and converted to time:
     var timeObj = Util.degreeToTime(ha);
     var totalSeconds = 2*Util.getTotalSeconds(timeObj);
-    var res = Util.getTimeFromSeconds(totalSeconds);
-    return res;
+    return totalSeconds;
+}
+
+export function GetDayLength(dt, lat, lon) {
+    var totalSeconds = GetDayLengthSeconds(dt, lat, lon);
+    return Util.getTimeFromSeconds(totalSeconds);
 }
   
 // Jtransit = true solar transit or solar noon Julian date
@@ -237,7 +241,7 @@ export function GetAzimuthAngle(dt, lat, lon) {
     if (h > 0)
         phita = 2.0*Math.PI -phita;
 
-    return (phita*180)/Math.PI;
+    return Util.degree(phita);
 }
 
 export function GetTwilightTime(alpha, dt, lat, lon){
