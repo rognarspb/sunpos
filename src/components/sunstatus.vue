@@ -28,6 +28,8 @@
             <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
             <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
 
+            <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
+
             <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
             <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
             <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
@@ -204,7 +206,12 @@ export default {
         if (this.date.getHours() > 0) {
           this.updateSun(moment(this.date).subtract(30, "minutes").toDate(), 'sun1', 0.3);
         }
-        this.updateSun(moment(this.date).toDate(), 'sun', 1.0);   
+        this.updateSun(moment(this.date).toDate(), 'sun', 1.0);  
+        
+        var elevation = Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
+        var skycolor = elevation > 0 ? "#e2efff" : "#072d5a";
+        svgElem.select("#skyrect")
+          .attr("fill", skycolor);
     },
 
 
