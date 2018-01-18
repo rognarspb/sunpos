@@ -75,20 +75,42 @@
           </div>
 
         <transition name="fade">
-          <div class="info" v-if="showInfo"> 
-            <p><strong>SunPos application provides various information about sun:</strong></p>
-            <ul>
-              <li>Where is the sun?</li>
-              <li>What time is solar noon?</li>
-              <li>Sunrise and sunset times</li>              
-              <li>Julian day number and normalized Julian day number</li>
-              <li>Ecliptic and equatorial coordinates</li>
-              <li>Sun azimuth, zenith and elevation angle</li>
-              <li>Twilight time at morning and evening</li>
-              <li>Photography golden hour</li>
-              <li>Day length and local sun coordinates</li>
-              <li>Sun solstice and equinox parameters</li>
-            </ul>
+          <div class="info" v-if="showInfo">             
+            <div class="row">
+              <div class="col">
+                <br/>
+                <p><strong>SunPos application provides various information about sun:</strong></p>
+                <ul>
+                  <li>Where is the sun?</li>
+                  <li>What time is solar noon?</li>
+                  <li>Sunrise and sunset times</li>              
+                  <li>Julian day number and normalized Julian day number</li>
+                  <li>Ecliptic and equatorial coordinates</li>
+                  <li>Sun azimuth, zenith and elevation angle</li>
+                  <li>Twilight time at morning and evening</li>
+                  <li>Photography golden hour</li>
+                  <li>Day length and local sun coordinates</li>
+                  <li>Sun solstice and equinox parameters</li>
+                </ul>
+              </div>
+              <div class="col" style="border-left: 1px solid lightgray;">
+                <br/>
+                <p><strong>SunPos позволяет получить различную информацию о солнце:</strong></p>
+                <ul>
+                  <li>Где сейчас солнце?</li>
+                  <li>Во сколько наступает истинный полдень?</li>
+                  <li>Время восхода и заката</li>              
+                  <li>Юлианская дата и Юлианский день</li>
+                  <li>Эклиптические и экваториальные координаты солнца</li>
+                  <li>Азимут солнца, угол зенита и высота солнца над горизонтом</li>
+                  <li>Время наступления утренних и вечерних сумерек</li>
+                  <li>Золотой час для фотографии</li>
+                  <li>Длительность дня и координаты солнца на небосводе</li>
+                  <li>Сведения о солнцестоянии и равноденствии</li>
+                </ul>
+              </div>
+              
+            </div>
           </div>
         </transition>
       </div>
