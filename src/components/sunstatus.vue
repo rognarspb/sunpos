@@ -17,7 +17,7 @@
 <template>
       <div>
         <div class="tooltip" style="opacity: 0" id="infoTooltip"></div>
-        <svg width="100%" height="100%" viewBox="0 0 820 360">       
+        <svg width="100%" height="100%" viewBox="0 0 820 460">       
             <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
             <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
@@ -29,8 +29,15 @@
             <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
 
             <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
-
             <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
+
+            <rect x="0" y="360" width="100" height="50" fill="darkblue" fill-opacity="0.7" id="night1"></rect>
+            <rect x="100" y="360" width="100" height="50" fill="blue" fill-opacity="0.5" id="twmorning"></rect>
+            <rect x="200" y="360" width="420" height="50" fill="yellow" fill-opacity="0.7" id="day"></rect>
+            <rect x="620" y="360" width="100" height="50" fill="blue" fill-opacity="0.5" id="twevening"></rect>
+            <rect x="720" y="360" width="100" height="50" fill="darkblue" fill-opacity="0.7" id="night2"></rect>
+
+
             <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
             <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
             <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">{{$t('solarnoon')}}: {{solarnoon}}</text>
@@ -209,11 +216,41 @@ export default {
         this.updateSun(moment(this.date).toDate(), 'sun', 1.0);  
         
         var elevation = Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
-        var skycolor = elevation > 0 ? "#e2efff" : "#072d5a";
+        var skycolor = elevation > 0 ? "#e2efff" : "#a2afaf";
         svgElem.select("#skyrect")
           .attr("fill", skycolor);
+
+        this.updateTimeline();
     },
 
+    getPixelOffset: function(dt){
+       var mins = Math.floor(Util.getTotalSeconds(dt)/60);
+       return 50 + mins/2;
+    },
+
+    updateTimeline: function(){
+        var svgElem = d3.select(this.$el).select("svg");
+        var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+        var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
+        var t1 = tw.morningTwilight;
+
+        svgElem.select("#night1")
+          .attr("x", 50)
+          .attr("width", this.getPixelOffset(tw.morningTwilight)-50);
+        svgElem.select("#twmorning")
+          .attr("x", this.getPixelOffset(tw.morningTwilight))
+          .attr("width", this.getPixelOffset(s1) - this.getPixelOffset(tw.morningTwilight));
+        svgElem.select("#day")
+          .attr("x", this.getPixelOffset(s1))
+          .attr("width", this.getPixelOffset(s2) - this.getPixelOffset(s1));
+        svgElem.select("#twevening")
+          .attr("x", this.getPixelOffset(s2))
+          .attr("width", this.getPixelOffset(tw.eveningTwilight) - this.getPixelOffset(s2));
+        svgElem.select("#night2")
+          .attr("x", this.getPixelOffset(tw.eveningTwilight))
+          .attr("width", 770 - this.getPixelOffset(tw.eveningTwilight));
+    },
 
     updateSun: function(datetime, id, opacity) {
         var totalMin = datetime.getHours()*60 + datetime.getMinutes();
