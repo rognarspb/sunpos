@@ -15,9 +15,27 @@
 }
 </i18n>
 <template>
-      <div>
+      <div style="width: 100%; height: 100%;">
         <div class="tooltip" style="opacity: 0" id="infoTooltip"></div>
-        <svg width="100%" height="100%" viewBox="0 0 820 460">       
+        <svg width="100%" height="100%" viewBox="0 0 820 460"> 
+            <defs>
+                <linearGradient id="dayGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop class="gstart" offset="0%" stop-color="orangered" stop-opacity="1"/>
+                    <stop class="gmid" offset="10%" stop-color="#ffd42a" stop-opacity="1"/>
+                    <stop class="gmid" offset="90%" stop-color="#ffd42a" stop-opacity="1"/>
+                    <stop class="gend" offset="100%" stop-color="orangered" stop-opacity="1"/>
+                </linearGradient>
+                <linearGradient id="morningGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop class="gstart" offset="0%" stop-color="#00aad4" stop-opacity="1"/>
+                    <stop class="gmid" offset="70%" stop-color="#00aad4" stop-opacity="1"/>
+                    <stop class="gend" offset="100%" stop-color="orangered" stop-opacity="1"/>                
+                </linearGradient>
+                <linearGradient id="eveningGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop class="gstart" offset="0%" stop-color="orangered" stop-opacity="1"/>
+                    <stop class="gmid" offset="30%" stop-color="#00aad4" stop-opacity="1"/>
+                    <stop class="gend" offset="100%" stop-color="#00aad4" stop-opacity="1"/>
+                </linearGradient> 
+            </defs>
             <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
             <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
@@ -31,12 +49,14 @@
             <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
             <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
 
-            <rect x="0" y="360" width="100" height="50" fill="darkblue" fill-opacity="0.7" id="night1"></rect>
-            <rect x="100" y="360" width="100" height="50" fill="blue" fill-opacity="0.5" id="twmorning"></rect>
-            <rect x="200" y="360" width="420" height="50" fill="yellow" fill-opacity="0.7" id="day"></rect>
-            <rect x="620" y="360" width="100" height="50" fill="blue" fill-opacity="0.5" id="twevening"></rect>
-            <rect x="720" y="360" width="100" height="50" fill="darkblue" fill-opacity="0.7" id="night2"></rect>
-
+            <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
+            <rect x="100" y="360" width="100" height="50" fill="url(#morningGradient)" fill-opacity="0.9" id="twmorning"></rect>
+            <rect x="200" y="360" width="420" height="50" fill="url(#dayGradient)" fill-opacity="0.9" id="day"></rect>
+            <rect x="620" y="360" width="100" height="50" fill="url(#eveningGradient)" fill-opacity="0.9" id="twevening"></rect>
+            <rect x="720" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night2"></rect>
+            <line x1="0" y1="360" x2="820" y2="360" stroke="lightgray" stroke-width="1"></line>
+            <line x1="0" y1="410" x2="820" y2="410" stroke="lightgray" stroke-width="1"></line>
+            
 
             <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
             <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
@@ -82,6 +102,7 @@ export default {
   },
   mounted: function(){
       this.update();
+      this.drawTimelineLabels();
   },
   methods: {  
     displayFunction: function(ix){
@@ -236,8 +257,8 @@ export default {
         var t1 = tw.morningTwilight;
 
         svgElem.select("#night1")
-          .attr("x", 50)
-          .attr("width", this.getPixelOffset(tw.morningTwilight)-50);
+          .attr("x", 0)
+          .attr("width", 50 + this.getPixelOffset(tw.morningTwilight)-50);
         svgElem.select("#twmorning")
           .attr("x", this.getPixelOffset(tw.morningTwilight))
           .attr("width", this.getPixelOffset(s1) - this.getPixelOffset(tw.morningTwilight));
@@ -249,8 +270,40 @@ export default {
           .attr("width", this.getPixelOffset(tw.eveningTwilight) - this.getPixelOffset(s2));
         svgElem.select("#night2")
           .attr("x", this.getPixelOffset(tw.eveningTwilight))
-          .attr("width", 770 - this.getPixelOffset(tw.eveningTwilight));
+          .attr("width", 820 - this.getPixelOffset(tw.eveningTwilight));
     },
+
+    drawTimelineLabels: function() {
+        var svgElem = d3.select(this.$el).select("svg");
+        var hourData = d3.range(25).map(function(x){
+          return {
+            x: 50 + x*30,
+            textOffset: 40 + x*30,
+            hour: String(x).padStart(2, "0")
+          }
+        });
+        svgElem.selectAll("txt")
+          .data(hourData)
+          .enter()
+            .append("text")
+              .attr("x", function(d){ return d.textOffset })
+              .attr("y", 430)
+              .attr("font-family", "Arial")
+              .attr("font-size", "16")
+              .attr("fill", "gray")
+              .text(function(d){ return d.hour });
+
+        svgElem.selectAll("ticks")        
+          .data(hourData)
+          .enter()
+            .append("line")
+              .attr("x1", function(d){ return d.x })
+              .attr("x2", function(d){ return d.x })
+              .attr("y1", 405)
+              .attr("y2", 415)
+              .attr("stroke", "black");
+    },
+
 
     updateSun: function(datetime, id, opacity) {
         var totalMin = datetime.getHours()*60 + datetime.getMinutes();

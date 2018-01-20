@@ -70,7 +70,7 @@
       <div class="col-sm-12 col-lg-8 col-xl-8">
         <h4>{{$t('sunStatusTitle')}}&nbsp;<span class="fa fa-question-circle" role="button" v-on:click="toggleInfo" style="cursor: pointer"></span></h4>
 
-          <div style="height: 440px; padding-top: 20px;" v-if="!showInfo">
+          <div style="height: 550px;" v-if="!showInfo">
             <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
           </div>
 
