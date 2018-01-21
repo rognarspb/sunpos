@@ -35,28 +35,45 @@
                     <stop class="gmid" offset="30%" stop-color="#00aad4" stop-opacity="1"/>
                     <stop class="gend" offset="100%" stop-color="#00aad4" stop-opacity="1"/>
                 </linearGradient> 
+                <linearGradient id="morningTwilightGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop class="gstart" offset="0%" stop-color="#214478" stop-opacity="1"/>
+                    <stop class="gmid" offset="50%" stop-color="#4e7ec5" stop-opacity="1"/>
+                    <stop class="gend" offset="100%" stop-color="#00aad4" stop-opacity="1"/>                
+                </linearGradient>                
+                <linearGradient id="eveningTwilightGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                    <stop class="gstart" offset="0%" stop-color="#00aad4" stop-opacity="1"/>
+                    <stop class="gmid" offset="50%" stop-color="#4e7ec5" stop-opacity="1"/>
+                    <stop class="gend" offset="100%" stop-color="#214478" stop-opacity="1"/>
+                </linearGradient> 
+                
             </defs>
+            <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
+            <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
+
+
+            <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
+            <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
+
+            <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
+            <rect x="50" y="360" width="100" height="50" fill="url(#morningTwilightGradient)" fill-opacity="0.9" id="tw1"></rect>
+            <rect x="100" y="360" width="100" height="50" fill="url(#morningGradient)" fill-opacity="0.9" id="twmorning"></rect>
+            <rect x="200" y="360" width="420" height="50" fill="url(#dayGradient)" fill-opacity="0.9" id="day"></rect>
+            <rect x="620" y="360" width="100" height="50" fill="url(#eveningGradient)" fill-opacity="0.9" id="twevening"></rect>
+            <rect x="670" y="360" width="100" height="50" fill="url(#eveningTwilightGradient)" fill-opacity="0.9" id="tw2"></rect>
+            <rect x="720" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night2"></rect>
+
+            <rect x="100" y="0" width="100" height="360" fill="yellow" fill-opacity="0.4" id="goldenhour1" title="Morning Golden hour"></rect>
+            <rect x="620" y="0" width="100" height="360" fill="yellow" fill-opacity="0.4" id="goldenhour2"></rect>
+
             <line x1="0" y1="180" x2="820" y2="180" stroke="lightgray" stroke-width="1"></line>
             <line x1="50" y1="0" x2="50" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="770" y1="0" x2="770" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="410" y1="0" x2="410" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="5,5"></line>
             <line x1="0" y1="0" x2="0" y2="360" stroke="lightgray" stroke-width="1" stroke-dasharray="3,3" id="cursorline"></line>
 
-            <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
-            <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
-            <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
-
-            <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
-            <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
-
-            <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
-            <rect x="100" y="360" width="100" height="50" fill="url(#morningGradient)" fill-opacity="0.9" id="twmorning"></rect>
-            <rect x="200" y="360" width="420" height="50" fill="url(#dayGradient)" fill-opacity="0.9" id="day"></rect>
-            <rect x="620" y="360" width="100" height="50" fill="url(#eveningGradient)" fill-opacity="0.9" id="twevening"></rect>
-            <rect x="720" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night2"></rect>
             <line x1="0" y1="360" x2="820" y2="360" stroke="lightgray" stroke-width="1"></line>
-            <line x1="0" y1="410" x2="820" y2="410" stroke="lightgray" stroke-width="1"></line>
-            
+            <line x1="0" y1="410" x2="820" y2="410" stroke="lightgray" stroke-width="1"></line>            
+            <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
 
             <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
             <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
@@ -156,9 +173,9 @@ export default {
                             .attr("d", lineFunction(functionData))
                             .attr("stroke", "steelblue")
                             .attr("stroke-width", 2)
-                            .attr("fill", "none")
-                            .attr("fill", "#a9c1ff") 
-                            .attr("fill-opacity", "0.1");
+                            .attr("fill", "none");
+                            //.attr("fill", "#a9c1ff") 
+                            //.attr("fill-opacity", "0.1");
 
         // scatterplot data:
 
@@ -242,6 +259,7 @@ export default {
           .attr("fill", skycolor);
 
         this.updateTimeline();
+        this.updateGoldenHours();
     },
 
     getPixelOffset: function(dt){
@@ -254,11 +272,14 @@ export default {
         var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
         var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
         var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
-        var t1 = tw.morningTwilight;
+        var atw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
 
         svgElem.select("#night1")
           .attr("x", 0)
-          .attr("width", 50 + this.getPixelOffset(tw.morningTwilight)-50);
+          .attr("width", 50 + this.getPixelOffset(atw.morningTwilight)-50);
+        svgElem.select("#tw1")
+          .attr("x", this.getPixelOffset(atw.morningTwilight))
+          .attr("width", this.getPixelOffset(tw.morningTwilight) - this.getPixelOffset(atw.morningTwilight));
         svgElem.select("#twmorning")
           .attr("x", this.getPixelOffset(tw.morningTwilight))
           .attr("width", this.getPixelOffset(s1) - this.getPixelOffset(tw.morningTwilight));
@@ -268,9 +289,28 @@ export default {
         svgElem.select("#twevening")
           .attr("x", this.getPixelOffset(s2))
           .attr("width", this.getPixelOffset(tw.eveningTwilight) - this.getPixelOffset(s2));
-        svgElem.select("#night2")
+        svgElem.select("#tw2")
           .attr("x", this.getPixelOffset(tw.eveningTwilight))
-          .attr("width", 820 - this.getPixelOffset(tw.eveningTwilight));
+          .attr("width", this.getPixelOffset(atw.eveningTwilight) - this.getPixelOffset(tw.eveningTwilight));
+        svgElem.select("#night2")
+          .attr("x", this.getPixelOffset(atw.eveningTwilight))
+          .attr("width", 820 - this.getPixelOffset(atw.eveningTwilight));
+    },
+
+    updateGoldenHours: function(){
+
+        var svgElem = d3.select(this.$el).select("svg");
+
+        var hmin = Sun.GetTwilightTime(-0.83, this.date, this.latitude, this.longitude);
+        var hmax = Sun.GetTwilightTime(10.0, this.date, this.latitude, this.longitude);
+        svgElem.select("#goldenhour1")
+          .attr("x", this.getPixelOffset(hmin.morningTwilight))
+          .attr("width", this.getPixelOffset(hmax.morningTwilight) - this.getPixelOffset(hmin.morningTwilight));
+
+        svgElem.select("#goldenhour2")
+          .attr("x", this.getPixelOffset(hmax.eveningTwilight))
+          .attr("width", this.getPixelOffset(hmin.eveningTwilight) - this.getPixelOffset(hmax.eveningTwilight));
+          
     },
 
     drawTimelineLabels: function() {
