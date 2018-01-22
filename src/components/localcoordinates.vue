@@ -70,7 +70,7 @@ export default {
       return Math.round(phita * 100) / 100;
     },
     sunHourAngle: function(){
-      var phita =  Sun.GetCurrentHourAngle(this.date, this.longitude);
+      var phita =  Sun.GetCurrentHourAngle(this.date, this.latitude, this.longitude);
       return Math.round(phita * 100) / 100;
     }
   }

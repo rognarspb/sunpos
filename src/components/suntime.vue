@@ -201,12 +201,12 @@ export default {
   },
   computed: {         
     solarNoonString: function(){
-      var sn =  Sun.GetSolarNoon(this.date, this.longitude);
+      var sn =  Sun.GetSolarNoon(this.date, this.latitude, this.longitude);
       var dateObj = JD.GetDateObject(sn);
       return Util.dateObjToString(dateObj);
     },
     solarNoon: function() {
-      var sn =  Sun.GetSolarNoon(this.date, this.longitude);
+      var sn =  Sun.GetSolarNoon(this.date, this.latitude, this.longitude);
       return sn.toFixed(6);     
     },
     sunriseHourAngle: function() {

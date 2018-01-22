@@ -21,8 +21,8 @@
 
     "sdoLink": "Sun photo",
     "sohoLink": "Sun's corona photo",
-    "jdcalc": "Julian day(JD) calculator"
-
+    "jdcalc": "Julian day(JD) calculator",
+    "timezone": "Timezone"
   },
   "ru": {
     "title": "Cолнце: положение, восход и закат",
@@ -38,14 +38,15 @@
     "seconds": "Секунды",
     "setNow": "Установить текущее время",
     "setNoon": "Установить полдень",
-    "currentCoordinates": "Текущие координаты",
+    "currentCoordinates": "Получить текущие координаты",
     
     "ecliptiTitle": "Плоскость эклиптики солнца",
     "addonTitle": "Вспомогательные ресурсы",
+    
     "sdoLink": "Фото солнца",
     "sohoLink": "Фото короны солнца",
-
-    "jdcalc": "Калькулятор юлианской даты"
+    "jdcalc": "Калькулятор юлианской даты",
+    "timezone": "Часовой пояс"
   }
 }
 </i18n>
@@ -117,13 +118,19 @@
       <div class="col-sm-12 col-lg-4 col-xl-4">
         <h4>{{$t('observer')}}</h4>
         <div class="form form-info">
-          <div class="form-group">
-            <label>{{$t('latitude')}}</label>
-            <input type="number" v-model="lat" class="form-control" />
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>{{$t('latitude')}}</label>
+              <input type="number" v-model="lat" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+              <label>{{$t('longitude')}}</label>
+              <input type="number" v-model="lon" class="form-control"/>
+            </div>
           </div>
           <div class="form-group">
-            <label>{{$t('longitude')}}</label>
-            <input type="number" v-model="lon" class="form-control"/>
+            <label>{{$t('timezone')}}</label>
+            <input type="text" v-model="timezoneName" readonly class="form-control"/>
           </div>
           <div class="form-group">
               <button class="btn btn-secondary btn-sm" v-on:click="getLocation">{{$t('currentCoordinates')}}</button>
@@ -219,6 +226,8 @@
 
 <script>
 import moment from 'moment';
+import tzlookup from 'tz-lookup';
+import momenttz from 'moment-timezone';
 import Datepicker from 'vuejs-datepicker';
 import Ecliptic from './components/ecliptic.vue';
 import SunStatus from './components/sunstatus.vue';
@@ -334,12 +343,9 @@ export default {
   computed:{   
     julianDate: function(){
       var dt = moment(this.userDate).toDate();
-      //var dt = new Date();
-      //dt.setFullYear(this.userDate.getFullYear());
-      //dt.setMonth(this.userDate.getMonth());
-      //dt.setDate(this.userDate.getDate());
       var res = dt.setHours(this.userHours, this.userMinutes, this.userSeconds);
-      return dt;
+      var dateWrapper = moment(dt).clone();
+      return dateWrapper.toDate();
     },
     eclipticLongitude: function(){
       var elon =  Sun.GetEclipticLongitude(this.julianDate);
@@ -347,6 +353,13 @@ export default {
     },
     globalLocale: function(){
       return this.$root.$options.i18n.locale;
+    },
+    timezoneName: function(){
+        var tzName = tzlookup(this.lat, this.lon);
+        var dt = new Date();
+        var hourOffset = moment(dt).tz(tzName).utcOffset()/60
+        var sign = hourOffset > 0 ? "+" : "";
+        return tzName + " (UTC" + sign + String(hourOffset).padStart(2, "0") + ")";
     }
   },
   watch: {

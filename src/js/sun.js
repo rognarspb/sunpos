@@ -1,5 +1,7 @@
 
 import moment from 'moment';
+import momenttimezone from 'moment-timezone';
+import tzlookup from 'tz-lookup';
 import * as JD from './jd.js';
 import * as Util from './util.js';
 
@@ -121,7 +123,7 @@ export function GetSunsetHourAngle(dt, lat){
 
 export function GetSunriseTime(dt, lat, lon) {
     var ha =  GetSunriseHourAngle(dt, lat);
-    var sn =  GetSolarNoon(dt, lon);
+    var sn =  GetSolarNoon(dt, lat, lon);
 
     var solarNoonObj = JD.GetDateObject(sn); 
     var solarNoonSeconds = Util.getTotalSeconds(solarNoonObj);
@@ -135,7 +137,7 @@ export function GetSunriseTime(dt, lat, lon) {
 
 export function GetSunsetTime(dt, lat, lon) {
     var ha =  GetSunriseHourAngle(dt, lat);
-    var sn =  GetSolarNoon(dt, lon);
+    var sn =  GetSolarNoon(dt, lat, lon);
 
     var solarNoonObj = JD.GetDateObject(sn); 
     var solarNoonSeconds = Util.getTotalSeconds(solarNoonObj);
@@ -163,13 +165,17 @@ export function GetDayLength(dt, lat, lon) {
 }
   
 // Jtransit = true solar transit or solar noon Julian date
-export function GetSolarNoon(currentDate, lon) {
+export function GetSolarNoon(currentDate, lat, lon) {
     var dt = new Date(); //now
-    var hourOffset = dt.getTimezoneOffset()/60;
+
+    var tzName = tzlookup(lat, lon);
+    var hourOffset = moment(dt).tz(tzName).utcOffset()/60;
+
+    //var hourOffset = dt.getTimezoneOffset()/60;
     dt.setDate(currentDate.getDate());
     dt.setMonth(currentDate.getMonth());
     dt.setFullYear(currentDate.getFullYear());
-    dt.setHours(-hourOffset, 0, 0);
+    dt.setHours(hourOffset, 0, 0);
     
     var jd = JD.GetJD(dt);
     var n = jd - 2451545.0 + 0.0008;
@@ -189,18 +195,18 @@ export function GetSolarNoon(currentDate, lon) {
 }
 
 export function GetSolarNoonTime(currentDate, lat, lon) {
-    var jd = GetSolarNoon(currentDate, lon);
+    var jd = GetSolarNoon(currentDate, lat, lon);
     var date = JD.GetDateObject(jd);
   
     return date;
 }
 
 // returns hour angle relative solar noon
-export function GetCurrentHourAngle(dt, lon){
+export function GetCurrentHourAngle(dt, lat, lon){
     var h = dt.getHours();
     var m = dt.getMinutes();
     var sec = dt.getSeconds();
-    var solarNoon = GetSolarNoon(dt, lon);
+    var solarNoon = GetSolarNoon(dt, lat, lon);
     var solarNoonObj = JD.GetDateObject(solarNoon);
 
     var currentSeconds = h*3600 + m*60 + sec;
@@ -211,7 +217,7 @@ export function GetCurrentHourAngle(dt, lon){
 }
 
 export function GetZenithAngle(dt, lat, lon) {
-    var hourAngle = GetCurrentHourAngle(dt, lon);// approximate
+    var hourAngle = GetCurrentHourAngle(dt, lat, lon);// approximate
     var PHI = rad(lat);
     var delta = rad(GetDelta(dt)); // declination
     var h = rad(hourAngle);
@@ -229,7 +235,7 @@ export function GetElevationAngle(dt, lat, lon) {
 export function GetAzimuthAngle(dt, lat, lon) {
     var theta = rad(GetZenithAngle(dt, lat, lon));
     var delta = rad(GetDelta(dt));
-    var h = rad(GetCurrentHourAngle(dt, lon));
+    var h = rad(GetCurrentHourAngle(dt, lat, lon));
     var PHI = rad(lat);
 
     var p = (-1.0*Math.sin(h)*Math.cos(delta))/Math.sin(theta);
@@ -248,7 +254,7 @@ export function GetTwilightTime(alpha, dt, lat, lon){
 
     var ha = GetHourAngle(alpha, dt, lat);
     var timeObj = Util.degreeToTime(ha);
-    var sn =  GetSolarNoon(dt, lon);
+    var sn =  GetSolarNoon(dt, lat, lon);
     var solarNoonObj = JD.GetDateObject(sn);
 
     var noonSeconds = Util.getTotalSeconds(solarNoonObj);
@@ -268,5 +274,3 @@ export function GetTwilightTime(alpha, dt, lat, lon){
 }
 
 
-  
-  
