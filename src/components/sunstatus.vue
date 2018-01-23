@@ -52,11 +52,11 @@
 
 
             <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
-            <rect x="0" y="181" width="820" height="179" fill="#c1ffa9" fill-opacity="0.2"></rect>
+            <rect x="0" y="181" width="820" height="178" fill="#c1ffa9" fill-opacity="0.2"></rect>
 
             <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
             <rect x="50" y="360" width="100" height="50" fill="url(#morningTwilightGradient)" fill-opacity="0.9" id="tw1"></rect>
-            <rect x="100" y="360" width="100" height="50" fill="url(#morningGradient)" fill-opacity="0.9" id="twmorning"></rect>
+            <rect x="100" y="360" width="100" height="50" fill="url(#morningGradient)" fill-opacity="0.9" id="twmorning" ></rect>
             <rect x="200" y="360" width="420" height="50" fill="url(#dayGradient)" fill-opacity="0.9" id="day"></rect>
             <rect x="620" y="360" width="100" height="50" fill="url(#eveningGradient)" fill-opacity="0.9" id="twevening"></rect>
             <rect x="670" y="360" width="100" height="50" fill="url(#eveningTwilightGradient)" fill-opacity="0.9" id="tw2"></rect>
@@ -120,6 +120,7 @@ export default {
   mounted: function(){
       this.update();
       this.drawTimelineLabels();
+      this.setTimelineTooltips();
   },
   methods: {  
     displayFunction: function(ix){
@@ -297,6 +298,8 @@ export default {
           .attr("width", 820 - this.getPixelOffset(atw.eveningTwilight));
     },
 
+
+
     updateGoldenHours: function(){
 
         var svgElem = d3.select(this.$el).select("svg");
@@ -344,6 +347,25 @@ export default {
               .attr("stroke", "black");
     },
 
+    setTimelineTooltips: function(){
+        var svgElem = d3.select(this.$el).select("svg");
+
+        svgElem.selectAll("#night1, #tw1, #twmorning, #day, #twevening, #tw2, #night2")
+          .on("mouseover", function() {	
+            svgElem.append("rect")
+              .attr("x", d3.select(this).attr("x"))
+              .attr("y", d3.select(this).attr("y"))
+              .attr("width", d3.select(this).attr("width"))
+              .attr("height", d3.select(this).attr("height"))
+              .attr("id", "rectSelection")
+              .style("fill", "none")
+              .style("stroke", "orangered")
+              .style("stroke-width", 2);
+          })
+          .on("mouseout", function(d) {		
+              d3.select("#rectSelection").remove();
+          });
+    },
 
     updateSun: function(datetime, id, opacity) {
         var totalMin = datetime.getHours()*60 + datetime.getMinutes();
