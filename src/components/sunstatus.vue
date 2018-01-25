@@ -17,6 +17,7 @@
 <template>
       <div style="width: 100%; height: 100%;">
         <div class="tooltip" style="opacity: 0" id="infoTooltip"></div>
+        <div class="tooltip" style="opacity: 0" id="timelineTooltip"></div>
         <svg width="100%" height="100%" viewBox="0 0 820 460"> 
             <defs>
                 <linearGradient id="dayGradient" x1="0%" x2="100%" y1="0%" y2="0%">
@@ -273,29 +274,35 @@ export default {
         var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
         var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
         var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
-        var atw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
+        var ntw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
+        var atw = Sun.GetTwilightTime(-18.0, this.date, this.latitude, this.longitude);
 
         svgElem.select("#night1")
           .attr("x", 0)
-          .attr("width", 50 + this.getPixelOffset(atw.morningTwilight)-50);
+          .attr("width", 50 + this.getPixelOffset(ntw.morningTwilight)-50);
+
+        // nautical twilights
         svgElem.select("#tw1")
-          .attr("x", this.getPixelOffset(atw.morningTwilight))
-          .attr("width", this.getPixelOffset(tw.morningTwilight) - this.getPixelOffset(atw.morningTwilight));
+          .attr("x", this.getPixelOffset(ntw.morningTwilight))
+          .attr("width", this.getPixelOffset(tw.morningTwilight) - this.getPixelOffset(ntw.morningTwilight));
+        // civil twilight
         svgElem.select("#twmorning")
           .attr("x", this.getPixelOffset(tw.morningTwilight))
           .attr("width", this.getPixelOffset(s1) - this.getPixelOffset(tw.morningTwilight));
         svgElem.select("#day")
           .attr("x", this.getPixelOffset(s1))
           .attr("width", this.getPixelOffset(s2) - this.getPixelOffset(s1));
+        // civil twilight
         svgElem.select("#twevening")
           .attr("x", this.getPixelOffset(s2))
           .attr("width", this.getPixelOffset(tw.eveningTwilight) - this.getPixelOffset(s2));
+        // nautical twilight
         svgElem.select("#tw2")
           .attr("x", this.getPixelOffset(tw.eveningTwilight))
-          .attr("width", this.getPixelOffset(atw.eveningTwilight) - this.getPixelOffset(tw.eveningTwilight));
+          .attr("width", this.getPixelOffset(ntw.eveningTwilight) - this.getPixelOffset(tw.eveningTwilight));
         svgElem.select("#night2")
-          .attr("x", this.getPixelOffset(atw.eveningTwilight))
-          .attr("width", 820 - this.getPixelOffset(atw.eveningTwilight));
+          .attr("x", this.getPixelOffset(ntw.eveningTwilight))
+          .attr("width", 820 - this.getPixelOffset(ntw.eveningTwilight));
     },
 
 
@@ -346,9 +353,51 @@ export default {
               .attr("y2", 415)
               .attr("stroke", "black");
     },
+    getTimelineTextById(id){
+      var htmlText = "Element id = " + event.target.id;
 
+      if (id == "tw1"){      
+        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
+        var ntw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
+        htmlText = "<strong>Nautical twilight (morning)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(ntw.morningTwilight) + " - " + Util.timeObjToShortString(tw.morningTwilight) + "</p>";        
+      }
+      else if (id == "twmorning"){
+        var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
+        htmlText = "<strong>Civil twilight (morning)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(tw.morningTwilight) + " - " + Util.timeObjToShortString(s1) + "</p>";
+      }
+      else if (id == "day"){
+        var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+        var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+        htmlText = "<strong>Day</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(s1) + " - " + Util.timeObjToShortString(s2) + "</p>";
+      }
+      else if (id == "twevening"){      
+        var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
+        htmlText = "<strong>Civil twilight (evening)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(s2) + " - " + Util.timeObjToShortString(tw.eveningTwilight) + "</p>";        
+      }
+      else if (id == "tw2"){      
+        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
+        var ntw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
+        htmlText = "<strong>Nautical twilight (evening)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(tw.eveningTwilight) + " - " + Util.timeObjToShortString(ntw.eveningTwilight) + "</p>";        
+      }
+      else if (id == "night1"){
+        htmlText = "<strong>Night</strong><br/>";
+      }
+      else if (id == "night2"){
+        htmlText = "<strong>Night</strong><br/>";
+      }
+      return htmlText;
+    },
     setTimelineTooltips: function(){
         var svgElem = d3.select(this.$el).select("svg");
+        var tooltip = d3.select(this.$el).select("#timelineTooltip");
+        var self = this;
 
         svgElem.selectAll("#night1, #tw1, #twmorning, #day, #twevening, #tw2, #night2")
           .on("mouseover", function() {	
@@ -361,9 +410,20 @@ export default {
               .style("fill", "none")
               .style("stroke", "orangered")
               .style("stroke-width", 2);
+
+            var htmlText = "id = " + event.target.id;
+            tooltip.transition()		
+              .duration(200)		
+              .style("opacity", .9);		
+            tooltip.html(self.getTimelineTextById(event.target.id))	
+              .style("left", (event.pageX + 15) + "px")		
+              .style("top", (event.pageY - 340) + "px");	
           })
           .on("mouseout", function(d) {		
-              d3.select("#rectSelection").remove();
+            d3.select("#rectSelection").remove();
+            tooltip.transition()		
+              .duration(500)		
+              .style("opacity", 0);	
           });
     },
 

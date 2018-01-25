@@ -97,6 +97,16 @@ export function timeObjToString(timeObj) {
     + String(timeObj.seconds).padStart(2, '0') + "sec";
 }
 
+export function timeObjToShortString(timeObj) {
+    if (!timeObj){
+        return '';
+    }
+
+    return String(timeObj.hours).padStart(2, '0') + ":" 
+    + String(timeObj.minutes).padStart(2, '0');
+
+}
+
 export function timeObjToDate(dt, timeObj) {
     var date = new Date();
     date.setFullYear(dt.getFullYear());
