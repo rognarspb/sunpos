@@ -56,11 +56,13 @@
             <rect x="0" y="181" width="820" height="178" fill="#c1ffa9" fill-opacity="0.2"></rect>
 
             <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
+            <rect x="25" y="360" width="100" height="50" fill="#315488" fill-opacity="0.9" id="atw1"></rect>
             <rect x="50" y="360" width="100" height="50" fill="url(#morningTwilightGradient)" fill-opacity="0.9" id="tw1"></rect>
             <rect x="100" y="360" width="100" height="50" fill="url(#morningGradient)" fill-opacity="0.9" id="twmorning" ></rect>
             <rect x="200" y="360" width="420" height="50" fill="url(#dayGradient)" fill-opacity="0.9" id="day"></rect>
             <rect x="620" y="360" width="100" height="50" fill="url(#eveningGradient)" fill-opacity="0.9" id="twevening"></rect>
             <rect x="670" y="360" width="100" height="50" fill="url(#eveningTwilightGradient)" fill-opacity="0.9" id="tw2"></rect>
+            <rect x="700" y="360" width="100" height="50" fill="#315488" fill-opacity="0.9" id="atw2"></rect>
             <rect x="720" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night2"></rect>
 
             <rect x="100" y="0" width="100" height="360" fill="yellow" fill-opacity="0.4" id="goldenhour1" title="Morning Golden hour"></rect>
@@ -279,8 +281,11 @@ export default {
 
         svgElem.select("#night1")
           .attr("x", 0)
-          .attr("width", 50 + this.getPixelOffset(ntw.morningTwilight)-50);
-
+          .attr("width", 50 + this.getPixelOffset(atw.morningTwilight)-50);
+        // astronomical twilights
+        svgElem.select("#atw1")
+          .attr("x", this.getPixelOffset(atw.morningTwilight))
+          .attr("width", this.getPixelOffset(ntw.morningTwilight) - this.getPixelOffset(atw.morningTwilight));
         // nautical twilights
         svgElem.select("#tw1")
           .attr("x", this.getPixelOffset(ntw.morningTwilight))
@@ -300,9 +305,13 @@ export default {
         svgElem.select("#tw2")
           .attr("x", this.getPixelOffset(tw.eveningTwilight))
           .attr("width", this.getPixelOffset(ntw.eveningTwilight) - this.getPixelOffset(tw.eveningTwilight));
-        svgElem.select("#night2")
+        // astronomical twilights
+        svgElem.select("#atw2")
           .attr("x", this.getPixelOffset(ntw.eveningTwilight))
-          .attr("width", 820 - this.getPixelOffset(ntw.eveningTwilight));
+          .attr("width", this.getPixelOffset(atw.eveningTwilight) - this.getPixelOffset(ntw.eveningTwilight));
+        svgElem.select("#night2")
+          .attr("x", this.getPixelOffset(atw.eveningTwilight))
+          .attr("width", 820 - this.getPixelOffset(atw.eveningTwilight));
     },
 
 
@@ -355,43 +364,60 @@ export default {
     },
     getTimelineTextById(id){
       var htmlText = "Element id = " + event.target.id;
+      var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+      var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+      var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
+      var ntw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
+      var atw = Sun.GetTwilightTime(-18.0, this.date, this.latitude, this.longitude);
+      var hmax = Sun.GetTwilightTime(10.0, this.date, this.latitude, this.longitude);       
+      var hmin =  Sun.GetTwilightTime(-0.83, this.date, this.latitude, this.longitude);
+      
+      if (id == "atw1"){              
 
-      if (id == "tw1"){      
-        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
-        var ntw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
+        htmlText = "<strong>Astronomical twilight (morning)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(atw.morningTwilight) + " - " + Util.timeObjToShortString(ntw.morningTwilight) + "</p>";        
+      }
+      else if (id == "tw1"){      
         htmlText = "<strong>Nautical twilight (morning)</strong><br/>";
         htmlText += "<p>" + Util.timeObjToShortString(ntw.morningTwilight) + " - " + Util.timeObjToShortString(tw.morningTwilight) + "</p>";        
       }
       else if (id == "twmorning"){
-        var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
-        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
         htmlText = "<strong>Civil twilight (morning)</strong><br/>";
         htmlText += "<p>" + Util.timeObjToShortString(tw.morningTwilight) + " - " + Util.timeObjToShortString(s1) + "</p>";
       }
       else if (id == "day"){
-        var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
-        var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
         htmlText = "<strong>Day</strong><br/>";
         htmlText += "<p>" + Util.timeObjToShortString(s1) + " - " + Util.timeObjToShortString(s2) + "</p>";
       }
       else if (id == "twevening"){      
-        var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
-        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
         htmlText = "<strong>Civil twilight (evening)</strong><br/>";
         htmlText += "<p>" + Util.timeObjToShortString(s2) + " - " + Util.timeObjToShortString(tw.eveningTwilight) + "</p>";        
       }
       else if (id == "tw2"){      
-        var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
-        var ntw = Sun.GetTwilightTime(-12.0, this.date, this.latitude, this.longitude);
         htmlText = "<strong>Nautical twilight (evening)</strong><br/>";
         htmlText += "<p>" + Util.timeObjToShortString(tw.eveningTwilight) + " - " + Util.timeObjToShortString(ntw.eveningTwilight) + "</p>";        
       }
+      else if (id == "atw2"){      
+        htmlText = "<strong>Astronomical twilight (evening)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(ntw.eveningTwilight) + " - " + Util.timeObjToShortString(atw.eveningTwilight) + "</p>";        
+      }
       else if (id == "night1"){
         htmlText = "<strong>Night</strong><br/>";
+        htmlText += "till " + Util.timeObjToShortString(atw.morningTwilight) 
       }
       else if (id == "night2"){
         htmlText = "<strong>Night</strong><br/>";
+        htmlText += "starts from " + Util.timeObjToShortString(atw.eveningTwilight) 
       }
+      else if (id == "goldenhour1"){      
+        htmlText = "<strong>Golden hour (morning)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(hmin.morningTwilight) + " - " + Util.timeObjToShortString(hmax.morningTwilight) + "</p>";        
+      }
+      else if (id == "goldenhour2"){      
+        htmlText = "<strong>Golden hour (evening)</strong><br/>";
+        htmlText += "<p>" + Util.timeObjToShortString(hmin.eveningTwilight) + " - " + Util.timeObjToShortString(hmax.eveningTwilight) + "</p>";        
+      }
+      
       return htmlText;
     },
     setTimelineTooltips: function(){
@@ -399,7 +425,7 @@ export default {
         var tooltip = d3.select(this.$el).select("#timelineTooltip");
         var self = this;
 
-        svgElem.selectAll("#night1, #tw1, #twmorning, #day, #twevening, #tw2, #night2")
+        svgElem.selectAll("#night1, #tw1, #twmorning, #day, #twevening, #tw2, #night2, #atw1, #atw2, #goldenhour1, #goldenhour2")
           .on("mouseover", function() {	
             svgElem.append("rect")
               .attr("x", d3.select(this).attr("x"))
