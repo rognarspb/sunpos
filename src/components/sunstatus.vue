@@ -4,13 +4,47 @@
     "sunrise": "Sunrise",
     "sunset": "Sunset",
     "solarnoon": "Solar noon",
-    "horizont": "Skyline"
+    "horizont": "Skyline",
+
+    "astroTwilight": "Astronomical twilight",
+    "nauticalTwilight": "Nautical twilight",
+    "civilTwilight": "Civil twilight",
+    "goldenHour": "Golden hour",
+    "morning": "morning",
+    "evening": "evening",
+
+    "day": "Day",
+    "night": "Night",
+
+    "till": "Till ",
+    "startsfrom": "Starts from ",
+
+    "time": "Time",
+    "azimuth": "azimuth",
+    "elevation": "elevation"
   },
   "ru": {
     "sunrise": "Восход",
     "sunset": "Закат",
     "solarnoon": "Истинный полдень",
-    "horizont": "Линия горизонта"
+    "horizont": "Линия горизонта",
+
+    "astroTwilight": "Астрономические сумерки",
+    "nauticalTwilight": "Навигационные сумерки",
+    "civilTwilight": "Гражданские сумерки",
+    "goldenHour": "Золотой час",
+    "morning": "утро",
+    "evening": "вечер",
+
+    "day": "День",
+    "night": "Ночь",
+    "till": "До",
+    "startsfrom": "Начинается в ",
+
+    "time": "Время",
+    "azimuth": "азимут",
+    "elevation": "высота"
+
   }
 }
 </i18n>
@@ -152,11 +186,11 @@ export default {
     displayHtml: function(ix){
         var data = this.displayFunction(ix);
         var dateStr = Util.timeToShortString(data.date);
-        return  "Time: " + dateStr + 
+        return  this.$t("time") + ": " + dateStr + 
                 "<br/>" + 
-                "&alpha;=" + data.value.toFixed(2) + "&deg; (elevation)" +
+                "&alpha;=" + data.value.toFixed(2) + "&deg; (" + this.$t("elevation") + ")" +
                 "<br/>" + 
-                "f=" + data.azimuth.toFixed(2) + "&deg; (azimuth)";
+                "f=" + data.azimuth.toFixed(2) + "&deg; (" + this.$t("azimuth") + ")";
 
     },
     update: function(){
@@ -374,48 +408,59 @@ export default {
       
       if (id == "atw1"){              
 
-        htmlText = "<strong>Astronomical twilight (morning)</strong><br/>";
+        htmlText = '<p><strong>' + this.$t('astroTwilight') +  ' (' + this.$t('morning') + ')</strong></p>';
         htmlText += "<p>" + Util.timeObjToShortString(atw.morningTwilight) + " - " + Util.timeObjToShortString(ntw.morningTwilight) + "</p>";        
       }
       else if (id == "tw1"){      
-        htmlText = "<strong>Nautical twilight (morning)</strong><br/>";
+        htmlText = '<p><strong>' + this.$t('nauticalTwilight') +  ' (' + this.$t('morning') + ')</strong></p>';
         htmlText += "<p>" + Util.timeObjToShortString(ntw.morningTwilight) + " - " + Util.timeObjToShortString(tw.morningTwilight) + "</p>";        
       }
       else if (id == "twmorning"){
-        htmlText = "<strong>Civil twilight (morning)</strong><br/>";
+        htmlText = '<p><strong>' + this.$t('civilTwilight') +  ' (' + this.$t('morning') + ')</strong></p>';
         htmlText += "<p>" + Util.timeObjToShortString(tw.morningTwilight) + " - " + Util.timeObjToShortString(s1) + "</p>";
       }
       else if (id == "day"){
-        htmlText = "<strong>Day</strong><br/>";
+        htmlText = '<p><strong>' + this.$t('day') +  '</strong></p>';
         htmlText += "<p>" + Util.timeObjToShortString(s1) + " - " + Util.timeObjToShortString(s2) + "</p>";
       }
       else if (id == "twevening"){      
-        htmlText = "<strong>Civil twilight (evening)</strong><br/>";
+        htmlText = "<p><strong>" + this.$t('civilTwilight') + " (" + this.$t('evening') + ")</strong></p>";
         htmlText += "<p>" + Util.timeObjToShortString(s2) + " - " + Util.timeObjToShortString(tw.eveningTwilight) + "</p>";        
       }
       else if (id == "tw2"){      
-        htmlText = "<strong>Nautical twilight (evening)</strong><br/>";
+        htmlText = "<p><strong>" + this.$t('nauticalTwilight') + " (" + this.$t('evening') + ")</strong></p>";
         htmlText += "<p>" + Util.timeObjToShortString(tw.eveningTwilight) + " - " + Util.timeObjToShortString(ntw.eveningTwilight) + "</p>";        
       }
       else if (id == "atw2"){      
-        htmlText = "<strong>Astronomical twilight (evening)</strong><br/>";
+        htmlText = "<p><strong>" + this.$t('astroTwilight') + " (" + this.$t('evening') + ")</strong></p>";
         htmlText += "<p>" + Util.timeObjToShortString(ntw.eveningTwilight) + " - " + Util.timeObjToShortString(atw.eveningTwilight) + "</p>";        
       }
       else if (id == "night1"){
-        htmlText = "<strong>Night</strong><br/>";
-        htmlText += "till " + Util.timeObjToShortString(atw.morningTwilight) 
+        htmlText = "<p><strong>" + this.$t('night') + "</strong></p>";
+        htmlText += this.$t("till") + " " + Util.timeObjToShortString(atw.morningTwilight) 
       }
       else if (id == "night2"){
-        htmlText = "<strong>Night</strong><br/>";
-        htmlText += "starts from " + Util.timeObjToShortString(atw.eveningTwilight) 
+        htmlText = "<p><strong>" + this.$t('night') + "</strong></p>";
+        htmlText += this.$t("startsfrom") + " " + Util.timeObjToShortString(atw.eveningTwilight) 
       }
       else if (id == "goldenhour1"){      
-        htmlText = "<strong>Golden hour (morning)</strong><br/>";
-        htmlText += "<p>" + Util.timeObjToShortString(hmin.morningTwilight) + " - " + Util.timeObjToShortString(hmax.morningTwilight) + "</p>";        
+        htmlText = "<p><strong>" + this.$t('goldenHour') + " (" + this.$t('morning') + ")</strong></p>";
+        htmlText += "<p>" + Util.timeObjToShortString(hmin.morningTwilight) + " - " + Util.timeObjToShortString(hmax.morningTwilight) + "</p>";  
+        
+        var t1  = Util.timeObjToDate(this.date, hmin.morningTwilight);
+        var t2  = Util.timeObjToDate(this.date, hmin.eveningTwilight);
+        var az1 = Sun.GetAzimuthAngle(t1, this.latitude, this.longitude).toFixed(2);
+        var az2 = Sun.GetAzimuthAngle(t2, this.latitude, this.longitude).toFixed(2);
+        htmlText += "<p>" + "&alpha; = "  + az1 + "&deg; - " + az2 + "&deg; </p>";        
       }
       else if (id == "goldenhour2"){      
-        htmlText = "<strong>Golden hour (evening)</strong><br/>";
+        htmlText = "<p><strong>" + this.$t('goldenHour') + " (" + this.$t('evening') + ")</strong></p>";
         htmlText += "<p>" + Util.timeObjToShortString(hmin.eveningTwilight) + " - " + Util.timeObjToShortString(hmax.eveningTwilight) + "</p>";        
+        var t2  = Util.timeObjToDate(this.date, hmax.morningTwilight);
+        var t1  = Util.timeObjToDate(this.date, hmax.eveningTwilight);
+        var az1 = Sun.GetAzimuthAngle(t1, this.latitude, this.longitude).toFixed(2);
+        var az2 = Sun.GetAzimuthAngle(t2, this.latitude, this.longitude).toFixed(2);
+        htmlText += "<p>" + "&alpha; = "  + az1 + "&deg; - " + az2 + "&deg; </p>";        
       }
       
       return htmlText;
@@ -511,14 +556,26 @@ export default {
 <style lang="scss">
   div.tooltip {	
     position: absolute;			
-    width: 160px;					
-    height: 50px;					
+    min-width: 160px;					
+    height: auto;
     padding: 5px;				
     font: 12px sans-serif;		
     background: lightsteelblue;	
     border: 0px;		
     border-radius: 2px;			
-    pointer-events: none;			
+    pointer-events: none;
+    p {
+      margin-bottom: 0.1rem;
+    }
+    strong:after {
+      display: block;
+      content: " ";
+      height: 0.2rem;      
+    }
+    br{
+      height: 0.1rem;
+    }
 }
 </style>
 
+line-height
