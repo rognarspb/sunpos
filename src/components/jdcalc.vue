@@ -60,7 +60,7 @@
               <label>{{$t('seconds')}}</label>
               <input type="number" class="form-control" v-model="userSeconds" placeholder="ss" :readonly="direction=='toDate'">
             </div>
-          </div>
+        </div>
         <div class="form-group" v-if="direction=='toJD'">
             <button class="btn btn-default btn-sm" v-on:click="setNow">{{$t('setNow')}}</button>
         </div>
@@ -74,16 +74,18 @@
             </div>
         </div>
         <hr/>
-        <div class="form-group">
-            <label>{{$t('julianDay')}}</label>
-            <input type="number" class="form-control" v-model="jd" placeholder="JD" :readonly="direction == 'toJD'">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>{{$t('julianDay')}}</label>
+                <input type="number" class="form-control" v-model="jd" placeholder="JD" :readonly="direction == 'toJD'">
+            </div>
+            <div class="form-group col-md-6">
+                <label>{{$t('julianDayNumber')}}</label>
+                <input type="number" class="form-control" v-model="jdn" placeholder="JDN" readonly="readonly">
+            </div>
         </div>
-        <div class="form-group">
-            <label>{{$t('julianDayNumber')}}</label>
-            <input type="number" class="form-control" v-model="jdn" placeholder="JDN" readonly="readonly">
-        </div>
-        <br/>
-        <div class="alert alert-info" v-html="$t('help')">
+        <button v-on:click="toggleHelp" class="btn btn-default btn-sm"><i class="fa fa-info"></i></button>
+        <div class="alert alert-info" v-html="$t('help')" v-if="showHelp">
         </div>
     </div>
 </template>
@@ -117,7 +119,8 @@ export default {
         userHours: 12,
         userMinutes: 0,
         userSeconds: 0,
-        direction: 'toJD'
+        direction: 'toJD',
+        showHelp: false
     }
   },
   created: function() {
@@ -158,7 +161,9 @@ export default {
         this.userMinutes = now.getMinutes();
         this.userSeconds = now.getSeconds();
     },
-    
+    toggleHelp: function(){
+        this.showHelp = !this.showHelp ;
+    }
   },
   computed: {
     fullDate: function(){

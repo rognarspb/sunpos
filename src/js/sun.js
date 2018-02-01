@@ -273,4 +273,33 @@ export function GetTwilightTime(alpha, dt, lat, lon){
     return res;
 }
 
+export function GetElevationTime(alpha, dt, lat, lon){
+
+    var ha = GetHourAngle(alpha, dt, lat);
+    var timeObj = Util.degreeToTime(ha);
+    var sn =  GetSolarNoon(dt, lat, lon);
+    var solarNoonObj = JD.GetDateObject(sn);
+
+    var noonSeconds = Util.getTotalSeconds(solarNoonObj);
+    var elevSeconds = Util.getTotalSeconds(timeObj);
+
+    var morningSeconds = noonSeconds - elevSeconds;
+    var eveningSeconds = noonSeconds + elevSeconds;
+    var morning = Util.getTimeFromSeconds(morningSeconds);
+    var evening = Util.getTimeFromSeconds(eveningSeconds);
+
+    var dtMorning = Util.timeObjToDate(dt, morning);
+    var dtEvening = Util.timeObjToDate(dt, evening);
+    var morningAzimuth = GetAzimuthAngle(dtMorning, lat, lon);
+    var eveningAzimuth = GetAzimuthAngle(dtEvening, lat, lon);
+
+    return {
+        hourAngle: ha,
+        morningTime: morning,
+        morningAzimuth: morningAzimuth,
+        eveningTime: evening,
+        eveningAzimuth: eveningAzimuth
+    };
+}
+
 

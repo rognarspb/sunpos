@@ -18,8 +18,10 @@
 
     "ecliptiTitle": "Ecliptic plane",
     "addonTitle": "Additional information",
+    "photoTitle": "Sun photos (online)",
 
     "sdoLink": "Sun photo",
+    "sohoSolarLink": "Sun photo",
     "sohoLink": "Sun's corona photo",
     "jdcalc": "Julian day(JD) calculator",
     "timezone": "Timezone"
@@ -42,8 +44,10 @@
     
     "ecliptiTitle": "Плоскость эклиптики солнца",
     "addonTitle": "Вспомогательные ресурсы",
+    "photoTitle": "Фотографии солнца (online)",
     
     "sdoLink": "Фото солнца",
+    "sohoSolarLink": "Фото солнца",
     "sohoLink": "Фото короны солнца",
     "jdcalc": "Калькулятор юлианской даты",
     "timezone": "Часовой пояс"
@@ -206,6 +210,18 @@
         <jdcalc></jdcalc>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
+        <azcalc :date="julianDate" :latitude="lat" :longitude="lon"></azcalc>
+      </div>
+    </div>
+
+    <hr/>
+    <h3 class="text-center"><a href="#photos">{{$t('photoTitle')}}</a></h3>
+    <br/>
+    <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
+    <br/>
+    
+    <div class="row" id="photos">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
         <div class="info text-center">
           <h4>{{$t('sdoLink')}} <a href="https://sdo.gsfc.nasa.gov/data/">SDO</a></h4>
           <img class="img-fluid" src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg"/>
@@ -213,12 +229,15 @@
       </div>    
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <div class="info text-center">
-          <h4>{{$t('sohoLink')}} <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
-          <img class="img-fluid" width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
+          <h4>{{$t('sohoSolarLink')}} <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
+          <img class="img-fluid" width="512" height="512" src="https://sohowww.nascom.nasa.gov/data/realtime/eit_304/512/latest.jpg"/>
         </div>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-
+        <div class="info text-center">
+          <h4>{{$t('sohoLink')}} <a href="https://soho.nascom.nasa.gov/data/realtime/realtime-update.html">SOHO</a></h4>
+          <img class="img-fluid" width="512" height="512" src="https://soho.nascom.nasa.gov/data/realtime/c2/1024/latest.jpg"/>
+        </div>
       </div>
     </div>
   </div>
@@ -233,6 +252,7 @@ import Ecliptic from './components/ecliptic.vue';
 import SunStatus from './components/sunstatus.vue';
 import SunTime from './components/suntime.vue';
 import JDCalc from './components/jdcalc.vue';
+import AZCalc from './components/azcalc.vue';
 import DateInfo from './components/dateinfo.vue';
 import Coordinates from './components/coordinates.vue';
 import LocalCoordinates from './components/localcoordinates.vue';
@@ -248,6 +268,7 @@ export default {
     'datepicker':  Datepicker,
     'ecliptic': Ecliptic,
     'jdcalc': JDCalc,
+    'azcalc': AZCalc,
     'sunstatus': SunStatus,
     'suntime': SunTime,
     'dateinfo': DateInfo,
