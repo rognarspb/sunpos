@@ -87,7 +87,7 @@
 
 
             <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
-            <rect x="0" y="181" width="820" height="178" fill="#c1ffa9" fill-opacity="0.2"></rect>
+            <rect x="0" y="181" width="820" height="178" fill="#c1ffa9" fill-opacity="0.2" id="earthrect"></rect>
 
             <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
             <rect x="25" y="360" width="100" height="50" fill="#315488" fill-opacity="0.9" id="atw1"></rect>
@@ -112,8 +112,22 @@
             <line x1="0" y1="410" x2="820" y2="410" stroke="lightgray" stroke-width="1"></line>            
             <line x1="410" y1="0" x2="410" y2="360" stroke="orange" stroke-width="1" stroke-dasharray="5,5" id="solarNoonLine"></line>
 
-            <text x = "120" y = "100" font-family="Arial" font-size="24" fill="orange">{{$t('sunrise')}}: {{sunrise}}</text>
-            <text x = "500" y = "100" font-family="Arial" font-size="24" fill="steelblue">{{$t('sunset')}}: {{sunset}}</text>
+            <!-- <circle cx="120" cy="80" r="80" stroke="none" fill="white" ></circle> -->
+            <g transform="translate(120 30)">
+              <text x="0" y="0" font-family="Arial" font-size="2em" fill="darkorange" id="sunriselabel" class="label-lg">
+                <tspan x="0" dy="1.2em" text-anchor="middle">{{$t('sunrise')}}</tspan>
+                <tspan x="0" dy="1.2em" text-anchor="middle">{{sunrise}}</tspan>
+              </text>
+            </g>
+
+            <!-- <circle cx="700" cy="80" r="80" stroke="none" fill="white" ></circle> -->
+            <g transform="translate(700 30)">
+              <text x="0" y="0" font-family="Arial" font-size="2em" fill="steelblue" id="sunsetlabel" class="label-lg">
+                <tspan x="0" dy="1.2em" text-anchor="middle">{{$t('sunset')}}</tspan>
+                <tspan x="0" dy="1.2em" text-anchor="middle">{{sunset}}</tspan>
+              </text>
+            </g>
+            
             <text x = "250" y = "350" font-family="Arial" font-size="16" fill="gray" id="solarNoonText">{{$t('solarnoon')}}: {{solarnoon}}</text>
             <text x = "30" y = "200" font-family="Arial" font-size="16" fill="gray">00:00</text>
             <text x = "390" y = "200" font-family="Arial" font-size="16" fill="gray">12:00</text>
@@ -217,7 +231,7 @@ export default {
 
         // scatterplot data:
 
-        svgElem.selectAll("circle").remove();
+        svgElem.selectAll("circle.cursor").remove();
         var cursorcircle = svgElem.append("circle")
           .attr("r", 20)
           .attr("cx",0)
@@ -225,8 +239,9 @@ export default {
           .attr("fill", "yellow")
           .attr("stroke","orange")
           .style("opacity", 0)
-          .attr("id","cursor");
+          .attr("class","cursor");
 
+        svgElem.selectAll("circle.dotcursor").remove();
         //  var cursorcircle = svgElem.select("#cursor");
         svgElem.selectAll("dot")	
           .data(functionData.filter(function(d){
@@ -238,6 +253,7 @@ export default {
           .attr("cy", function(d) { return 180 - d.y; })
           .attr("stroke", "steelblue")
           .attr("fill", "steelblue")
+          .attr("class","dotcursor")
           .style("opacity", .3)
           .on("mouseover", function(d) {		
               tooltip.transition()		
@@ -292,9 +308,19 @@ export default {
         this.updateSun(moment(this.date).toDate(), 'sun', 1.0);  
         
         var elevation = Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
-        var skycolor = elevation > 0 ? "#e2efff" : "#a2afaf";
+        var skycolor = elevation > 0 ? "#e2efff" : "#121f1f";
         svgElem.select("#skyrect")
           .attr("fill", skycolor);
+
+        if (elevation > 0 ){
+          svgElem.select("#sunriselabel").attr("fill", "darkorange");
+          svgElem.select("#sunsetlabel").attr("fill", "steelblue");
+          svgElem.select("#earthrect").attr("fill", "#c1ffa9");
+        } else {
+          svgElem.select("#sunriselabel").attr("fill", "yellow");
+          svgElem.select("#sunsetlabel").attr("fill", "white");
+          svgElem.select("#earthrect").attr("fill", "#03ab3a");
+        }
 
         this.updateTimeline();
         this.updateGoldenHours();

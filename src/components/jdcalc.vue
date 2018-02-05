@@ -84,7 +84,7 @@
                 <input type="number" class="form-control" v-model="jdn" placeholder="JDN" readonly="readonly">
             </div>
         </div>
-        <button v-on:click="toggleHelp" class="btn btn-default btn-sm"><i class="fa fa-info"></i></button>
+        <button v-on:click="toggleHelp" class="btn btn-default btn-sm"><i class="fa fa-question-circle"></i></button>
         <div class="alert alert-info" v-html="$t('help')" v-if="showHelp">
         </div>
     </div>
