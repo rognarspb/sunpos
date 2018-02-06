@@ -425,18 +425,18 @@ export default {
   color: #2c3e50;
   @media only screen and (min-resolution:96dpi) and (max-resolution:264dpi) and (min-width:768px) and (max-width:1024px),
        only screen and (-webkit-min-device-pixel-ratio: 1) and (-webkit-max-device-pixel-ratio:3) and (min-width:768px) and (max-width:1024px) {
-    text.label-lg{
-      font-size: 1.2em;
-    }
-    div, p {
-      font-size: 2rem;
-    }
-    h1, h2, h3, h4{
-      font-size: 3rem;
-    }
-    button, input{
-      font-size: 2rem;
-    }
+    // text.label-lg{
+    //   font-size: 1.2em;
+    // }
+    // div, p {
+    //   font-size: 2rem;
+    // }
+    // h1, h2, h3, h4{
+    //   font-size: 3rem;
+    // }
+    // button, input{
+    //   font-size: 2rem;
+    // }
   }
 }
 

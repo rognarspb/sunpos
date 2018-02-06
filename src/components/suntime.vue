@@ -51,7 +51,7 @@
         <div class="info">
           <!-- <h5>Восход и закат</h5> -->
           <div class="row row-img">
-            <div class="col-1 vparent">
+            <div class="col-2 vparent">
                 <svg width="36" height="36" style="background:none" class="vcenter">
                     <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff9431"></circle>
                 </svg>
@@ -64,7 +64,7 @@
             </div>
           </div>
           <div class="row row-img">
-            <div class="col-1 vparent">
+            <div class="col-2 vparent">
               <svg width="36" height="36" style="background:none" class="vcenter">
                   <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ff6e31"></circle>
               </svg>
@@ -78,7 +78,7 @@
           </div>
           <hr/>
           <div class="row">
-            <div class="col-1">
+            <div class="col-2">
               <svg width="36" height="36" style="background:none">
                   <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="#ffe92b"></circle>
               </svg>
@@ -98,7 +98,7 @@
           </div>
           <hr/>
           <div class="row">
-            <div class="col-1">
+            <div class="col-2">
               <svg width="36" height="36" style="background:none">
                   <circle cx="18" cy="18" r="16" stroke="#afafaf" stroke-width="2" fill="whitesmoke"></circle>
               </svg>
