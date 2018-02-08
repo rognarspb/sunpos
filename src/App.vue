@@ -484,9 +484,13 @@ h4 {
 .title-row {
   padding-top: 10px;
   padding-bottom: 20px;
-  background: #4181ca;
+  // background: #4181ca;
+  background: url('assets/top.svg');
+  background-repeat: no-repeat;
+  background-size: cover;  
+
   color: whitesmoke;
-  border-bottom: 10px solid #bedcfb;
+  border-bottom: 1px solid #bedcfb;
   h1 {
     text-shadow: 0 0 3px #efefef;
   }
@@ -495,7 +499,7 @@ h4 {
 .lang-row {
   padding-top: 5px;
   padding-bottom: 5px;
-  background: #d2e2f8;
+  background: #d4fff5;
 }
 
 
