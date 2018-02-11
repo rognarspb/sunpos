@@ -42,6 +42,7 @@
                 :language="globalLocale" 
                 :disabled-picker="direction == 'toDate'"
                 :bootstrap-styling="true"
+                input-class="form-control-sm"
                 :full-month-name="true"
                 :calendar-button="true"
                 calendar-button-icon="far fa-calendar-alt" ></datepicker>
@@ -50,22 +51,22 @@
         <div class="form-row">
             <div class="form-group col-md-4">
               <label>{{$t('hours')}}</label>
-              <input type="number" class="form-control" v-model="userHours" placeholder="HH" :readonly="direction=='toDate'">
+              <input type="number" class="form-control form-control-sm" v-model="userHours" placeholder="HH" :readonly="direction=='toDate'">
             </div>
             <div class="form-group col-md-4">
               <label>{{$t('minutes')}}</label>
-              <input type="number" class="form-control" v-model="userMinutes" placeholder="mm" :readonly="direction=='toDate'">
+              <input type="number" class="form-control form-control-sm" v-model="userMinutes" placeholder="mm" :readonly="direction=='toDate'">
             </div>
             <div class="form-group col-md-4">
               <label>{{$t('seconds')}}</label>
-              <input type="number" class="form-control" v-model="userSeconds" placeholder="ss" :readonly="direction=='toDate'">
+              <input type="number" class="form-control form-control-sm" v-model="userSeconds" placeholder="ss" :readonly="direction=='toDate'">
             </div>
         </div>
         <div class="form-group" v-if="direction=='toJD'">
             <button class="btn btn-default btn-sm" v-on:click="setNow">{{$t('setNow')}}</button>
         </div>
         <hr/>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="margin-bottom: 15px">
             <div class="col-4">
               <button class="btn btn-default btn-block" v-on:click="toggleDirection" :title="$t('direction')">
                 <i v-if="direction == 'toJD'" class="fa fa-arrow-down"></i>
@@ -77,15 +78,16 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label>{{$t('julianDay')}}</label>
-                <input type="number" class="form-control" v-model="jd" placeholder="JD" :readonly="direction == 'toJD'">
+                <input type="number" step="any" class="form-control form-control-sm" v-model="jd" placeholder="JD" :readonly="direction == 'toJD'">
             </div>
             <div class="form-group col-md-6">
                 <label>{{$t('julianDayNumber')}}</label>
-                <input type="number" class="form-control" v-model="jdn" placeholder="JDN" readonly="readonly">
+                <input type="number" class="form-control form-control-sm" v-model="jdn" placeholder="JDN" readonly="readonly">
             </div>
         </div>
         <button v-on:click="toggleHelp" class="btn btn-default btn-sm"><i class="fa fa-question-circle"></i></button>
-        <div class="alert alert-info" v-html="$t('help')" v-if="showHelp">
+
+        <div style="margin-top: 10px;" class="alert alert-info" v-html="$t('help')" v-if="showHelp">
         </div>
     </div>
 </template>

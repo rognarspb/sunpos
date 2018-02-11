@@ -16,6 +16,19 @@
 </i18n>
 <template>
     <svg width="100%" height="410" viewBox="0 0 500 500">
+       <defs>
+          <marker
+            id="arrow"
+            markerUnits="strokeWidth"
+            markerWidth="12"
+            markerHeight="12"
+            viewBox="0 0 12 12"
+            refX="6"
+            refY="6"
+            orient="auto">
+            <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: gray;"></path>
+          </marker>
+        </defs>
         <circle cx="40" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
         <circle cx="440" cy="240" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
         <circle cx="240" cy="40" r="20" stroke="#afafaf" stroke-width="2" fill="#efefef"></circle>
@@ -63,6 +76,7 @@ export default {
     }
   },
   mounted: function(){
+      this.draw();
       this.update();
   },
   methods: {  
@@ -70,6 +84,35 @@ export default {
     rad: function(degree){
         return (degree * Math.PI)/180;
     },   
+    draw: function(){
+      var arc = d3.arc()
+          .innerRadius(240)
+          .outerRadius(240)
+          .startAngle(120 * (Math.PI/180)) //converting from degs to radians
+          .endAngle(150 * (Math.PI/180)) //just radians
+
+      d3.select(this.$el)
+          .append("path")
+          .attr("d", arc)
+          .attr("stroke", "lightgray")
+          .attr("stroke-width", "2")
+          .attr("fill", "none")
+          .attr("transform", "translate(240,240)");
+
+      var arc2 = d3.arc()
+          .innerRadius(240)
+          .outerRadius(240)
+          .startAngle(300 * (Math.PI/180)) //converting from degs to radians
+          .endAngle(330 * (Math.PI/180)) //just radians
+
+      d3.select(this.$el)
+          .append("path")
+          .attr("d", arc2)
+          .attr("stroke", "lightgray")
+          .attr("stroke-width", "2")
+          .attr("fill", "none")
+          .attr("transform", "translate(240,240)");
+    },
     updateEarth: function(degree) {
         var orbit = d3.select(this.$el).select("#orbit");
         var earth = d3.select(this.$el).select("#earth");

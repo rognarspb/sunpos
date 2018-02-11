@@ -125,16 +125,16 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>{{$t('latitude')}}</label>
-              <input type="number" step="any" v-model="lat" class="form-control" />
+              <input type="number" step="any" v-model="lat" class="form-control form-control-sm" />
             </div>
             <div class="form-group col-md-6">
               <label>{{$t('longitude')}}</label>
-              <input type="number" step="any" v-model="lon" class="form-control"/>
+              <input type="number" step="any" v-model="lon" class="form-control form-control-sm"/>
             </div>
           </div>
           <div class="form-group">
             <label>{{$t('timezone')}}</label>
-            <input type="text" v-model="timezoneName" readonly class="form-control"/>
+            <input type="text" v-model="timezoneName" readonly class="form-control form-control-sm"/>
           </div>
           <div class="form-group">
               <button class="btn btn-secondary btn-sm" v-on:click="getLocation">{{$t('currentCoordinates')}}</button>
@@ -145,6 +145,7 @@
               <datepicker v-model="userDate"              
                 :language="globalLocale" 
                 :bootstrap-styling="true"
+                input-class="form-control-sm"
                 :full-month-name="true"
                 :calendar-button="true"
                 calendar-button-icon="far fa-calendar-alt" ></datepicker>
@@ -153,15 +154,15 @@
           <div class="form-row">
             <div class="form-group col-md-4">
               <label>{{$t('hours')}}</label>
-              <input type="number" class="form-control" v-model="userHours" placeholder="HH">
+              <input type="number" class="form-control form-control-sm" v-model="userHours" placeholder="HH">
             </div>
             <div class="form-group col-md-4">
               <label>{{$t('minutes')}}</label>
-              <input type="number" class="form-control" v-model="userMinutes" placeholder="mm">
+              <input type="number" class="form-control form-control-sm" v-model="userMinutes" placeholder="mm">
             </div>
             <div class="form-group col-md-4">
               <label>{{$t('seconds')}}</label>
-              <input type="number" class="form-control" v-model="userSeconds" placeholder="ss">
+              <input type="number" class="form-control form-control-sm" v-model="userSeconds" placeholder="ss">
             </div>
           </div>
           <div class="form-group">

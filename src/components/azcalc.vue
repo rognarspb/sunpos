@@ -29,11 +29,11 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label>{{$t('elevation')}} 1, {{$t('degree')}} &deg</label>
-                <input type="number" class="form-control" v-model="alpha1" placeholder="alpha">
+                <input type="number" class="form-control form-control-sm" v-model="alpha1" placeholder="alpha">
             </div>
             <div class="form-group col-md-6">
                 <label>{{$t('elevation')}} 2, {{$t('degree')}} &deg</label>
-                <input type="number" class="form-control" v-model="alpha2" placeholder="alpha">
+                <input type="number" class="form-control form-control-sm" v-model="alpha2" placeholder="alpha">
             </div>
         </div>
         <hr/>
@@ -42,43 +42,43 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>{{$t('time')}} 1</label>
-                        <input type="text" class="form-control form-morning" :value="morningTime1" readonly>
+                        <input type="text" class="form-control form-control-sm form-morning" :value="morningTime1" readonly>
                     </div>
                     <div class="form-group col-md-6">
                         <label>{{$t('azimuth')}} 1</label>
-                        <input type="text" class="form-control form-morning" :value="morningAzimuth1" readonly>
+                        <input type="text" class="form-control form-control-sm form-morning" :value="morningAzimuth1" readonly>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>{{$t('time')}} 2</label>
-                        <input type="text" class="form-control form-evening" :value="eveningTime1" readonly>
+                        <input type="text" class="form-control form-control-sm form-evening" :value="eveningTime1" readonly>
                     </div>
                     <div class="form-group col-md-6">
                         <label>{{$t('azimuth')}} 2</label>
-                        <input type="text" class="form-control form-evening" :value="eveningAzimuth1" readonly>
+                        <input type="text" class="form-control form-control-sm form-evening" :value="eveningAzimuth1" readonly>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="background: #fffbda">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>{{$t('time')}} 1</label>
-                        <input type="text" class="form-control form-morning" :value="morningTime2" readonly>
+                        <input type="text" class="form-control form-control-sm form-morning" :value="morningTime2" readonly>
                     </div>
                     <div class="form-group col-md-6">
                         <label>{{$t('azimuth')}} 1</label>
-                        <input type="text" class="form-control form-morning" :value="morningAzimuth2" readonly>
+                        <input type="text" class="form-control form-control-sm form-morning" :value="morningAzimuth2" readonly>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>{{$t('time')}} 2</label>
-                        <input type="text" class="form-control form-evening" :value="eveningTime2" readonly>
+                        <input type="text" class="form-control form-control-sm form-evening" :value="eveningTime2" readonly>
                     </div>
                     <div class="form-group col-md-6">
                         <label>{{$t('azimuth')}} 2</label>
-                        <input type="text" class="form-control form-evening" :value="eveningAzimuth2" readonly>
+                        <input type="text" class="form-control form-control-sm form-evening" :value="eveningAzimuth2" readonly>
                     </div>
                 </div>
             </div>
