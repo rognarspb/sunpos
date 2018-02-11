@@ -45,6 +45,19 @@
        x2="88.257439"
        y2="35.251488"
        gradientTransform="matrix(1.5746446,0,0,1.1894036,-1.6390891,23.709014)" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1063"
+       x="-0.15360001"
+       width="1.3072"
+       y="-0.15360001"
+       height="1.3072">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.1973676"
+         id="feGaussianBlur1065" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -53,9 +66,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="219.4792"
-     inkscape:cy="-52.554506"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="582.38574"
+     inkscape:cy="46.499987"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -76,7 +89,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -92,5 +105,34 @@
        height="25.175709"
        x="20.97768"
        y="39.787201" />
+    <path
+       style="opacity:0.181;fill:#ffffec;fill-opacity:1;stroke-width:0.4641389"
+       id="path1067"
+       sodipodi:type="arc"
+       sodipodi:cx="147.89662"
+       sodipodi:cy="-88.6362"
+       sodipodi:rx="105.764"
+       sodipodi:ry="19.656725"
+       sodipodi:start="0"
+       sodipodi:end="3.1415927"
+       d="m 253.66062,-88.6362 a 105.764,19.656725 0 0 1 -52.882,17.023223 105.764,19.656725 0 0 1 -105.764001,0 105.764,19.656725 0 0 1 -52.881997,-17.023224 l 105.763998,10e-7 z"
+       transform="scale(1,-1)" />
+    <g
+       id="g838"
+       transform="matrix(2.6716436,0,0,2.6716436,-121.45284,-42.668882)">
+      <circle
+         transform="matrix(0.72567003,0,0,0.72567003,27.520301,11.958181)"
+         r="9.354434"
+         cy="51.512939"
+         cx="101.69606"
+         id="path878-6"
+         style="opacity:0.53800001;fill:#ffffec;fill-opacity:1;stroke-width:0.3367424;filter:url(#filter1063)" />
+      <circle
+         r="5.333611"
+         cy="48.542324"
+         cx="101.01489"
+         id="path878"
+         style="fill:#ffffec;fill-opacity:1;stroke-width:0.19200018" />
+    </g>
   </g>
 </svg>

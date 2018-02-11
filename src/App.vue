@@ -125,11 +125,11 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>{{$t('latitude')}}</label>
-              <input type="number" v-model="lat" class="form-control" />
+              <input type="number" step="any" v-model="lat" class="form-control" />
             </div>
             <div class="form-group col-md-6">
               <label>{{$t('longitude')}}</label>
-              <input type="number" v-model="lon" class="form-control"/>
+              <input type="number" step="any" v-model="lon" class="form-control"/>
             </div>
           </div>
           <div class="form-group">

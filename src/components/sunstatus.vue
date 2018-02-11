@@ -260,8 +260,8 @@ export default {
                   .duration(200)		
                   .style("opacity", .9);		
               tooltip.html(self.displayHtml(d.x))	
-                  .style("left", (event.pageX + 15) + "px")		
-                  .style("top", (event.pageY - 340) + "px");	
+                  .style("left", (d3.event.pageX + 15) + "px")		
+                  .style("top", (d3.event.pageY - 340) + "px");	
               cursorcircle.attr("cx", 50 + d.x)
                         .attr("cy", 180 - d.y)
                         .style("opacity", 0.5);
@@ -423,7 +423,7 @@ export default {
               .attr("stroke", "black");
     },
     getTimelineTextById(id){
-      var htmlText = "Element id = " + event.target.id;
+      var htmlText = "Element id = " + d3.event.target.id;
       var s1 = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
       var s2 = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
       var tw = Sun.GetTwilightTime(-6.0, this.date, this.latitude, this.longitude);
@@ -481,7 +481,7 @@ export default {
       }
       else if (id == "goldenhour2"){      
         htmlText = "<p><strong>" + this.$t('goldenHour') + " (" + this.$t('evening') + ")</strong></p>";
-        htmlText += "<p>" + Util.timeObjToShortString(hmin.eveningTwilight) + " - " + Util.timeObjToShortString(hmax.eveningTwilight) + "</p>";        
+        htmlText += "<p>" + Util.timeObjToShortString(hmax.eveningTwilight) + " - " + Util.timeObjToShortString(hmin.eveningTwilight) + "</p>";        
         var t2  = Util.timeObjToDate(this.date, hmax.morningTwilight);
         var t1  = Util.timeObjToDate(this.date, hmax.eveningTwilight);
         var az1 = Sun.GetAzimuthAngle(t1, this.latitude, this.longitude).toFixed(2);
@@ -508,13 +508,13 @@ export default {
               .style("stroke", "orangered")
               .style("stroke-width", 2);
 
-            var htmlText = "id = " + event.target.id;
+            var htmlText = "id = " + d3.event.target.id;
             tooltip.transition()		
               .duration(200)		
               .style("opacity", .9);		
-            tooltip.html(self.getTimelineTextById(event.target.id))	
-              .style("left", (event.pageX + 15) + "px")		
-              .style("top", (event.pageY - 340) + "px");	
+            tooltip.html(self.getTimelineTextById(d3.event.target.id))	
+              .style("left", (d3.event.pageX + 15) + "px")		
+              .style("top", (d3.event.pageY - 340) + "px");	
           })
           .on("mouseout", function(d) {		
             d3.select("#rectSelection").remove();
