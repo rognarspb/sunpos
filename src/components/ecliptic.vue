@@ -85,33 +85,37 @@ export default {
         return (degree * Math.PI)/180;
     },   
     draw: function(){
-      var arc = d3.arc()
-          .innerRadius(240)
-          .outerRadius(240)
-          .startAngle(120 * (Math.PI/180)) //converting from degs to radians
-          .endAngle(150 * (Math.PI/180)) //just radians
+      var curve = d3.curveBasisOpen;
+      var data = d3.range(5)
+      var scale1 = d3.scaleLinear().domain(d3.extent(data)).range([5*Math.PI/6, 4*Math.PI/6])
+      var scale2 = d3.scaleLinear().domain(d3.extent(data)).range([11*Math.PI/6, 5*Math.PI/3])
+      var line1 = d3.radialLine()
+        .angle(function(d,i) { return scale1(d) })
+        .radius(250)
+      	.curve(curve);
+      var line2 = d3.radialLine()
+        .angle(function(d,i) { return scale2(d) })
+        .radius(250)
+      	.curve(curve);
 
       d3.select(this.$el)
           .append("path")
-          .attr("d", arc)
-          .attr("stroke", "lightgray")
+          .attr("d", line1(data))
+          .attr("stroke", "gray")
           .attr("stroke-width", "2")
           .attr("fill", "none")
+          .attr("marker-end", "url(#arrow)")
           .attr("transform", "translate(240,240)");
-
-      var arc2 = d3.arc()
-          .innerRadius(240)
-          .outerRadius(240)
-          .startAngle(300 * (Math.PI/180)) //converting from degs to radians
-          .endAngle(330 * (Math.PI/180)) //just radians
 
       d3.select(this.$el)
           .append("path")
-          .attr("d", arc2)
-          .attr("stroke", "lightgray")
+          .attr("d", line2(data))
+          .attr("stroke", "gray")
           .attr("stroke-width", "2")
           .attr("fill", "none")
+          .attr("marker-end", "url(#arrow)")
           .attr("transform", "translate(240,240)");
+
     },
     updateEarth: function(degree) {
         var orbit = d3.select(this.$el).select("#orbit");
