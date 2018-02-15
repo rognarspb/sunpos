@@ -213,6 +213,9 @@
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <azcalc :date="julianDate" :latitude="lat" :longitude="lon"></azcalc>
       </div>
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <azimuth :date="julianDate" :latitude="lat" :longitude="lon"></azimuth>
+      </div>
     </div>
 
     <hr/>
@@ -258,6 +261,7 @@ import DateInfo from './components/dateinfo.vue';
 import Coordinates from './components/coordinates.vue';
 import LocalCoordinates from './components/localcoordinates.vue';
 import Twilight from './components/twilight.vue';
+import Azimuth from './components/azimuth.vue';
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 import * as Util from './js/util.js';
@@ -275,7 +279,8 @@ export default {
     'dateinfo': DateInfo,
     'coordinates': Coordinates,
     'localcoordinates': LocalCoordinates,
-    'twilight': Twilight
+    'twilight': Twilight,
+    'azimuth': Azimuth
   },
   data () {
     return {
