@@ -214,7 +214,7 @@
         <azcalc :date="julianDate" :latitude="lat" :longitude="lon"></azcalc>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <azimuth :date="julianDate" :latitude="lat" :longitude="lon"></azimuth>
+        
       </div>
     </div>
 

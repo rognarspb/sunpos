@@ -64,8 +64,8 @@ import * as d3 from 'd3';
 export default {
   name: 'ecliptic',
   props: {
-    longitude: Number,
-    latitude: Number
+    longitude: Number, // ecliptic longitude
+    latitude: Number   // ecliptic latitude
   },
   components: {
   },

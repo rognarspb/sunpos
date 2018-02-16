@@ -24,6 +24,7 @@
           <dd>&theta;={{zenithAngle}}&deg; &alpha;={{elevationAngle}}&deg;</dd>
           <dt>{{$t('sunAzimuth')}}</dt>
           <dd>{{azimuthAngle}}&deg; </dd>
+          <azimuth :date="date" :latitude="latitude" :longitude="longitude"></azimuth>
         </dl>
     </div>
 </template>
@@ -33,10 +34,14 @@ import moment from 'moment';
 import * as JD from '../js/jd.js';
 import * as Sun from '../js/sun.js';
 import * as Util from '../js/util.js';
+import Azimuth from '../components/azimuth.vue';
 
 
 export default {
   name: 'coordinates',
+  components: {
+      'azimuth': Azimuth
+  },
   props: {
       date: {
           default: new Date(),
