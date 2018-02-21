@@ -29,17 +29,20 @@
         <line x1="40" y1="240" x2="440" y2="240" stroke="lightgray" stroke-width="2"></line>
         <line x1="240" y1="40" x2="240" y2="440" stroke="lightgray" stroke-width="2"></line>
 
-        <text x ="100" y = "230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">&alpha;={{currentAzimuth.toFixed(2)}}&deg;</text>
+        <path id="day"></path>
+        <path id="mgh"></path>
+        <path id="egh"></path>
 
         <line x1="240" y1="240" x2="440" y2="440" stroke="orange" stroke-width="2" id="az1"></line>
         <line x1="240" y1="240" x2="40" y2="440" stroke="steelblue" stroke-width="2" id="az2"></line>
-        <line x1="240" y1="240" x2="450" y2="440" id="ghm1" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
-        <line x1="240" y1="240" x2="430" y2="440" id="ghm2" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
 
-        <path id="day"></path>
         <line x1="240" y1="240" x2="430" y2="440" id="sunline" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
         <circle cx="240" cy="240" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>
-        <circle cx="240" cy="240" r="10" fill="orange" ></circle>
+        <circle cx="240" cy="240" r="10" fill="steelblue" ></circle>
+
+        <text x="100" y="230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">&straightphi;={{currentAzimuth.toFixed(2)}}&deg;</text>
+        <text x="100" y="240" font-family="Verdana" id="az1Text" stroke="steelblue" font-size="16">&straightphi;m={{azimuthMorning.toFixed(2)}}&deg;</text>
+        <text x="100" y="250" font-family="Verdana" id="az2Text" stroke="steelblue" font-size="16">&straightphi;e={{azimuthEvening.toFixed(2)}}&deg;</text>
 
     </svg>
 </template>
@@ -93,7 +96,10 @@ export default {
         var az2 = d3.select(this.$el).select("#az2");
         var sun = d3.select(this.$el).select("#sun");
         var sunline = d3.select(this.$el).select("#sunline");
-
+        var suntext = d3.select(this.$el).select("#angleText");
+        var az1Text = d3.select(this.$el).select("#az1Text");
+        var az2Text = d3.select(this.$el).select("#az2Text");
+        
         var elevInfo = Sun.GetElevationTime(0.0, this.date, this.latitude, this.longitude);
         var currentAzimuth = Sun.GetAzimuthAngle(this.date, this.latitude, this.longitude);
         console.log("Updated azimuth = " + currentAzimuth);
@@ -112,12 +118,19 @@ export default {
         sun.attr("cy", 240 + y0);
         sunline.attr("x2", 240 + x0);
         sunline.attr("y2", 240 + y0);
+        suntext.attr("x", 240 + x0 - 50);
+        suntext.attr("y", 240 + y0 + 50);
         
 
         az1.attr("x2", 240 + x1);
         az1.attr("y2", 240 + y1);
         az2.attr("x2", 240 - x2);
         az2.attr("y2", 240 + y2);
+
+        az1Text.attr("x", 240 + x1 - 50);
+        az1Text.attr("y", 240 + y1 + 50);
+        az2Text.attr("x", 240 - x2 - 50);
+        az2Text.attr("y", 240 + y2 + 50);
 
         var arc = d3.arc()
           .innerRadius(0)
@@ -128,6 +141,33 @@ export default {
         d3.select(this.$el).select("#day")
           .attr("d", arc)
           .attr("fill", "yellow")
+          .attr("fill-opacity","0.5")
+          .attr("transform", "translate(240,240)");
+
+        var gh1 = Sun.GetElevationTime(-0.8, this.date, this.latitude, this.longitude);
+        var gh2 = Sun.GetElevationTime(6.1, this.date, this.latitude, this.longitude);
+
+        var arcm = d3.arc()
+          .innerRadius(0)
+          .outerRadius(240)
+          .startAngle(Util.rad(gh1.morningAzimuth)) 
+          .endAngle(Util.rad(gh2.morningAzimuth));
+        
+        d3.select(this.$el).select("#mgh")
+          .attr("d", arcm)
+          .attr("fill", "orange")
+          .attr("fill-opacity","0.5")
+          .attr("transform", "translate(240,240)");
+
+        var arce = d3.arc()
+          .innerRadius(0)
+          .outerRadius(240)
+          .startAngle(Util.rad(gh1.eveningAzimuth)) 
+          .endAngle(Util.rad(gh2.eveningAzimuth));
+        
+        d3.select(this.$el).select("#egh")
+          .attr("d", arce)
+          .attr("fill", "orange")
           .attr("fill-opacity","0.5")
           .attr("transform", "translate(240,240)");
     },
@@ -150,6 +190,14 @@ export default {
   computed: {
     currentAzimuth: function(){
       return Sun.GetAzimuthAngle(this.date, this.latitude, this.longitude);
+    },
+    azimuthMorning: function(){
+      var elevInfo = Sun.GetElevationTime(0.0, this.date, this.latitude, this.longitude);
+      return elevInfo.morningAzimuth;
+    },
+    azimuthEvening: function(){
+      var elevInfo = Sun.GetElevationTime(0.0, this.date, this.latitude, this.longitude);
+      return elevInfo.eveningAzimuth;
     }
   }
 }

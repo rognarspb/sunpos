@@ -474,7 +474,7 @@ export default {
         htmlText += "<p>" + Util.timeObjToShortString(hmin.morningTwilight) + " - " + Util.timeObjToShortString(hmax.morningTwilight) + "</p>";  
         
         var t1  = Util.timeObjToDate(this.date, hmin.morningTwilight);
-        var t2  = Util.timeObjToDate(this.date, hmin.eveningTwilight);
+        var t2  = Util.timeObjToDate(this.date, hmax.morningTwilight);
         var az1 = Sun.GetAzimuthAngle(t1, this.latitude, this.longitude).toFixed(2);
         var az2 = Sun.GetAzimuthAngle(t2, this.latitude, this.longitude).toFixed(2);
         htmlText += "<p>" + "&alpha; = "  + az1 + "&deg; - " + az2 + "&deg; </p>";        
@@ -482,7 +482,7 @@ export default {
       else if (id == "goldenhour2"){      
         htmlText = "<p><strong>" + this.$t('goldenHour') + " (" + this.$t('evening') + ")</strong></p>";
         htmlText += "<p>" + Util.timeObjToShortString(hmax.eveningTwilight) + " - " + Util.timeObjToShortString(hmin.eveningTwilight) + "</p>";        
-        var t2  = Util.timeObjToDate(this.date, hmax.morningTwilight);
+        var t2  = Util.timeObjToDate(this.date, hmin.eveningTwilight);
         var t1  = Util.timeObjToDate(this.date, hmax.eveningTwilight);
         var az1 = Sun.GetAzimuthAngle(t1, this.latitude, this.longitude).toFixed(2);
         var az2 = Sun.GetAzimuthAngle(t2, this.latitude, this.longitude).toFixed(2);

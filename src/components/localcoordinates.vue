@@ -23,7 +23,7 @@
           <dt v-html="$t('sunElevation')"></dt>
           <dd>&theta;={{zenithAngle}}&deg; &alpha;={{elevationAngle}}&deg;</dd>
           <dt>{{$t('sunAzimuth')}}</dt>
-          <dd>{{azimuthAngle}}&deg; </dd>
+          <dd>&straightphi;={{azimuthAngle}}&deg; </dd>
           <azimuth :date="date" :latitude="latitude" :longitude="longitude"></azimuth>
         </dl>
     </div>
