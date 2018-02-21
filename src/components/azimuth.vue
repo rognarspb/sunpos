@@ -36,8 +36,8 @@
         <line x1="240" y1="240" x2="440" y2="440" stroke="orange" stroke-width="2" id="az1"></line>
         <line x1="240" y1="240" x2="40" y2="440" stroke="steelblue" stroke-width="2" id="az2"></line>
 
-        <line x1="240" y1="240" x2="430" y2="440" id="sunline" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
         <circle cx="240" cy="240" r="20" id="sun" fill="yellow" stroke="orange" stroke-width="4"></circle>
+        <line x1="240" y1="240" x2="430" y2="440" id="sunline" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
         <circle cx="240" cy="240" r="10" fill="steelblue" ></circle>
 
         <text x="100" y="230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">&straightphi;={{currentAzimuth.toFixed(2)}}&deg;</text>
@@ -113,11 +113,22 @@ export default {
         var x0 = r*Math.cos(Util.rad(currentAzimuth - 90));
         var y0 = r*Math.sin(Util.rad(currentAzimuth - 90));
 
+        var sunOpacity = 0.5;
+        var sunStroke = "none";
+        if (currentAzimuth > elevInfo.morningAzimuth && currentAzimuth < elevInfo.eveningAzimuth){
+          sunOpacity = "1.0";
+          sunStroke = "orange";
+        }
 
-        sun.attr("cx", 240 + x0);
-        sun.attr("cy", 240 + y0);
-        sunline.attr("x2", 240 + x0);
-        sunline.attr("y2", 240 + y0);
+        sun.attr("cx", 240 + x0)
+           .attr("cy", 240 + y0)
+           .attr("stroke", sunStroke)
+           .attr("fill-opacity",sunOpacity);
+
+        sunline.attr("x2", 240 + x0)
+               .attr("y2", 240 + y0)
+               .attr("marker-end", "url(#arrow)");
+
         suntext.attr("x", 240 + x0 - 50);
         suntext.attr("y", 240 + y0 + 50);
         
