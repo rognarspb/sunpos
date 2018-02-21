@@ -100,7 +100,7 @@ export default {
         var az1Text = d3.select(this.$el).select("#az1Text");
         var az2Text = d3.select(this.$el).select("#az2Text");
         
-        var elevInfo = Sun.GetElevationTime(0.0, this.date, this.latitude, this.longitude);
+        var elevInfo = Sun.GetElevationTime(-0.83, this.date, this.latitude, this.longitude);
         var currentAzimuth = Sun.GetAzimuthAngle(this.date, this.latitude, this.longitude);
         console.log("Updated azimuth = " + currentAzimuth);
 
@@ -191,12 +191,24 @@ export default {
     currentAzimuth: function(){
       return Sun.GetAzimuthAngle(this.date, this.latitude, this.longitude);
     },
+    sunriseAzimuth: function(){
+        var sunriseTime = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
+        var dt = Util.timeObjToDate(this.date, sunriseTime);
+        var a = Sun.GetAzimuthAngle(dt, this.latitude, this.longitude);
+        return a;
+    },
+    sunsetAzimuth: function(){
+        var sunsetTime = Sun.GetSunsetTime(this.date, this.latitude, this.longitude);
+        var dt = Util.timeObjToDate(this.date, sunsetTime);
+        var a = Sun.GetAzimuthAngle(dt, this.latitude, this.longitude);
+        return a;
+    },
     azimuthMorning: function(){
-      var elevInfo = Sun.GetElevationTime(0.0, this.date, this.latitude, this.longitude);
+      var elevInfo = Sun.GetElevationTime(-0.83, this.date, this.latitude, this.longitude);
       return elevInfo.morningAzimuth;
     },
     azimuthEvening: function(){
-      var elevInfo = Sun.GetElevationTime(0.0, this.date, this.latitude, this.longitude);
+      var elevInfo = Sun.GetElevationTime(-0.83, this.date, this.latitude, this.longitude);
       return elevInfo.eveningAzimuth;
     }
   }
