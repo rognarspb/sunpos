@@ -75,7 +75,7 @@
       <div class="col-sm-12 col-lg-8 col-xl-8">
         <h4>{{$t('sunStatusTitle')}}&nbsp;<span class="fa fa-question-circle" role="button" v-on:click="toggleInfo" style="cursor: pointer"></span></h4>
 
-          <div style="height: 550px;" v-if="!showInfo">
+          <div style="height: 550px;" v-if="!showInfo" class="info">
             <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
           </div>
 
@@ -208,10 +208,14 @@
     <br/>
     <div class="row" id="addons">
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <jdcalc></jdcalc>
+        <div class="form-info">
+          <jdcalc></jdcalc>
+        </div>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
-        <azcalc :date="julianDate" :latitude="lat" :longitude="lon"></azcalc>
+        <div class="form-info">
+          <azcalc :date="julianDate" :latitude="lat" :longitude="lon"></azcalc>
+        </div>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
         
@@ -453,12 +457,13 @@ h4 {
 }
 
 .info {
-  background: #efefef;
-  border: 2px solid #efefef;
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 4px;
   margin: 10px;
   padding: 20px;
   min-height: 460px;
-  box-shadow: 3px 3px 50px -5px  #888888;
+  box-shadow: 2px 2px 30px -3px  #888888;
   &:hover {
     border: 2px solid lightgreen;
   }

@@ -40,6 +40,11 @@
         <line x1="240" y1="240" x2="430" y2="440" id="sunline" stroke="gray" stroke-width="1" stroke-dasharray="5,5"></line>
         <circle cx="240" cy="240" r="10" fill="steelblue" ></circle>
 
+        <text x="235" y="35" font-family="Verdana" stroke="steelblue" font-size="24">N</text>
+        <text x="235" y="460" font-family="Verdana" stroke="steelblue" font-size="24">S</text>
+        <text x="16" y="245" font-family="Verdana" stroke="steelblue" font-size="24">W</text>
+        <text x="445" y="245" font-family="Verdana" stroke="steelblue" font-size="24">E</text>
+
         <text x="100" y="230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">&straightphi;={{currentAzimuth.toFixed(2)}}&deg;</text>
         <text x="100" y="240" font-family="Verdana" id="az1Text" stroke="steelblue" font-size="16">&straightphi;m={{azimuthMorning.toFixed(2)}}&deg;</text>
         <text x="100" y="250" font-family="Verdana" id="az2Text" stroke="steelblue" font-size="16">&straightphi;e={{azimuthEvening.toFixed(2)}}&deg;</text>

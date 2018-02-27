@@ -157,11 +157,8 @@ export default {
     background: #efefef;
     border: 2px solid #efefef;
     margin: 10px;
-    padding: 20px;  
+    padding: 10px;  
     min-height: 432px;
-    &:hover {
-      border: 2px solid lightgreen;
-    }
 }
 .form-morning{
     color: darkorange;
