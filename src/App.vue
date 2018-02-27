@@ -72,10 +72,10 @@
       </div>
     </div>
     <div class="row top-row">
-      <div class="col-sm-12 col-lg-8 col-xl-8">
+      <div class="col-sm-12 col-lg-12 col-xl-6">
         <h4>{{$t('sunStatusTitle')}}&nbsp;<span class="fa fa-question-circle" role="button" v-on:click="toggleInfo" style="cursor: pointer"></span></h4>
 
-          <div style="height: 550px;" v-if="!showInfo" class="info">
+          <div v-if="!showInfo" class="info">
             <sunstatus :date="julianDate" :latitude="lat" :longitude="lon"></sunstatus>
           </div>
 
@@ -119,9 +119,9 @@
           </div>
         </transition>
       </div>
-      <div class="col-sm-12 col-lg-4 col-xl-4">
+      <div class="col-sm-12 col-lg-6 col-xl-3">
         <h4>{{$t('observer')}}</h4>
-        <div class="form form-info">
+        <div class="form form-info info-eq">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>{{$t('latitude')}}</label>
@@ -170,7 +170,11 @@
               <button class="btn btn-secondary btn-sm" v-on:click="setNoon">{{$t('setNoon')}}</button>
           </div>
         </div>
-      </div>       
+      </div>
+      <div class="col-sm-12 col-lg-6 col-xl-3">
+        <dateinfo :date="julianDate"></dateinfo>
+      </div>
+       
     </div>
     <hr/>
     <h3 class="text-center"><a href="#details">{{$t('detailedTitle')}}</a></h3>
@@ -178,18 +182,15 @@
     <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
     <br/>    
     <div class="row sky-row" id="details">
-      <div class="col-sm-12 col-lg-6 col-xl-4">
-        <dateinfo :date="julianDate"></dateinfo>
-      </div>
-      <div class="col-sm-12 col-lg-6 col-xl-4">
+      <div class="col-sm-12 col-lg-6 col-xl-6">
         <suntime :date="julianDate" :latitude="lat" :longitude="lon"></suntime>
       </div>
-      <div class="col-sm-12 col-lg-6 col-xl-4">
+      <div class="col-sm-12 col-lg-6 col-xl-6">
         <twilight :date="julianDate" :latitude="lat" :longitude="lon"></twilight>
       </div>
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <h4>{{$t('ecliptiTitle')}}</h4>
-        <div class="info">
+        <div class="info info-eq">
           <ecliptic :longitude="eclipticLongitude"></ecliptic>
         </div>
       </div>
@@ -462,18 +463,23 @@ h4 {
   border-radius: 4px;
   margin: 10px;
   padding: 20px;
-  min-height: 460px;
+  // min-height: 460px;
   box-shadow: 2px 2px 30px -3px  #888888;
   &:hover {
     border: 2px solid lightgreen;
   }
 }
+
+.info-eq {
+  min-height: 630px;
+}
+
 .form-info {
   background: #efefef;
   border: 2px solid #efefef;
   margin: 10px;
   padding: 20px;  
-  min-height: 432px;
+  // min-height: 432px;
   box-shadow: 3px 3px 50px -5px  #888888;
   &:hover {
     border: 2px solid lightgreen;

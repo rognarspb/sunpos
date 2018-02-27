@@ -17,7 +17,7 @@
 <template>
     <div>
         <h4>{{$t('title')}}</h4>
-        <dl class="info">
+        <dl class="info info-eq">
           <dt>{{$t('hourAngle')}}</dt>
           <dd>h={{sunHourAngle}}&deg;</dd>
           <dt v-html="$t('sunElevation')"></dt>

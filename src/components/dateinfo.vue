@@ -33,7 +33,7 @@
 <template>
     <div>
         <h4>{{$t('title')}}</h4>
-        <dl class="info">
+        <dl class="info info-eq">
             <dt>{{$t('datestr')}}</dt>
             <dd>{{ localTime }}</dd>
             <dt>{{$t('julianDay')}}</dt>

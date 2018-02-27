@@ -48,7 +48,7 @@
 <template>
     <div>
         <h4>{{$t('title')}}</h4>
-        <div class="info">
+        <div class="info info-eq">
           <!-- <h5>Восход и закат</h5> -->
           <div class="row row-img">
             <div class="col-2 vparent">

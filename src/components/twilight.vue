@@ -23,7 +23,7 @@
 <template>
     <div>
         <h4>{{$t('title')}}</h4>
-        <div class="info">
+        <div class="info info-eq">
             <h5>{{$t('morning')}}</h5>
             <table class="table table-reponsive table-sm">
                 <tbody>

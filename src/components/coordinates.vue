@@ -23,7 +23,7 @@
 <template>
     <div>
         <h4>{{$t('title')}}</h4>
-        <dl class="info">
+        <dl class="info info-eq">
           <dt>{{$t('eclipticCoordinates')}}</dt>
           <dd>&beta;={{eclipticLatitude}}&deg;, &lambda;={{eclipticLongitude}}&deg; </dd>
           <dt>{{$t('equatorialCoordinates')}}</dt>
