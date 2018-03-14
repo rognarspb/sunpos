@@ -80,14 +80,24 @@
                     <stop class="gmid" offset="50%" stop-color="#4e7ec5" stop-opacity="1"/>
                     <stop class="gend" offset="100%" stop-color="#214478" stop-opacity="1"/>
                 </linearGradient> 
-                
+                <linearGradient id="skyGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                    <stop style="stop-color:#4a8bf6;stop-opacity:1" offset="0"  />
+                    <stop style="stop-color:#85c8f9;stop-opacity:1" offset="0.54232806"/>
+                    <stop style="stop-color:#bcf8fd;stop-opacity:1" offset="1"  />
+                </linearGradient>
+              <linearGradient id="nightGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                    <stop style="stop-color:#19335b;stop-opacity:1" offset="0"/>
+                    <stop style="stop-color:#529296;stop-opacity:1" offset="0.65075374"/>
+                    <stop style="stop-color:#90974c;stop-opacity:1" offset="0.82537687" />
+                    <stop style="stop-color:#c97a39;stop-opacity:1" offset="1"/>
+                </linearGradient>                
             </defs>
             <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunrisePoint"></circle>
             <circle cx="410" cy="182" r="4" stroke="#afafaf" stroke-width="2" fill="#efefef" id="sunsetPoint"></circle>
 
 
-            <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.5" id="skyrect"></rect>
-            <rect x="0" y="181" width="820" height="178" fill="#c1ffa9" fill-opacity="0.2" id="earthrect"></rect>
+            <rect x="0" y="0" width="820" height="180" fill="#e2efff" fill-opacity="0.9" id="skyrect"></rect>
+            <rect x="0" y="181" width="820" height="178" fill="#c1ffa9" fill-opacity="0.5" id="earthrect"></rect>
 
             <rect x="0" y="360" width="100" height="50" fill="#214478" fill-opacity="0.9" id="night1"></rect>
             <rect x="25" y="360" width="100" height="50" fill="#315488" fill-opacity="0.9" id="atw1"></rect>
@@ -166,7 +176,13 @@ export default {
   },
   data () {
     return {
+      oldDate: new Date()
     }
+  },
+  created: function() {
+      var noon = new Date();
+      noon.setHours(12,0,0,0);
+      this.oldDate = noon;
   },
   mounted: function(){
       this.update();
@@ -299,21 +315,18 @@ export default {
             .attr("x", 55 + minsSolarNoon/2)
         
         // calc sun "position":
-        if (this.date.getHours() > 1) {
-          this.updateSun(moment(this.date).subtract(60, "minutes").toDate(), 'sun2', 0.1);
-        }
-        if (this.date.getHours() > 0) {
-          this.updateSun(moment(this.date).subtract(30, "minutes").toDate(), 'sun1', 0.3);
-        }
-        this.updateSun(moment(this.date).toDate(), 'sun', 1.0);  
+        this.animateSun();
         
+        // color sky and labels:
         var elevation = Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
-        var skycolor = elevation > 0 ? "#e2efff" : "#121f1f";
+        var skycolor = elevation > 0 ?  "url(#skyGradient)"  : "url(#nightGradient)";
+         // "#e2efff"
+        //  "#121f1f";
         svgElem.select("#skyrect")
           .attr("fill", skycolor);
 
         if (elevation > 0 ){
-          svgElem.select("#sunriselabel").attr("fill", "darkorange");
+          svgElem.select("#sunriselabel").attr("fill", "white");
           svgElem.select("#sunsetlabel").attr("fill", "steelblue");
           svgElem.select("#earthrect").attr("fill", "#c1ffa9");
         } else {
@@ -524,6 +537,35 @@ export default {
           });
     },
 
+    animateSun: function(){
+        var self = this;
+        var startTime = moment(this.oldDate).unix();
+        var endTime = moment(this.date).unix();
+        var delta = (endTime > startTime) ? 60*5 : -60*5; // 5 minutes
+        var currentTime = startTime;
+
+        var t = d3.timer(function() {
+            currentTime = currentTime + delta;
+            var dt = moment.unix(currentTime).toDate();
+            self.updateSunPosition(dt);
+            if (Math.abs(currentTime - endTime) <= 2.0*Math.abs(delta)) {
+              self.updateSunPosition(self.date);
+              t.stop();
+            }
+        });
+        
+    },
+
+    updateSunPosition: function(datetime){
+        if (datetime.getHours() > 1) {
+          this.updateSun(moment(datetime).subtract(60, "minutes").toDate(), 'sun2', 0.1);
+        }
+        if (this.date.getHours() > 0) {
+          this.updateSun(moment(datetime).subtract(30, "minutes").toDate(), 'sun1', 0.3);
+        }
+        this.updateSun(moment(datetime).toDate(), 'sun', 1.0); 
+    },
+
     updateSun: function(datetime, id, opacity) {
         var totalMin = datetime.getHours()*60 + datetime.getMinutes();
         var elevation = Sun.GetElevationAngle(datetime, this.latitude, this.longitude);
@@ -545,7 +587,8 @@ export default {
     }
   },
   watch:{
-    date: function(newValue){
+    date: function(newValue, oldValue){
+      this.oldDate = oldValue;
       this.update();
     },
     longitude: function(newValue){
