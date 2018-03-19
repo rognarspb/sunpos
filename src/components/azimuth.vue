@@ -46,6 +46,7 @@
         <text x="445" y="245" font-family="Verdana" stroke="steelblue" font-size="24">E</text>
 
         <text x="100" y="230" font-family="Verdana" id="angleText" stroke="steelblue" font-size="16">&straightphi;={{currentAzimuth.toFixed(2)}}&deg;</text>
+        <text x="100" y="230" font-family="Verdana" id="elevationText" stroke="blue" font-size="16">&alpha;={{currentElevation.toFixed(2)}}&deg;</text>
         <text x="100" y="240" font-family="Verdana" id="az1Text" stroke="steelblue" font-size="16">&straightphi;m={{azimuthMorning.toFixed(2)}}&deg;</text>
         <text x="100" y="250" font-family="Verdana" id="az2Text" stroke="steelblue" font-size="16">&straightphi;e={{azimuthEvening.toFixed(2)}}&deg;</text>
 
@@ -102,6 +103,7 @@ export default {
         var sun = d3.select(this.$el).select("#sun");
         var sunline = d3.select(this.$el).select("#sunline");
         var suntext = d3.select(this.$el).select("#angleText");
+        var sunElevText = d3.select(this.$el).select("#elevationText");
         var az1Text = d3.select(this.$el).select("#az1Text");
         var az2Text = d3.select(this.$el).select("#az2Text");
         
@@ -136,6 +138,8 @@ export default {
 
         suntext.attr("x", 240 + x0 - 50);
         suntext.attr("y", 240 + y0 + 50);
+        sunElevText.attr("x", 240 + x0 - 50);
+        sunElevText.attr("y", 240 + y0 + 70);
         
 
         az1.attr("x2", 240 + x1);
@@ -206,6 +210,9 @@ export default {
   computed: {
     currentAzimuth: function(){
       return Sun.GetAzimuthAngle(this.date, this.latitude, this.longitude);
+    },
+    currentElevation: function(){
+      return Sun.GetElevationAngle(this.date, this.latitude, this.longitude);
     },
     sunriseAzimuth: function(){
         var sunriseTime = Sun.GetSunriseTime(this.date, this.latitude, this.longitude);
