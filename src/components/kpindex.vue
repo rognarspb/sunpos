@@ -1,0 +1,177 @@
+<i18n>
+{
+  "en": {
+    "kpindex": "Kp Index"
+  },
+  "ru": {
+    "kpindex": "Kp индекс"
+  }
+}
+</i18n>
+
+<template>
+    <div class="container">
+        <h4>{{title}}</h4>
+        <svg width="100%" height="400" viewBox="0 0 380 500"></svg>
+    </div>
+</template>
+
+<script>
+import axios from 'axios';
+import moment from 'moment';
+import * as d3 from 'd3';
+import {KpIndexParser} from '../js/kp.js';
+
+
+
+export default {
+  name: 'kpindex',
+  props: {
+      date: {
+          default: new Date(),
+          required: true
+      },
+      subset: {
+        default: 0,
+        required: false
+      }
+  },
+  components: {
+  },
+  data () {
+    return {
+      kpData: null,
+      kpValues: []
+    }
+  },
+  mounted: function(){
+      this.update();
+  },
+  methods: {  
+    
+    loadData: function(){
+        const kpUrl = "https://services.swpc.noaa.gov/text/daily-geomagnetic-indices.txt";
+        axios.get(kpUrl)
+          .then(response => {
+              let strData = response.data.toString()
+              let parser = new KpIndexParser(strData);
+              this.kpValues = parser.parseDate(this.date);
+              this.draw();
+        });
+    },   
+    draw: function(){
+        let indices = this.kpValues[this.subset].indices;
+        let svgElem = d3.select(this.$el).select("svg");
+        let scaleFactor = 40;
+
+        svgElem.selectAll("*").remove();
+        svgElem.selectAll('bars')
+          .data(indices)
+          .enter()
+            .append('rect')
+              .attr('stroke', 'gray')
+              .attr('fill', function(d){
+                  let kp = d.value;
+                  if (kp < 0){
+                      return 'steelblue';
+                  }
+                  else if (kp >=0  && kp <= 3) {
+                      return 'green';
+                  }
+                  else if (kp > 3 && kp < 5) {
+                      return 'yellow'
+                  }
+                  else if (kp >= 5) {
+                    return 'red';
+                  }
+              })
+              .attr('width', 40)
+              .attr('height', function(d) {
+                  let height = (d.value > 0 ) ? d.value * scaleFactor : 10;
+                  return height;
+              })
+              .attr('y', function(d) {
+                  let height = (d.value > 0 ) ? d.value * scaleFactor : 10;
+                  return 380 - height;
+              })
+              .attr('x', function(d, i) {
+                  return i * 50;
+              });
+
+        svgElem.selectAll('frames')
+          .data(indices)
+          .enter()
+            .append('rect')
+              .attr('width', 40)
+              .attr('height', scaleFactor*9)
+              .attr('fill', 'none')
+              .attr('stroke', 'lightgray')
+              .attr('y', 20)
+              .attr('x', function(d, i) {
+                  return i * 50;
+              });
+
+          svgElem.selectAll('txt')
+            .data(indices)
+            .enter()
+              .append('text')
+                .text(function(d){
+                    return d.value;
+                })
+                .attr('font-size', 18)
+                .attr('y', function(d){
+                    let height = (d.value > 0 ) ? d.value * scaleFactor : 10;
+                    return 370 - height;
+                })
+                .attr('x', function(d, i) {
+                    return i * 50 + 15;
+                });
+                
+          svgElem.selectAll('hours')
+            .data(indices)
+            .enter()
+              .append('text')
+                .text(function(d){
+                    return d.startPeriod + ':00';
+                })
+                .attr('font-size', 18)
+                .attr('y', 400)
+                .attr('x', function(d, i) {
+                    return i * 50;
+                });
+    },
+   
+    update: function(){
+        this.loadData();
+    }
+  },
+  watch:{
+    date: function(newValue){
+      this.update();
+    }
+  },
+  computed: {
+      title(){
+          if (this.kpValues && this.kpValues.length > 0)
+            return this.kpValues[this.subset].name;
+          return 'Unknown subset';
+      }
+  }
+}
+</script>
+
+<style lang="scss">
+  h4 {
+    margin-bottom: 10px;
+    margin-top: 5px;
+  }
+  svg{
+    background: white;
+  }
+  div.container{
+    width: 100%; 
+    height: 100%;
+    background: whitesmoke;
+  }
+</style>
+
