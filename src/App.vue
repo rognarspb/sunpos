@@ -24,7 +24,10 @@
     "sohoSolarLink": "Sun photo",
     "sohoLink": "Sun's corona photo",
     "jdcalc": "Julian day(JD) calculator",
-    "timezone": "Timezone"
+    "timezone": "Timezone",
+
+    "kpIndexTitle": "Kp index",
+    "kpIndexInfo": "The Kp-index is the global geomagnetic activity index. "
   },
   "ru": {
     "title": "Cолнце: положение, восход и закат",
@@ -50,7 +53,10 @@
     "sohoSolarLink": "Фото солнца",
     "sohoLink": "Фото короны солнца",
     "jdcalc": "Калькулятор юлианской даты",
-    "timezone": "Часовой пояс"
+    "timezone": "Часовой пояс",
+
+    "kpIndexTitle": "Kp-индекс",
+    "kpIndexInfo": "Kp-индекс, глобальный планетарный индекс геомагнитной активности. "
   }
 }
 </i18n>
@@ -200,9 +206,21 @@
       <div class="col-sm-12 col-lg-6 col-xl-4">
         <localcoordinates :date="julianDate" :latitude="lat" :longitude="lon"></localcoordinates>
       </div>
-      
     </div>
     <hr/>
+    <h3 class="text-center"><a href="#kp">{{$t('kpIndexTitle')}}</a></h3>
+    <p class="text-center">{{$t('kpIndexInfo')}}</p>
+    <div class="row sky-row" id="kp">
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <kpindex :date="julianDate" :subset="0"></kpindex>
+      </div>
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <kpindex :date="julianDate" :subset="1"></kpindex>
+      </div>
+      <div class="col-sm-12 col-lg-6 col-xl-4">
+        <kpindex :date="julianDate" :subset="2"></kpindex>
+      </div>
+    </div>
     <h3 class="text-center"><a href="#addons">{{$t('addonTitle')}}</a></h3>
     <br/>
     <div class="text-center"><i class="fa fa-arrow-down fa-2x"></i></div>
@@ -267,6 +285,7 @@ import Coordinates from './components/coordinates.vue';
 import LocalCoordinates from './components/localcoordinates.vue';
 import Twilight from './components/twilight.vue';
 import Azimuth from './components/azimuth.vue';
+import KpIndex from './components/kpindex.vue'
 import * as JD from './js/jd.js';
 import * as Sun from './js/sun.js';
 import * as Util from './js/util.js';
@@ -285,7 +304,8 @@ export default {
     'coordinates': Coordinates,
     'localcoordinates': LocalCoordinates,
     'twilight': Twilight,
-    'azimuth': Azimuth
+    'azimuth': Azimuth,
+    'kpindex': KpIndex
   },
   data () {
     return {

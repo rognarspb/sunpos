@@ -1,10 +1,12 @@
 <i18n>
 {
   "en": {
-    "kpindex": "Kp Index"
+    "kpindex": "Kp Index",
+    "refresh": "Refresh"
   },
   "ru": {
-    "kpindex": "Kp индекс"
+    "kpindex": "Kp индекс",
+    "refresh": "Обновить"
   }
 }
 </i18n>
@@ -13,6 +15,7 @@
     <div class="container">
         <h4>{{title}}</h4>
         <svg width="100%" height="400" viewBox="0 0 380 500"></svg>
+        <button type="button" v-on:click="update" class="btn btn-outline-primary btn-sm">{{$t('refresh')}}</button>
     </div>
 </template>
 
@@ -86,16 +89,20 @@ export default {
                   }
               })
               .attr('width', 40)
-              .attr('height', function(d) {
-                  let height = (d.value > 0 ) ? d.value * scaleFactor : 10;
-                  return height;
+              .attr('x', function(d, i) {
+                  return i * 50;
               })
+              .attr('height', 0) //this is the initial value
+              .attr('y', 380)
+              .transition()
+              .duration(1500) //time in ms
               .attr('y', function(d) {
                   let height = (d.value > 0 ) ? d.value * scaleFactor : 10;
                   return 380 - height;
               })
-              .attr('x', function(d, i) {
-                  return i * 50;
+              .attr('height', function(d) {
+                  let height = (d.value > 0 ) ? d.value * scaleFactor : 10;
+                  return height;
               });
 
         svgElem.selectAll('frames')
@@ -139,6 +146,15 @@ export default {
                 .attr('x', function(d, i) {
                     return i * 50;
                 });
+
+          svgElem.append('line')
+            .attr('x1', 0)
+            .attr('y1', 220)
+            .attr('x2', 400)
+            .attr('y2', 220)
+            .attr('stroke', 'orange')
+            .attr('stroke-width', 2)
+            .attr('stroke-dasharray', '5,5');
     },
    
     update: function(){

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const moment = require('moment');
-const kpUrl = 'http://services.swpc.noaa.gov/text/daily-geomagnetic-indices.txt';
+const kpUrl = 'https://services.swpc.noaa.gov/text/daily-geomagnetic-indices.txt';
 
 class KpIndex{
    
@@ -63,26 +63,27 @@ class KpIndexParser{
     }
 }
 
+function formatPeriodTime(hours){
+    var dtOffset = new Date().getTimezoneOffset()/60;
+    var res = hours - dtOffset;
+     if (res < 0)
+         res = 24 - res;
+    if (res >= 24)
+         res = res - 24;
+    //return `${res.toString().padStart(2,'0')}:00 (${hours.toString().padStart(2,'0')}:00 UTC)`;
+    return `${res.toString().padStart(2,'0')}:00`;
+}
+
 
 function DisplayKpIndex(kpDataArray){
     console.log("Displaying KpIndex...")
-    const periods = [
-        "00:00 - 03:00",
-        "03:00 - 06:00",
-        "06:00 - 09:00",
-        "09:00 - 12:00",
-        "12:00 - 15:00",
-        "15:00 - 18:00",
-        "18:00 - 21:00",
-        "21:00 - 24:00",
-    ];
 
     for(let ix=0; ix < kpDataArray.length; ix++){
         let kpData = kpDataArray[ix];
         console.log(`\n${kpData.name}`)
         for(let i=0; i < kpData.indices.length; i++){
-            let periodStart = `${kpData.indices[i].startPeriod.toString().padStart(2,'0')}:00`;
-            let periodEnd = `${kpData.indices[i].endPeriod.toString().padStart(2,'0')}:00`;
+            let periodStart = formatPeriodTime(kpData.indices[i].startPeriod);
+            let periodEnd = formatPeriodTime(kpData.indices[i].endPeriod);
             console.log(`Kp index [${periodStart}-${periodEnd}] = ${kpData.indices[i].value}`);
         }
             
