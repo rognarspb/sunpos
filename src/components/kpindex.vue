@@ -14,6 +14,7 @@
 <template>
     <div class="container">
         <h4>{{title}}</h4>
+        <input type="number" v-model="numdays" class="form-control"/>
         <svg width="100%" height="400" viewBox="0 0 380 500"></svg>
         <button type="button" v-on:click="update" class="btn btn-outline-primary btn-sm">{{$t('refresh')}}</button>
     </div>
@@ -37,6 +38,10 @@ export default {
       subset: {
         default: 0,
         required: false
+      },
+      numdays: {
+        default: 1,
+        required: false
       }
   },
   components: {
@@ -44,7 +49,8 @@ export default {
   data () {
     return {
       kpData: null,
-      kpValues: []
+      kpValues: [],
+      kpDayValues: []
     }
   },
   mounted: function(){
@@ -59,13 +65,29 @@ export default {
               let strData = response.data.toString()
               let parser = new KpIndexParser(strData);
               this.kpValues = parser.parseDate(this.date);
+
+              this.kpDayValues = [];
+              for(let i=0; i < this.numdays; i++) {
+                let kpDate = moment(this.date).subtract(i, 'days');
+                let kpVals = parser.parseDate(kpDate);
+                this.kpDayValues.push(kpVals);
+              }
               this.draw();
         });
     },   
     draw: function(){
-        let indices = this.kpValues[this.subset].indices;
+        // join and group indicies?
+        //let indices = this.kpValues[this.subset].indices;
+        let indices = [];
+        for(let i=this.numdays-1; i >= 0; i--) {
+            let dayIndices = this.kpDayValues[i][this.subset].indices;
+            indices = indices.concat(dayIndices);
+        }
         let svgElem = d3.select(this.$el).select("svg");
         let scaleFactor = 40;
+        let barWidth = 40/this.numdays;
+        let barStep = 50/this.numdays;
+        let txtOffset = 15/this.numdays;
 
         svgElem.selectAll("*").remove();
         svgElem.selectAll('bars')
@@ -88,9 +110,9 @@ export default {
                     return 'red';
                   }
               })
-              .attr('width', 40)
+              .attr('width', barWidth)
               .attr('x', function(d, i) {
-                  return i * 50;
+                  return i * barStep;
               })
               .attr('height', 0) //this is the initial value
               .attr('y', 380)
@@ -109,13 +131,13 @@ export default {
           .data(indices)
           .enter()
             .append('rect')
-              .attr('width', 40)
+              .attr('width', barWidth)
               .attr('height', scaleFactor*9)
               .attr('fill', 'none')
               .attr('stroke', 'lightgray')
               .attr('y', 20)
               .attr('x', function(d, i) {
-                  return i * 50;
+                  return i * barStep;
               });
 
           svgElem.selectAll('txt')
@@ -131,7 +153,7 @@ export default {
                     return 370 - height;
                 })
                 .attr('x', function(d, i) {
-                    return i * 50 + 15;
+                    return i * barStep + txtOffset;
                 });
                 
           svgElem.selectAll('hours')
@@ -163,6 +185,9 @@ export default {
   },
   watch:{
     date: function(newValue){
+      this.update();
+    },
+    numdays: function(newValue){
       this.update();
     }
   },
