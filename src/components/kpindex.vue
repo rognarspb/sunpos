@@ -2,11 +2,13 @@
 {
   "en": {
     "kpindex": "Kp Index",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "days": "Days count"
   },
   "ru": {
     "kpindex": "Kp индекс",
-    "refresh": "Обновить"
+    "refresh": "Обновить",
+    "days": "Отображать дней"
   }
 }
 </i18n>
@@ -14,8 +16,13 @@
 <template>
     <div class="container">
         <h4>{{title}}</h4>
-        <input type="number" v-model="numdays" class="form-control"/>
-        <svg width="100%" height="400" viewBox="0 0 380 500"></svg>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">{{$t('days')}}:</div>
+          </div>
+          <input type="number" v-model="numdays" class="form-control"/>
+        </div>      
+        <svg width="100%" height="400" viewBox="0 0 480 440"></svg>
         <button type="button" v-on:click="update" class="btn btn-outline-primary btn-sm">{{$t('refresh')}}</button>
     </div>
 </template>
@@ -38,11 +45,11 @@ export default {
       subset: {
         default: 0,
         required: false
-      },
-      numdays: {
-        default: 1,
-        required: false
       }
+      // numdays: {
+      //   default: 1,
+      //   required: false
+      // }
   },
   components: {
   },
@@ -50,7 +57,8 @@ export default {
     return {
       kpData: null,
       kpValues: [],
-      kpDayValues: []
+      kpDayValues: [],
+      numdays: 1
     }
   },
   mounted: function(){
@@ -85,9 +93,9 @@ export default {
         }
         let svgElem = d3.select(this.$el).select("svg");
         let scaleFactor = 40;
-        let barWidth = 40/this.numdays;
-        let barStep = 50/this.numdays;
-        let txtOffset = 15/this.numdays;
+        let barWidth = 50/this.numdays;
+        let barStep = 60/this.numdays;
+        let txtOffset = barWidth/2 - 5;
 
         svgElem.selectAll("*").remove();
         svgElem.selectAll('bars')
@@ -156,6 +164,8 @@ export default {
                     return i * barStep + txtOffset;
                 });
                 
+          let hoursOffsetY = 400;
+          let rotateHours = this.numdays > 1;
           svgElem.selectAll('hours')
             .data(indices)
             .enter()
@@ -163,16 +173,19 @@ export default {
                 .text(function(d){
                     return d.startPeriod + ':00';
                 })
-                .attr('font-size', 18)
-                .attr('y', 400)
-                .attr('x', function(d, i) {
-                    return i * 50;
+                .attr('font-size', function(){
+                    return rotateHours ? 2*barStep/3 : 18;
+                })
+                .attr('transform', function(d, i) {
+                    return rotateHours 
+                      ? `translate(${i*barStep}, ${hoursOffsetY - 16}) rotate(90)`
+                      : `translate(${i*barStep}, ${hoursOffsetY})`;
                 });
 
           svgElem.append('line')
             .attr('x1', 0)
             .attr('y1', 220)
-            .attr('x2', 400)
+            .attr('x2', 480)
             .attr('y2', 220)
             .attr('stroke', 'orange')
             .attr('stroke-width', 2)
