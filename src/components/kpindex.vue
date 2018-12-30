@@ -25,7 +25,7 @@
             <button type="button" class="btn btn-outline-secondary" @click="setNumDays(4)">4</button>
             <button type="button" class="btn btn-outline-secondary" @click="setNumDays(5)">5</button>
           </div>
-          <input type="number" v-model="numdays" class="form-control"/>
+          <input type="number" v-model="numdays" placeholder="days" class="form-control"/>
         </div>      
      
         <svg width="100%" height="400" viewBox="0 0 480 440"></svg>
