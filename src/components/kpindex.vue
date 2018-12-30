@@ -18,12 +18,12 @@
         <h4>{{title}}</h4>
         <label>{{$t('days')}}:</label>
         <div class="input-group">
-          <div class="input-group-addon btn-group">
-            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(1)">1</button>
-            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(2)">2</button>
-            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(3)">3</button>
-            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(4)">4</button>
-            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(5)">5</button>
+          <div class="input-group-prepend">
+            <span class="input-group-text">{{$t('days')}}:</span>
+            <template v-for="number in days">
+              <button type="button" :key="number" v-bind:class="{ 'active' : numdays == number}" class="btn btn-outline-secondary" @click="setNumDays(number)">{{number}}</button>
+            </template>       
+            <span class="input-group-text">...</span>   
           </div>
           <input type="number" v-model="numdays" placeholder="days" class="form-control"/>
         </div>      
@@ -46,7 +46,7 @@ export default {
   props: {
       date: {
           default: new Date(),
-          required: true
+          required: true,
       },
       subset: {
         default: 0,
@@ -64,7 +64,8 @@ export default {
       kpData: null,
       kpValues: [],
       kpDayValues: [],
-      numdays: 1
+      numdays: 1,
+      days: [1,2,3,4,5]
     }
   },
   mounted: function(){
@@ -75,6 +76,12 @@ export default {
     setNumDays: function(n){
       this.numdays = n;
       //this.refresh();
+    },
+
+    numDaysClass(n, nd) {
+          return n => nd == n
+              ? 'btn-secondary'
+              : 'btn-secondary-outline'; 
     },
     
     loadData: function(){
@@ -221,6 +228,7 @@ export default {
             return this.kpValues[this.subset].name;
           return 'Unknown subset';
       }
+
   }
 }
 </script>
