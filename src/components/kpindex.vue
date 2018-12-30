@@ -16,7 +16,6 @@
 <template>
     <div class="container">
         <h4>{{title}}</h4>
-        <label>{{$t('days')}}:</label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">{{$t('days')}}:</span>
