@@ -16,12 +16,18 @@
 <template>
     <div class="container">
         <h4>{{title}}</h4>
+        <label>{{$t('days')}}:</label>
         <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">{{$t('days')}}:</div>
+          <div class="input-group-addon btn-group">
+            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(1)">1</button>
+            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(2)">2</button>
+            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(3)">3</button>
+            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(4)">4</button>
+            <button type="button" class="btn btn-outline-secondary" @click="setNumDays(5)">5</button>
           </div>
           <input type="number" v-model="numdays" class="form-control"/>
         </div>      
+     
         <svg width="100%" height="400" viewBox="0 0 480 440"></svg>
         <button type="button" v-on:click="update" class="btn btn-outline-primary btn-sm">{{$t('refresh')}}</button>
     </div>
@@ -65,6 +71,11 @@ export default {
       this.update();
   },
   methods: {  
+
+    setNumDays: function(n){
+      this.numdays = n;
+      //this.refresh();
+    },
     
     loadData: function(){
         const kpUrl = "https://services.swpc.noaa.gov/text/daily-geomagnetic-indices.txt";
