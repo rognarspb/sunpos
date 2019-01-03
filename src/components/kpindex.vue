@@ -19,7 +19,7 @@
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text">{{$t('days')}}:</span>
-            <template v-for="number in days">
+            <template v-for="number in 5">
               <button type="button" :key="number" v-bind:class="{ 'active' : numdays == number}" class="btn btn-outline-secondary" @click="setNumDays(number)">{{number}}</button>
             </template>       
             <span class="input-group-text">...</span>   
@@ -63,8 +63,7 @@ export default {
       kpData: null,
       kpValues: [],
       kpDayValues: [],
-      numdays: 1,
-      days: [1,2,3,4,5]
+      numdays: 1
     }
   },
   mounted: function(){
@@ -115,6 +114,28 @@ export default {
         let txtOffset = barWidth/2 - 5;
 
         svgElem.selectAll("*").remove();
+
+        if (this.numdays > 1){
+
+          let daysData = Array.from({length: this.numdays}, (v,k) => k+1);
+          let dayWidth = 480/this.numdays;
+          svgElem.selectAll("daybars")
+            .data(daysData)
+            .enter()
+              .append('rect')
+              .attr('stroke', 'none')
+              .attr('fill', function(d) {
+                return  d % 2 != 0 ?  '#efefef' : 'none';
+              })
+              .attr('width', dayWidth)
+              .attr('x', function(d, i) {
+                  return i * dayWidth;
+              })
+              .attr('height', 50 + scaleFactor*9) //this is the initial value
+              .attr('y', 20)
+
+        }
+
         svgElem.selectAll('bars')
           .data(indices)
           .enter()
