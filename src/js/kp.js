@@ -3,14 +3,14 @@ import moment from 'moment';
 const kpUrl = 'http://services.swpc.noaa.gov/text/daily-geomagnetic-indices.txt';
 
 export class KpIndex{
-   
+
     constructor(val, startPeriod){
         const periodLength = 3;
         this.value = val;
         this.startPeriod = startPeriod;
         this.endPeriod = this.startPeriod + periodLength;
     }
-} 
+}
 
 export class KpIndexData {
     constructor(strName){
@@ -46,20 +46,20 @@ export class KpIndexParser{
         result.push(this.extractKpIndices(strData, startOffset, "Middle Latitude"));
         result.push(this.extractKpIndices(strData, startOffset + dataBlockLength, "High Latitude"));
         result.push(this.extractKpIndices(strData, startOffset + 2*dataBlockLength, "Estimated"));
-        return result;    
+        return result;
     }
 
     parseDate(date) {
         let strDate = moment(date).format('YYYY MM DD');
         console.log(`Reading Kp index for date: '${strDate}'`);
-        
+
         for(let ix=0; ix < this.arrLines.length; ix++){
             if(this.arrLines[ix].startsWith(strDate)){
                 var parsed = this.parseKpDataLine(this.arrLines[ix]);
                 return parsed;
             }
         }
-        return null; // date not found    
+        return null; // date not found
     }
 }
 
@@ -68,7 +68,7 @@ export class KpIndexParser{
 export function DownloadKpData(callback){
     axios.get(kpUrl)
     .then(response => {
-        console.log("Data retrieved success");
+        console.log("Data download success");
         //let lines = response.data.toString().split('\n');
         if (callback)
             callback(response.data.toString());
