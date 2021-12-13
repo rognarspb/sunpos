@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg version="1.1" viewBox="0 0 109.1 106.89" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(31.583 30.883)" fill="#f4ad44">
+  <path d="m30.533-5.5316-15.877-0.1915 8.0288-25.16 3.9241 12.676z"/>
+  <path d="m29.884 50.661-7.9385 0.0958-7.9385 0.0957 8.0288 25.16 3.9241-12.676z"/>
+  <path d="m52.166 30.067 0.1916-15.877 25.16 8.0288-12.676 3.9241z"/>
+  <path d="m-6.2317 14.179-0.1915 15.877-25.16-8.0288 12.676-3.9241z"/>
+  <path d="m48.832 8.0433-11.091-11.362 23.468-12.113-6.1882 11.738z"/>
+  <path d="m-6.2417 34.012 11.091 11.362-23.468 12.113 6.1882-11.738z"/>
+  <path d="m38.844 45.092 11.362-11.091 12.113 23.468-11.738-6.1882z"/>
+  <path d="m6.3805-3.0368-11.362 11.091-12.113-23.468 11.738 6.1882z"/>
+  <ellipse cx="22.967" cy="22.564" rx="22.967" ry="22.564" fill-rule="evenodd"/>
+ </g>
+</svg>

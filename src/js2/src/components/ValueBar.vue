@@ -1,8 +1,33 @@
 <template>
   <rect stroke="lightgray" fill="none"  :width="width" :height="height" :x="x" :y="y"></rect>
-  <rect stroke="gray" :fill="fillColor" :width="width" :height="valueHeight" :x="x" :y="valueY"></rect>
+  <rect class="bar-animation"
+    :stroke="strokeColor"
+    stroke-width="2"
+    :fill="fillColor"
+    :width="width"
+    :height="valueHeight"
+    :x="x"
+    :y="valueY"
+    rx="4"
+    ry="4"
+   />
   <text :style="textStyle" :x="textX" :y="textY">{{valueText}}</text>
   <line :x1="x" :y1="lineY" :x2="x + Number(width)" :y2="lineY" stroke="orange" stroke-width="2" stroke-dasharray="5,4"></line>
+  <template v-if="this.value >= 4">
+    <svg :x="x" :y="textY - 70" viewBox="20 -100 1500 1500">
+      <g :fill="sunColor">
+        <path d="m30.533-5.5316-15.877-0.1915 8.0288-25.16 3.9241 12.676z"/>
+        <path d="m29.884 50.661-7.9385 0.0958-7.9385 0.0957 8.0288 25.16 3.9241-12.676z"/>
+        <path d="m52.166 30.067 0.1916-15.877 25.16 8.0288-12.676 3.9241z"/>
+        <path d="m-6.2317 14.179-0.1915 15.877-25.16-8.0288 12.676-3.9241z"/>
+        <path d="m48.832 8.0433-11.091-11.362 23.468-12.113-6.1882 11.738z"/>
+        <path d="m-6.2417 34.012 11.091 11.362-23.468 12.113 6.1882-11.738z"/>
+        <path d="m38.844 45.092 11.362-11.091 12.113 23.468-11.738-6.1882z"/>
+        <path d="m6.3805-3.0368-11.362 11.091-12.113-23.468 11.738 6.1882z"/>
+        <ellipse cx="22.967" cy="22.564" rx="22.967" ry="22.564" fill-rule="evenodd"/>
+      </g>
+    </svg>
+  </template>
 </template>
 
 <script>
@@ -18,7 +43,7 @@ function measureTextSize(text, font) {
 }
 
 const FILL_COLOR_RED = 'FF0000';
-const FILL_COLOR_RED_HL = 'FF0000';
+const FILL_COLOR_RED_HL = 'FF6060';
 
 const FILL_COLOR_YELLOW = 'FFFF00';
 const FILL_COLOR_YELLOW_HL = 'EEEE66';
@@ -43,7 +68,9 @@ export default {
       colorGreen: FILL_COLOR_GREEN,
       colorGreenActive: FILL_COLOR_GREEN_HL,
       colorYellow: FILL_COLOR_YELLOW,
+      colorYellowActive: FILL_COLOR_YELLOW_HL,
       colorRed: FILL_COLOR_RED,
+      colorRedActive: FILL_COLOR_RED_HL,
       colorStep: 0,
       colorMaxStep: 20,
       colorDirection: 1,
@@ -51,7 +78,7 @@ export default {
     };
   },
   created() {
-    this.colorInterval = setInterval(this.updateColor, 100);
+    // this.colorInterval = setInterval(this.updateColor, 50);
   },
   beforeUnmount() {
     if (this.colorInterval) {
@@ -160,10 +187,62 @@ export default {
         return `#${this.colorRed}`;
       }
       return 'white';
+    },
+    strokeColor() {
+      const kp = this.value || 0;
+      if (kp < 0) {
+          return 'steelblue';
+      } else if (kp >= 0 && kp <= 3) {
+          return `#${this.colorGreenActive}`;
+      } else if (kp > 3 && kp < 5) {
+          return `#${this.colorYellowActive}`;
+      } else if (kp >= 5) {
+        return `#${this.colorRedActive}`;
+      }
+      return 'white';
+    },
+    sunColor() {
+      const kp = this.value || 0;
+      if (kp < 0) {
+          return 'yellow';
+      } else if (kp >= 0 && kp <= 3) {
+          return 'yellow';
+      } else if (kp > 3 && kp < 5) {
+          return '#ffcc66';
+      } else if (kp >= 5) {
+        return '#ff6600';
+      }
+      return 'white';
     }
   }
 };
 </script>
 
 <style scoped>
+  .border-animation {
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-name: appear-border;
+  }
+
+  .bar-animation {
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-name: appear-bar;
+    transform-origin: 0 400px;
+  }
+
+  @keyframes appear-bar {
+    0% { transform: scale(1, 0); }
+    /* 50% { transform: scale(1, 0.5); } */
+    100% { transform: scale(1, 1); }
+  }
+
+  @keyframes appear-border {
+    0% { stroke-dasharray: 0 10; }
+    50% { stroke-dasharray: 10 10; }
+    100% { stroke-dasharray: 10 10; }
+  }
 </style>

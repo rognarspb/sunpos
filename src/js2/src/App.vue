@@ -1,21 +1,22 @@
 <template>
+  <div>
+    <label>Start date:</label>
+    <input type="date" v-model="startDay"/>
+    <label>Finish date:</label>
+    <input type="date" v-model="finishDay"/>
+    <label>Name of set:</label>
+    <select v-model="datasetName">
+      <option value="Estimated">Estimated</option>
+      <option value="High Latitude">High Latitude</option>
+      <option value="Middle Latitude">Middle Latitude</option>
+    </select>
+  </div>
   <div class="row">
     <template v-for="day in days" :key="day">
       <div class="col">
-        <KpIndex :date="day"/>
+        <KpIndex :date="day" :name="datasetName"/>
       </div>
     </template>
-  </div>
-  <div class="row">
-    <div class="col">
-      <KpIndex :date="getDay(-2)"/>
-    </div>
-    <div class="col">
-      <KpIndex :date="getDay(-1)"/>
-    </div>
-    <div class="col">
-      <KpIndex :date="getDay()"/>
-    </div>
   </div>
 </template>
 
@@ -31,7 +32,8 @@ export default {
   data: function() {
     return {
       startDay: new Date(),
-      finishDay: new Date()
+      finishDay: new Date(),
+      datasetName: 'Estimated'
     };
   },
   methods: {
@@ -52,7 +54,7 @@ export default {
       let dt = this.startDay;
       let numDays = 0;
 
-      while (moment(dt).isBefore(this.finishDay, 'day') || numDays <= 50) {
+      while (moment(dt).isSameOrBefore(this.finishDay, 'date') && numDays <= 50) {
         result.push(dt);
         dt = moment(dt).add(1, 'day').toDate();
         numDays++;

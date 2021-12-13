@@ -1,7 +1,11 @@
 <template>
   <div class="kp-index">
     <div class="kp-index__header">{{dateText}}</div>
-    <div v-if="isLoading">Загрузка данных...</div>
+    <div v-if="isLoading" class="kp-index__panel">
+      <svg width="100%" height="400" viewBox="-40 0 480 440">
+        <text x="120" y="220" font-family="Monospace" font-size="16">Загрузка данных...</text>
+      </svg>
+    </div>
     <div v-if="!isLoading && error" class="kp-index__panel">
       <svg width="100%" height="400" viewBox="-40 0 480 440">
         <rect fill="#efefef"  :width="480" :height="440" :x="0" :y="0"></rect>
@@ -37,6 +41,7 @@ export default {
   },
   props: {
     date: { type: [Date, String], required: false, default: null },
+    name: { type: String, required: false, default: 'Estimated' },
     fontSize: { type: [Number, String], required: false, default: 18 },
     fontFamily: { type: String, required: false, default: 'Monospace' }
   },
@@ -66,25 +71,33 @@ export default {
       return this.kpDate ? moment(this.kpDate).format('DD.MM.YYYY') : 'Нет данных';
     }
   },
-  async created() {
-    try {
-      this.isLoading = true;
-      this.kpDate = this.date;
-      this.kpDateData = null;
-      this.values = [];
+  created() {
+    this.load();
+  },
+  watch: {
+    name: function() { this.load(); }
+  },
+  methods: {
+    async load() {
+      try {
+        this.isLoading = true;
+        this.kpDate = this.date;
+        this.kpDateData = null;
+        this.values = [];
 
-      const service = new KpService();
-      this.kpData = await service.fetch();
-      const kpDataSet = service.findDate(this.date);
-      if (kpDataSet) {
-        this.kpDataSet = kpDataSet;
-        this.values = kpDataSet.estimated.values;
-        this.kpDate = kpDataSet.date;
+        const service = new KpService();
+        this.kpData = await service.fetch();
+        const kpDataSet = service.findDate(this.date);
+        if (kpDataSet) {
+          this.kpDataSet = kpDataSet;
+          this.values = kpDataSet.getByName(this.name).values;
+          this.kpDate = kpDataSet.date;
+        }
+      } catch (error) {
+        this.error = error;
+      } finally {
+        this.isLoading = false;
       }
-    } catch (error) {
-      this.error = error;
-    } finally {
-      this.isLoading = false;
     }
   }
 };
