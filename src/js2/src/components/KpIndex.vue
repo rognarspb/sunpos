@@ -18,7 +18,7 @@
       <svg width="100%" height="400" viewBox="-40 0 480 440">
         <template v-for="(item, index) in values" :key="index">
           <value-bar :x="index*50" y="20" :value="item.value"/>
-          <text :style="textStyle" :x="index*50" :y="400">{{item.periodStart}}</text>
+          <text :style="textStyle" :x="index*50" :y="400">{{item.periodStart.toString().padStart(2, '0') + ':00'}}</text>
         </template>
       </svg>
     </div>
@@ -42,8 +42,8 @@ export default {
   props: {
     date: { type: [Date, String], required: false, default: null },
     name: { type: String, required: false, default: 'Estimated' },
-    fontSize: { type: [Number, String], required: false, default: 18 },
-    fontFamily: { type: String, required: false, default: 'Monospace' }
+    fontSize: { type: [Number, String], required: false, default: 12 },
+    fontFamily: { type: String, required: false, default: 'Roboto Mono' }
   },
   data: function() {
     return {
@@ -68,7 +68,9 @@ export default {
       return style;
     },
     dateText() {
-      return this.kpDate ? moment(this.kpDate).format('DD.MM.YYYY') : 'Нет данных';
+      return this.kpDate
+        ? moment(this.kpDate).format('DD MMMM YYYY')
+        : 'Нет данных';
     }
   },
   created() {
@@ -110,7 +112,7 @@ export default {
   border: 1px gray;
 }
 .kp-index__header {
-  font-size: 18pt;
+  font-size: 16pt;
   text-align: center;
 }
 

@@ -13,7 +13,7 @@
    />
   <text :style="textStyle" :x="textX" :y="textY">{{valueText}}</text>
   <line :x1="x" :y1="lineY" :x2="x + Number(width)" :y2="lineY" stroke="orange" stroke-width="2" stroke-dasharray="5,4"></line>
-  <template v-if="this.value >= 4">
+  <template v-if="this.value >= 5">
     <svg :x="x" :y="textY - 70" viewBox="20 -100 1500 1500">
       <g :fill="sunColor">
         <path d="m30.533-5.5316-15.877-0.1915 8.0288-25.16 3.9241 12.676z"/>
@@ -42,14 +42,20 @@ function measureTextSize(text, font) {
   return textSize;
 }
 
-const FILL_COLOR_RED = 'FF0000';
+const FILL_COLOR_RED = 'D14009';
 const FILL_COLOR_RED_HL = 'FF6060';
 
-const FILL_COLOR_YELLOW = 'FFFF00';
-const FILL_COLOR_YELLOW_HL = 'EEEE66';
+const FILL_COLOR_ORANGE = 'FC9601';
+const FILL_COLOR_ORANGE_HL = 'FC9601';
 
-const FILL_COLOR_GREEN = '00ce00';
-const FILL_COLOR_GREEN_HL = '3efc3e';
+const FILL_COLOR_YELLOW = 'FFCC33';
+const FILL_COLOR_YELLOW_HL = 'FFCC33';
+
+const FILL_COLOR_GREEN = 'FFE484';
+const FILL_COLOR_GREEN_HL = 'FFE484';
+
+const FILL_COLOR_MIN = '00ce00';
+const FILL_COLOR_MIN_HL = '00ce00';
 
 export default {
   name: 'ValueBar',
@@ -61,14 +67,18 @@ export default {
     height: { type: [Number, String], required: false, default: 360 },
     minHeight: { type: [Number, String], required: false, default: 10 },
     fontSize: { type: [Number, String], required: false, default: 18 },
-    fontFamily: { type: String, required: false, default: 'Monospace' }
+    fontFamily: { type: String, required: false, default: 'Roboto Mono' }
   },
   data: function() {
     return {
+      colorMin: FILL_COLOR_MIN,
+      colorMinActive: FILL_COLOR_MIN_HL,
       colorGreen: FILL_COLOR_GREEN,
       colorGreenActive: FILL_COLOR_GREEN_HL,
       colorYellow: FILL_COLOR_YELLOW,
       colorYellowActive: FILL_COLOR_YELLOW_HL,
+      colorOrange: FILL_COLOR_ORANGE,
+      colorOrangeActive: FILL_COLOR_ORANGE_HL,
       colorRed: FILL_COLOR_RED,
       colorRedActive: FILL_COLOR_RED_HL,
       colorStep: 0,
@@ -171,7 +181,9 @@ export default {
     },
     valueText() {
       if (this.value || this.value === 0) {
-        return (this.value >= 0) ? this.value : 'н/д';
+        return (this.value >= 0)
+          ? this.value
+          : 'н/д';
       }
       return 'н/д';
     },
@@ -179,11 +191,15 @@ export default {
       const kp = this.value || 0;
       if (kp < 0) {
           return 'steelblue';
-      } else if (kp >= 0 && kp <= 3) {
+      } else if (kp >= 0 && kp <= 2) {
+          return `#${this.colorMin}`;
+      } else if (kp >= 3 && kp < 4) {
           return `#${this.colorGreen}`;
       } else if (kp > 3 && kp < 5) {
           return `#${this.colorYellow}`;
-      } else if (kp >= 5) {
+      } else if (kp >= 5 && kp < 7) {
+        return `#${this.colorOrange}`;
+      } else if (kp >= 7) {
         return `#${this.colorRed}`;
       }
       return 'white';
@@ -192,11 +208,15 @@ export default {
       const kp = this.value || 0;
       if (kp < 0) {
           return 'steelblue';
-      } else if (kp >= 0 && kp <= 3) {
+      } else if (kp >= 0 && kp <= 2) {
+          return `#${this.colorMinActive}`;
+      } else if (kp >= 3 && kp < 4) {
           return `#${this.colorGreenActive}`;
       } else if (kp > 3 && kp < 5) {
           return `#${this.colorYellowActive}`;
-      } else if (kp >= 5) {
+      } else if (kp >= 5 && kp < 7) {
+        return `#${this.colorOrangeActive}`;
+      } else if (kp >= 7) {
         return `#${this.colorRedActive}`;
       }
       return 'white';
