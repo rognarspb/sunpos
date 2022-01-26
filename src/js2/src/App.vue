@@ -1,7 +1,16 @@
 <template>
   <div>
-    <div style="padding: 20px;">
-      <kp-calendar start="2022-01-01" finish="2022-01-31" ></kp-calendar>
+    <h4>Режим: квартал</h4>
+    <div style="margin-top: 20px;">
+      <kp-calendar mode="quarter"></kp-calendar>
+    </div>
+    <h4>Режим: месяц</h4>
+    <div style="margin-top: 20px;">
+      <kp-calendar mode="month"></kp-calendar>
+    </div>
+    <h4>Режим: год</h4>
+    <div style="margin-top: 20px;">
+      <kp-calendar mode="year"></kp-calendar>
     </div>
     <div>
       <KpIndexSet/>
@@ -11,7 +20,7 @@
 
 <script>
 import KpIndexSet from './components/KpIndexSet.vue';
-import KpCalendar from './components/KpCalendar.vue';
+import KpCalendar from './components/calendar/KpCalendar.vue';
 
 export default {
   name: 'App',
