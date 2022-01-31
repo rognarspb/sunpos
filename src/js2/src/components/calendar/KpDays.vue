@@ -151,15 +151,6 @@
   watch(() => props.start, () => { update(); });
   watch(() => props.finish, () => { update(); });
   watch(() => props.selected, () => { updateSelected(); });
-  // watch(start, () => {
-  //   update();
-  // });
-  // watch(finish, () => {
-  //   update();
-  // });
-  // watch(selected, () => {
-  //   updateSelected();
-  // });
 
   // update on created:
   update();

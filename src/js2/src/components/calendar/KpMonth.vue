@@ -1,9 +1,15 @@
 <template>
   <div class="month">
     <div class="title">
-      <div class="title__arrow" v-if="showNavigation" @click="prev">&#129044;</div>
-      <div class="title__text" :title="titleTooltip">{{title}}</div>
-      <div class="title__arrow" v-if="showNavigation" @click="next">&#129046;</div>
+      <div v-if="showNavigation" class="title__arrow" @click="prev">
+        &#129044;
+      </div>
+      <div class="title__text" :title="titleTooltip">
+        {{ title }}
+      </div>
+      <div v-if="showNavigation" class="title__arrow" @click="next">
+        &#129046;
+      </div>
     </div>
     <kp-days
       :start="startDate"
@@ -24,7 +30,7 @@ export default {
   props: {
     month: { type: Number, required: false, default: () => new Date().getMonth() },
     year: { type: Number, required: false, default: () => new Date().getFullYear() },
-    selected: { type: String, required: false },
+    selected: { type: String, required: false, default: '' },
     showYear: { type: Boolean, required: false, default: false },
     showNavigation: { type: Boolean, required: false, default: false }
   },
