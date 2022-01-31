@@ -1,17 +1,17 @@
 <template>
-    <div class="month">
-      <div class="title">
-        <div class="title__arrow" v-if="showNavigation" @click="prev">&#129044;</div>
-        <div class="title__text" :title="titleTooltip">{{title}}</div>
-        <div class="title__arrow" v-if="showNavigation" @click="next">&#129046;</div>
-      </div>
-      <kp-days
-        :start="startDate"
-        :finish="finishDate"
-        :selected="selected"
-        @date:selected="onDateSelected">
-      </kp-days>
+  <div class="month">
+    <div class="title">
+      <div class="title__arrow" v-if="showNavigation" @click="prev">&#129044;</div>
+      <div class="title__text" :title="titleTooltip">{{title}}</div>
+      <div class="title__arrow" v-if="showNavigation" @click="next">&#129046;</div>
     </div>
+    <kp-days
+      :start="startDate"
+      :finish="finishDate"
+      :selected="selected"
+      @date:selected="onDateSelected"
+    />
+  </div>
 </template>
 
 <script>
@@ -34,17 +34,6 @@ export default {
       dateMonth: null,
       dateDay: 1
     };
-  },
-  created() {
-    this.update();
-  },
-  watch: {
-    month() {
-      this.update();
-    },
-    year() {
-      this.update();
-    }
   },
   computed: {
     isValid() {
@@ -81,6 +70,17 @@ export default {
       }
       return '';
     }
+  },
+  watch: {
+    month() {
+      this.update();
+    },
+    year() {
+      this.update();
+    }
+  },
+  created() {
+    this.update();
   },
   methods: {
     onDateSelected(isoDate) {

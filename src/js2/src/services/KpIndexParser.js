@@ -34,7 +34,7 @@ export default class KpIndexParser {
     const dataBlockLength = 23;
 
     const dateString = strText.substr(0, 10).trim();
-    console.log(`Parsing date: "${dateString}"`);
+    // console.log(`Parsing date: "${dateString}"`);
     const dt = moment(dateString, 'YYYY MM DD').toDate();
     const result = new KpIndexDataSet(dt);
     result.push(INDEX_MID, new KpIndexData(INDEX_MID, dt, KpIndexParser.extractValues(strText, startOffset)));

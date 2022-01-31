@@ -9,151 +9,160 @@
       <div>СБ</div>
       <div>ВС</div>
     </div>
-    <div v-for="row in rows" :key="row.index" class="row">
-      <div class="week">{{row.weekIndex}}</div>
-      <div v-for="cell in row.cells"
+    <div
+      v-for="row in rows"
+      :key="row.index"
+      class="row"
+    >
+      <div class="week">
+        {{ row.weekIndex }}
+      </div>
+      <div
+        v-for="cell in row.cells"
         :key="cell.index"
         class="cell"
         :class="getCellClass(cell)"
         :title="cell.displayDate"
         @click="onSelectDate(cell)"
       >
-        <span v-if="!cell.isHidden" class="day">{{cell.day}}</span>
+        <span v-if="!cell.isHidden" class="day">{{ cell.day }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import moment from 'moment';
+<script setup>
+  import moment from 'moment';
+  import { ref, toRefs, watch } from 'vue';
 
-export default {
-  name: 'KpDays',
-  props: {
-    selected: { type: String, required: false },
-    start: { type: String, required: false },
-    finish: { type: String, required: false },
+  const name = 'KpDays';
+  const props = defineProps({
+    selected: { type: String, required: false, default: '' },
+    start: { type: String, required: false, default: '' },
+    finish: { type: String, required: false, default: '' },
     readonly: { type: Boolean, required: false, default: false }
-  },
-  data: function() {
-    return {
-      rows: [],
-      cells: [],
-      startDay: null,
-      finishDay: null,
-      selectedDay: null
-    };
-  },
-  created() {
-    this.update();
-  },
-  watch: {
-    start() {
-      this.update();
-    },
-    finish() {
-      this.update();
-    },
-    selected(newVal) {
-      this.updateSelected();
-    }
-  },
-  methods: {
-    getCellClass(column) {
-      const classNames = ['cell'];
-      if (column.isToday) {
-        classNames.push('cell-today');
-      }
-      if (!column.isWorkDay) {
-        classNames.push('cell-weekend');
-      }
-      if (column.isSelected) {
-        classNames.push('cell-selected');
-      }
-      return classNames.join(' ');
-    },
-    onSelectDate(cell) {
-      // do not handle empty cells:
-      if (cell.isHidden) {
-        return;
+  });
+
+  const emit = defineEmits(['date:selected']);
+
+  const rows = ref([]);
+  const cells = ref([]);
+  const startDay = ref(null);
+  const finishDay = ref(null);
+  const selectedDay = ref(null);
+
+  const update = () => {
+    startDay.value = moment(props.start);
+    finishDay.value = moment(props.finish);
+
+    const updatedRows = [];
+    const updatedCells = [];
+    const selectedDay = props.selected && moment(props.selected).isValid()
+      ? moment(props.selected).startOf('day')
+      : null;
+
+    let rowIndex = 0;
+    let dt = moment(startDay.value).isoWeekday(1);
+    let row = null;
+
+    while (dt.isSameOrBefore(finishDay.value)) {
+      row = {
+        index: rowIndex++,
+        weekIndex: dt.week(),
+        cells: []
+      };
+      updatedRows.push(row);
+
+      if (rowIndex > 6) {
+        break;
       }
 
-      if (this.selectedDay === cell.isoDate && cell.isSelected) {
-        // do nothing:
-        return;
-      }
-
-      this.selectedDay = cell.isoDate;
-      cell.isSelected = true;
-
-      // unselect others:
-      this.cells.forEach((x) => {
-        if (x !== cell) {
-          x.isSelected = false;
-        }
-      });
-
-      this.$emit('date:selected', cell.isoDate);
-    },
-    updateSelected() {
-      const selectedDay = this.selected && moment(this.selected).isValid()
-        ? moment(this.selected).startOf('day')
-        : null;
-
-      this.cells.forEach((x) => {
-        const dt = moment(x.isoDate);
-        x.isSelected = selectedDay && selectedDay.isSame(dt.startOf('day'));
-      });
-    },
-    update() {
-      this.startDay = moment(this.start);
-      this.finishDay = moment(this.finish);
-
-      const rows = [];
-      const cells = [];
-      const selectedDay = this.selected && moment(this.selected).isValid()
-        ? moment(this.selected).startOf('day')
-        : null;
-
-      let rowIndex = 0;
-      let dt = moment(this.startDay).isoWeekday(1);
-      let row = null;
-
-      while (dt.isSameOrBefore(this.finishDay)) {
-        row = {
-          index: rowIndex++,
-          weekIndex: dt.week(),
-          cells: []
+      for (let cellIndex = 0; cellIndex < 7; cellIndex++) {
+        // set day properties
+        const cell = {
+          index: cellIndex,
+          day: dt.date(),
+          isWorkDay: dt.isoWeekday() >= 1 && dt.isoWeekday() < 6,
+          isDayOff: false,
+          isoDate: dt.toISOString(),
+          displayDate: dt.format('DD.MM.YYYY'),
+          isHidden: dt.isBefore(startDay.value) || dt.isAfter(finishDay.value),
+          isToday: moment().startOf('day').isSame(dt.startOf('day')),
+          isSelected: selectedDay && selectedDay.isSame(dt.startOf('day'))
         };
-        rows.push(row);
-
-        if (rowIndex > 6) {
-          break;
-        }
-
-        for (let cellIndex = 0; cellIndex < 7; cellIndex++) {
-          // set day properties
-          const cell = {
-            index: cellIndex,
-            day: dt.date(),
-            isWorkDay: dt.isoWeekday() >= 1 && dt.isoWeekday() < 6,
-            isDayOff: false,
-            isoDate: dt.toISOString(),
-            displayDate: dt.format('DD.MM.YYYY'),
-            isHidden: dt.isBefore(this.startDay) || dt.isAfter(this.finishDay),
-            isToday: moment().startOf('day').isSame(dt.startOf('day')),
-            isSelected: selectedDay && selectedDay.isSame(dt.startOf('day'))
-          };
-          row.cells.push(cell);
-          cells.push(cell);
-          dt = dt.add(1, 'day');
-        }
+        row.cells.push(cell);
+        updatedCells.push(cell);
+        dt = dt.add(1, 'day');
       }
-      this.rows = rows;
-      this.cells = cells;
     }
-  }
-};
+    rows.value = updatedRows;
+    cells.value = updatedCells;
+  };
+
+  const getCellClass = (column) => {
+    const classNames = ['cell'];
+    if (column.isToday) {
+      classNames.push('cell-today');
+    }
+    if (!column.isWorkDay) {
+      classNames.push('cell-weekend');
+    }
+    if (column.isSelected && !column.isHidden) {
+      classNames.push('cell-selected');
+    }
+    return classNames.join(' ');
+  };
+
+  const onSelectDate = (cell) => {
+    // do not handle empty cells:
+    if (cell.isHidden) {
+      return;
+    }
+
+    if (selectedDay.value === cell.isoDate && cell.isSelected) {
+      // do nothing:
+      return;
+    }
+
+    selectedDay.value = cell.isoDate;
+    cell.isSelected = true;
+
+    // unselect others:
+    cells.value.forEach((x) => {
+      if (x !== cell) {
+        x.isSelected = false;
+      }
+    });
+
+    emit('date:selected', cell.isoDate);
+  };
+
+  const updateSelected = () => {
+    const selectedDay = props.selected && moment(props.selected).isValid()
+      ? moment(props.selected).startOf('day')
+      : null;
+
+    cells.value.forEach((x) => {
+      const dt = moment(x.isoDate);
+      x.isSelected = selectedDay && selectedDay.isSame(dt.startOf('day'));
+    });
+  };
+
+  watch(() => props.start, () => { update(); });
+  watch(() => props.finish, () => { update(); });
+  watch(() => props.selected, () => { updateSelected(); });
+  // watch(start, () => {
+  //   update();
+  // });
+  // watch(finish, () => {
+  //   update();
+  // });
+  // watch(selected, () => {
+  //   updateSelected();
+  // });
+
+  // update on created:
+  update();
 </script>
 
 <style>

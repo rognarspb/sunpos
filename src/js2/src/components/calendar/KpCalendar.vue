@@ -7,23 +7,30 @@
         :selected="selected"
         @date:selected="onDateSelected"
         show-year
-        show-navigation>
-      </kp-month>
+        show-navigation
+      />
     </div>
-    <div class="calendar-quarter" v-if="mode==='quarter'">
-      <template v-for="m in months" :key="m.index">
-        <div class="calendar-quarter__month">
-          <kp-month
-            :month="m.month"
-            :year="m.year"
-            :selected="selected"
-            @date:selected="onDateSelected">
-          </kp-month>
-        </div>
-      </template>
+    <div v-if="mode==='quarter'" class="calendar-quarter">
+      <div class="calendar-quarter__title">
+        <div class="calendar-quarter__arrow" @click="prevQuarter">&#129044;</div>
+        <div class="calendar-quarter__title__text">{{quarterTitle}}</div>
+        <div class="calendar-quarter__arrow" @click="nextQuarter">&#129046;</div>
+      </div>
+      <div class="calendar-quarter__months">
+        <template v-for="m in months" :key="m.index">
+          <div class="calendar-quarter__month">
+            <kp-month
+              :month="m.month"
+              :year="m.year"
+              :selected="selected"
+              @date:selected="onDateSelected"
+            />
+          </div>
+        </template>
+      </div>
     </div>
-    <div class="calendar-year" v-if="mode==='year'">
-      <div class="calendar-year__title">{{firstYear}}</div>
+    <div v-if="mode==='year'" class="calendar-year">
+      <div class="calendar-year__title">{{ firstYear }}</div>
       <div class="calendar-year__months">
         <template v-for="m in months" :key="m.index">
           <div class="calendar-year__month">
@@ -31,8 +38,8 @@
               :month="m.month"
               :year="m.year"
               :selected="selected"
-              @date:selected="onDateSelected">
-            </kp-month>
+              @date:selected="onDateSelected"
+            />
           </div>
         </template>
       </div>
@@ -44,6 +51,18 @@
 import moment from 'moment';
 import KpMonth from './KpMonth.vue';
 
+function toRoman(num) {
+  const lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+  let roman = '';
+  for (const i in lookup) {
+    while (num >= lookup[i]) {
+      roman += i;
+      num -= lookup[i];
+    }
+  }
+  return roman;
+}
+
 export default {
   name: 'KpCalendar',
   components: { KpMonth },
@@ -53,6 +72,8 @@ export default {
   data: function() {
     return {
       months: [],
+      quarter: 0,
+      year: new Date().getFullYear(),
       selected: new Date().toISOString()
     };
   },
@@ -67,6 +88,9 @@ export default {
     firstYear() {
       const now = moment();
       return this.months ? this.months[0].year : now.year();
+    },
+    quarterTitle() {
+      return `${toRoman(this.quarter + 1)} квартал ${this.year}`;
     }
   },
   methods: {
@@ -113,6 +137,41 @@ export default {
 
 .calendar-quarter {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-quarter__arrow {
+  width: 30px;
+  text-align: center;
+  font-size: 18pt;
+  border-radius: 4px;
+}
+
+.calendar-quarter__arrow:hover {
+  cursor: pointer;
+  background: #efefef;
+}
+
+.calendar-quarter__title {
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 850px;
+  width: 100%;
+}
+
+.calendar-quarter__title__text {
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
+}
+
+.calendar-quarter__months {
+  display: flex;
   flex-direction: row;
   justify-content: center;
   flex-wrap: nowrap;
@@ -130,7 +189,6 @@ export default {
   padding: 10px;
   font-weight: bold;
   background: #efefef;
-  width: 100%;
   margin-bottom: 10px;
 }
 

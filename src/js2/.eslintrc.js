@@ -4,8 +4,9 @@ module.exports = {
     node: true
   },
   extends: [
-    'plugin:vue/vue3-essential',
-    '@vue/standard'
+    // 'plugin:vue/vue3-essential',
+    'plugin:vue/vue3-recommended',
+    // '@vue/standard'
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -18,6 +19,15 @@ module.exports = {
     'indent': 'off',
     'linebreak-style': 0,
     'func-call-spacing': 'off',
-    'space-before-function-paren': ['error', 'never']
+    'space-before-function-paren': ['error', 'never'],
+    'vue/script-setup-uses-vars': 'warn',
+    'vue/max-attributes-per-line': ['error', {
+      'singleline': {
+        'max': 3
+      },
+      'multiline': {
+        'max': 1
+      }
+    }]
   }
 };
