@@ -2,34 +2,41 @@
   <div class="settings">
     <div>Диапазон дат: </div>
     <label>C </label>
-    <v-date-picker v-model="startDay"></v-date-picker>
+    <KpDatePicker v-model="startDay" />
     <label>по </label>
-    <v-date-picker v-model="finishDay"></v-date-picker>
+    <KpDatePicker v-model="finishDay" />
     <label>Name of set:</label>
     <select v-model="datasetName">
-      <option value="Estimated">Estimated</option>
-      <option value="High Latitude">High Latitude</option>
-      <option value="Middle Latitude">Middle Latitude</option>
+      <option value="Estimated">
+        Estimated
+      </option>
+      <option value="High Latitude">
+        High Latitude
+      </option>
+      <option value="Middle Latitude">
+        Middle Latitude
+      </option>
     </select>
   </div>
   <div class="row">
     <template v-for="day in days" :key="day">
       <div class="col">
-        <KpIndex :date="day" :name="datasetName"/>
+        <KpIndex :date="day" :name="datasetName" />
       </div>
     </template>
   </div>
-
 </template>
 
 <script>
   import moment from 'moment';
   import KpIndex from './KpIndex.vue';
+  import KpDatePicker from './calendar/KpDatePicker.vue';
 
   export default {
     name: 'KpIndexSet',
     components: {
-      KpIndex
+      KpIndex,
+      KpDatePicker
     },
     data: function() {
       return {
@@ -37,14 +44,6 @@
         finishDay: new Date(),
         datasetName: 'Estimated'
       };
-    },
-    methods: {
-      getDay(offset) {
-        if (offset > 0) {
-          return moment().add(offset, 'day').toDate();
-        }
-        return new Date();
-      }
     },
     computed: {
       days() {
@@ -63,7 +62,15 @@
         }
         return result;
       }
-    }
+    },
+    methods: {
+      getDay(offset) {
+        if (offset > 0) {
+          return moment().add(offset, 'day').toDate();
+        }
+        return new Date();
+      }
+    },
   };
 
 </script>

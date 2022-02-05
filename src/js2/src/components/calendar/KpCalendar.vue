@@ -4,7 +4,7 @@
       <kp-month
         :month="firstMonth"
         :year="firstYear"
-        :selected="selected"
+        :selected="selectedValue"
         show-year
         show-navigation
         @date:selected="onDateSelected"
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import moment from 'moment';
   import KpMonth from './KpMonth.vue';
   import KpYear from './KpYear.vue';
@@ -42,7 +42,8 @@
 
   // components: { KpMonth },
   const props = defineProps({
-    mode: { type: String, required: false, default: 'quater' }
+    mode: { type: String, required: false, default: 'quater' },
+    selected: { type: String, required: false, default: new Date().toISOString() }
   });
 
   const emit = defineEmits(['date:selected']);
@@ -50,7 +51,7 @@
   const months  = ref([]);
   const quarter = ref(0);
   const year = ref(new Date().getFullYear());
-  const selected = ref(new Date().toISOString());
+  const selectedValue = ref(props.selected);
 
   // computed
   const firstMonth = computed(() => {
@@ -90,7 +91,7 @@
   });
 
   const onDateSelected = (isoDate) => {
-    selected.value = isoDate;
+    selectedValue.value = isoDate;
     emit('date:selected', isoDate);
   };
 
@@ -123,6 +124,10 @@
       }
     }
   };
+
+  watch(() => props.selected, (newValue) => {
+    selectedValue.value = newValue;
+  });
 
   update();
 </script>

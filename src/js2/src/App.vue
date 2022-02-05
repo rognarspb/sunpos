@@ -1,19 +1,21 @@
 <template>
   <div>
+    <h4>Выбор даты</h4>
+    <KpDatePicker />
     <h4>Режим: квартал</h4>
     <div style="margin-top: 20px;">
-      <kp-calendar mode="quarter"></kp-calendar>
+      <KpCalendar mode="quarter" />
     </div>
     <h4>Режим: месяц</h4>
     <div style="margin-top: 20px;">
-      <kp-calendar mode="month"></kp-calendar>
+      <KpCalendar mode="month" />
     </div>
     <h4>Режим: год</h4>
     <div style="margin-top: 20px;">
-      <kp-calendar mode="year"></kp-calendar>
+      <KpCalendar mode="year" />
     </div>
     <div>
-      <KpIndexSet/>
+      <KpIndexSet />
     </div>
   </div>
 </template>
@@ -21,12 +23,14 @@
 <script>
 import KpIndexSet from './components/KpIndexSet.vue';
 import KpCalendar from './components/calendar/KpCalendar.vue';
+import KpDatePicker from './components/calendar/KpDatePicker.vue';
 
 export default {
   name: 'App',
   components: {
     KpIndexSet,
-    KpCalendar
+    KpCalendar,
+    KpDatePicker
   }
 };
 </script>

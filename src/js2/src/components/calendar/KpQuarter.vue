@@ -32,35 +32,54 @@
   import KpMonth from './KpMonth.vue';
   import toRoman from '../../services/KpRomanConverter';
 
+  const now = moment();
   const months  = ref([]);
-  const selected = ref(new Date().toISOString());
+  const selected = ref(now.toISOString());
+  const quarter = ref(now.quarter());
+  const year = ref(now.year());
   const emit = defineEmits(['date:selected']);
 
   const quarterNumber = computed(() => {
-    const dt = selected.value ? moment(selected.value) :  moment();
-    return dt.quarter();
+    return quarter.value;
   });
 
   const yearNumber = computed(() => {
-    const dt = selected.value ? moment(selected.value) :  moment();
-    return dt.year();
+    return year.value;
   });
 
   const quarterTitle = computed(() => {
-    return `${toRoman(quarterNumber.value + 1)} квартал ${yearNumber.value}`;
+    return `${toRoman(quarterNumber.value)} квартал ${yearNumber.value}`;
   });
 
   const init = () => {
-    const now = moment();
-    const quarter = now.month() / 3;
     months.value = [];
     for (let i = 0; i < 3; i++) {
       months.value.push({
         index: i,
-        month: quarter + i,
-        year: now.year()
+        month: (quarter.value - 1)*3 + i,
+        year: year.value
       });
     }
+  };
+
+  const nextQuarter = () => {
+    if (quarter.value === 4) {
+      year.value++;
+      quarter.value = 1;
+    } else {
+      quarter.value++;
+    }
+    init();
+  };
+
+  const prevQuarter = () => {
+    if (quarter.value === 1) {
+      year.value--;
+      quarter.value = 4;
+    } else {
+      quarter.value--;
+    }
+    init();
   };
 
   const onDateSelected = (isoDate) => {
