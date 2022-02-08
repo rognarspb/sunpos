@@ -1,5 +1,5 @@
 <template>
-  <div class="datepicker-container">
+  <div ref="$element" class="datepicker-container">
     <div class="datepicker">
       <div class="datepicker__input">
         <input v-model="textValue" type="text">
@@ -8,31 +8,40 @@
         &#x1F4C6;
       </div>
     </div>
-    <div v-if="isDropdown" class="datepicker__dropdown">
-      <KpCalendar mode="month" :selected="internalValue.toISOString()" @date:selected="onDateSelected" />
-    </div>
+    <transition name="fade">
+      <div v-if="isDropdown" class="datepicker__dropdown">
+        <KpCalendar mode="month" :selected="internalValue.toISOString()" @date:selected="onDateSelected" />
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
   import KpCalendar from './KpCalendar.vue';
-  import { ref, computed, watch } from 'vue';
+  import { ref, computed, watch, onBeforeUnmount } from 'vue';
   import moment from 'moment';
 
-  const emit = defineEmits(['modelValue:selected']);
+  const emit = defineEmits(['update:modelValue']);
 
   const selected = ref(null);
   const isDropdown = ref(false);
   const internalValue = ref(new Date());
   const textValue = ref('');
+  const $element = ref(null);
 
   const props = defineProps({
-    modelValue: { type: String, required: false, default: '' },
+    modelValue: { type: [String, Date], required: false, default: '' },
     displayFormat: { type: String, required: false, default: 'DD.MM.YYYY' },
   });
 
   const toggle = () => {
     isDropdown.value = !isDropdown.value;
+  };
+
+  const close = (e) => {
+    if (!$element.value.contains(e.target)) {
+      isDropdown.value = false;
+    }
   };
 
   const text = computed(() => {
@@ -50,9 +59,21 @@
     emit('update:modelValue', internalValue.value);
   };
 
+  // handle model property change:
   watch(() => props.modelValue, (newValue) => {
     internalValue.value = newValue;
     textValue.value = text.value;
+  });
+
+  // handle user text input:
+  watch(textValue, (newValue) => {
+    const mdt = moment(newValue, props.displayFormat );
+    if (mdt.isValid()) {
+      if (!mdt.isSame(internalValue.value, 'day')) {
+        internalValue.value = mdt.toDate();
+        emit('update:modelValue', internalValue.value);
+      }
+    }
   });
 
   if (props.modelValue) {
@@ -62,6 +83,14 @@
       textValue.value = text.value;
     }
   }
+
+  document.addEventListener('click', close);
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('click', close);
+  });
+
+  defineExpose({ $element });
 </script>
 
 <style scoped>
@@ -121,6 +150,16 @@
   input:focus-visible {
     outline-color: lightgray;
     outline-width: 1px;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
   }
 }
 </style>

@@ -1,11 +1,10 @@
 <template>
   <div class="settings">
-    <div>Диапазон дат: </div>
-    <label>C </label>
+    <label>Диапазон дат c </label>
     <KpDatePicker v-model="startDay" />
     <label>по </label>
     <KpDatePicker v-model="finishDay" />
-    <label>Name of set:</label>
+    <label>Набор данных:</label>
     <select v-model="datasetName">
       <option value="Estimated">
         Estimated
@@ -40,7 +39,7 @@
     },
     data: function() {
       return {
-        startDay: new Date(),
+        startDay: moment().subtract('days', 3).toDate(),
         finishDay: new Date(),
         datasetName: 'Estimated'
       };
@@ -84,4 +83,41 @@
   .col {
     display: inline-block;
   }
+  .settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
+  .settings label {
+    margin-left: 15px;
+    margin-right: 5px;
+    font-weight: bold;
+  }
+
+  @supports(-webkit-appearance: none) or (-moz-appearance: none) {
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      --active: #275EFE;
+      --active-inner: #fff;
+      --focus: 2px rgba(198, 212, 255, 1);
+      --border: #BBC1E1;
+      --border-hover: #275EFE;
+      --background: #fff;
+      --disabled: #F6F8FF;
+      --disabled-inner: #E1E6F9;
+      border-radius: 4px 0 0 4px;
+      border: 1px solid lightgray;
+      padding: 5px;
+    }
+  }
+
+  select:focus-visible {
+    outline-color: lightgray;
+    outline-width: 1px;
+  }
+
 </style>

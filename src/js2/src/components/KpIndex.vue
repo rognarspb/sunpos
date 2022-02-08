@@ -1,30 +1,49 @@
 <template>
   <div class="kp-index">
-    <div class="kp-index__header">{{dateText}}</div>
+    <div class="kp-index__header">
+      {{ dateText }}
+    </div>
     <div v-if="isLoading" class="kp-index__panel">
       <svg width="100%" height="400" viewBox="-40 0 480 440">
-        <text x="120" y="220" font-family="Monospace" font-size="16">Загрузка данных...</text>
+        <text
+          x="120"
+          y="220"
+          font-family="Monospace"
+          font-size="16"
+        >
+          Загрузка данных...
+        </text>
       </svg>
     </div>
     <div v-if="!isLoading && error" class="kp-index__panel">
       <svg width="100%" height="400" viewBox="-40 0 480 440">
-        <rect fill="#efefef"  :width="480" :height="440" :x="0" :y="0"></rect>
+        <rect
+          fill="#efefef"
+          :width="480"
+          :height="440"
+          :x="0"
+          :y="0"
+        />
       </svg>
     </div>
-    <div class="kp-index__error" v-if="error">
-      <strong>Ошибка:</strong> {{error}}
+    <div v-if="error" class="kp-index__error">
+      <strong>Ошибка:</strong> {{ error }}
     </div>
     <div v-if="!isLoading && !error" class="kp-index__panel">
       <svg width="100%" height="400" viewBox="-40 0 480 440">
         <template v-for="(item, index) in values" :key="index">
-          <value-bar :x="index*50" y="20" :value="item.value"/>
-          <text :style="textStyle" :x="index*50" :y="400">{{item.periodStart.toString().padStart(2, '0') + ':00'}}</text>
+          <ValueBar
+            :x="index*50"
+            y="20"
+            :value="item.value"
+          />
+          <text :style="textStyle" :x="index*50" :y="400">{{ item.periodStart.toString().padStart(2, '0') + ':00' }}</text>
         </template>
       </svg>
     </div>
     <div v-if="showData">
       <div>Данные:</div>
-      <pre>{{formattedData}}</pre>
+      <pre>{{ formattedData }}</pre>
     </div>
   </div>
 </template>
@@ -73,11 +92,11 @@ export default {
         : 'Нет данных';
     }
   },
-  created() {
-    this.load();
-  },
   watch: {
     name: function() { this.load(); }
+  },
+  created() {
+    this.load();
   },
   methods: {
     async load() {

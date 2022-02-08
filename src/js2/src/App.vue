@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4>Выбор даты</h4>
+    <!-- <h4>Выбор даты</h4>
     <KpDatePicker />
     <h4>Режим: квартал</h4>
     <div style="margin-top: 20px;">
@@ -13,7 +13,7 @@
     <h4>Режим: год</h4>
     <div style="margin-top: 20px;">
       <KpCalendar mode="year" />
-    </div>
+    </div> -->
     <div>
       <KpIndexSet />
     </div>
@@ -29,8 +29,8 @@ export default {
   name: 'App',
   components: {
     KpIndexSet,
-    KpCalendar,
-    KpDatePicker
+    // KpCalendar,
+    // KpDatePicker
   }
 };
 </script>
