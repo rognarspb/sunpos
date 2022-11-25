@@ -32,12 +32,10 @@
     <div v-if="!isLoading && !error" class="kp-index__panel">
       <svg width="100%" height="400" viewBox="-40 0 480 440">
         <template v-for="(item, index) in values" :key="index">
-          <ValueBar
-            :x="index*50"
-            y="20"
-            :value="item.value"
-          />
-          <text :style="textStyle" :x="index*50" :y="400">{{ item.periodStart.toString().padStart(2, '0') + ':00' }}</text>
+          <ValueBar :x="index * 50" y="20" :value="item.value" />
+          <text :style="textStyle" :x="index * 50" :y="400">
+            {{ item.periodStart.toString().padStart(2, '0') + ':00' }}
+          </text>
         </template>
       </svg>
     </div>
@@ -48,88 +46,89 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import moment from 'moment';
-import { KpService } from '../services/KpService';
+import { useStore } from '../stores/KpIndexStore';
 import ValueBar from './ValueBar.vue';
 
-export default {
-  name: 'KpIndex',
-  components: {
-    ValueBar
-  },
-  props: {
-    date: { type: [Date, String], required: false, default: null },
-    name: { type: String, required: false, default: 'Estimated' },
-    fontSize: { type: [Number, String], required: false, default: 12 },
-    fontFamily: { type: String, required: false, default: 'Roboto Mono' }
-  },
-  data: function() {
-    return {
-      kpData: null,
-      kpDataSet: null,
-      kpDate: null,
-      values: [],
-      error: null,
-      isLoading: false,
-      showData: false
-    };
-  },
-  computed: {
-    formattedData() {
-      return this.kpDataSet ? JSON.stringify(this.kpDataSet, null, 2) : '';
-    },
-    textStyle() {
-      const style = {
-        'font-family': this.fontFamily,
-        'font-size': this.fontSize + 'px'
-      };
-      return style;
-    },
-    dateText() {
-      return this.kpDate
-        ? moment(this.kpDate).format('DD MMMM YYYY')
-        : 'Нет данных';
-    }
-  },
-  watch: {
-    name: function() { this.load(); }
-  },
-  created() {
-    this.load();
-  },
-  methods: {
-    async load() {
-      try {
-        this.isLoading = true;
-        this.kpDate = this.date;
-        this.kpDateData = null;
-        this.values = [];
+const props = defineProps({
+  date: { type: [Date, String], required: false, default: null },
+  name: { type: String, required: false, default: 'Estimated' },
+  fontSize: { type: [Number, String], required: false, default: 12 },
+  fontFamily: { type: String, required: false, default: 'Roboto Mono' }
+});
 
-        const service = new KpService();
-        this.kpData = await service.fetch();
-        const kpDataSet = service.findDate(this.date);
-        if (kpDataSet) {
-          this.kpDataSet = kpDataSet;
-          this.values = kpDataSet.getByName(this.name).values;
-          this.kpDate = kpDataSet.date;
-        }
-      } catch (error) {
-        this.error = error;
-      } finally {
-        this.isLoading = false;
-      }
-    }
+const store = useStore();
+
+const kpDataSet = ref();
+const kpDate = ref(null);
+const values = ref([]);
+const showData = ref(false);
+
+const { isLoading, isLoaded, error } = storeToRefs(store);
+
+const formattedData = computed(() => {
+  return kpDataSet.value ? JSON.stringify(kpDataSet.value, null, 2) : '';
+});
+
+
+const textStyle = computed(() => {
+  const style = {
+    'font-family': props.fontFamily,
+    'font-size': props.fontSize + 'px'
+  };
+  return style;
+});
+
+const dateText = computed(() => {
+  return kpDate.value
+    ? moment(props.date).format('DD MMMM YYYY')
+    : 'Нет данных';
+});
+
+
+watch(() => props.name, () => {
+  load();
+});
+
+watch(() => props.date, () => {
+  console.log(`Date changed to: ${props.date}`);
+  load();
+});
+
+watch(isLoaded, () => {
+  load();
+});
+
+
+const load = async() => {
+  if (!props.date || !props.name) {
+    return;
+  }
+
+  values.value = [];
+  kpDate.value = undefined;
+
+  kpDataSet.value = await store.getDatasetByDate(props.date);
+  if (kpDataSet.value) {
+    values.value = kpDataSet.value.getByName(props.name).values;
+    kpDate.value = kpDataSet.value.date;
   }
 };
 
+// load data on created:
+load();
 </script>
+
 <style scoped>
 .kp-index__panel {
   background: #f0f0f0;
   margin: 15px;
   border: 1px gray;
 }
+
 .kp-index__header {
   font-size: 16pt;
   text-align: center;

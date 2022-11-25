@@ -158,15 +158,15 @@ export default {
       const kp = this.value || 0;
       if (kp < 0) {
           return 'steelblue';
-      } else if (kp >= 0 && kp <= 2) {
+      } else if (kp >= 0.0 && kp < 2.0) {
           return `#${this.colorMin}`;
-      } else if (kp >= 3 && kp < 4) {
+      } else if (kp >= 2.0 && kp <= 3.0) {
           return `#${this.colorGreen}`;
-      } else if (kp > 3 && kp < 5) {
+      } else if (kp > 3.0 && kp < 5.0) {
           return `#${this.colorYellow}`;
-      } else if (kp >= 5 && kp < 7) {
+      } else if (kp >= 5.0 && kp < 7.0) {
         return `#${this.colorOrange}`;
-      } else if (kp >= 7) {
+      } else if (kp >= 7.0) {
         return `#${this.colorRed}`;
       }
       return 'white';
@@ -175,15 +175,15 @@ export default {
       const kp = this.value || 0;
       if (kp < 0) {
           return 'steelblue';
-      } else if (kp >= 0 && kp <= 2) {
+      } else if (kp >= 0 && kp < 2.0) {
           return `#${this.colorMinActive}`;
-      } else if (kp >= 3 && kp < 4) {
+      } else if (kp >= 2.0 && kp <= 3.0) {
           return `#${this.colorGreenActive}`;
-      } else if (kp > 3 && kp < 5) {
+      } else if (kp > 3.0 && kp < 5.0) {
           return `#${this.colorYellowActive}`;
-      } else if (kp >= 5 && kp < 7) {
+      } else if (kp >= 5.0 && kp < 7.0) {
         return `#${this.colorOrangeActive}`;
-      } else if (kp >= 7) {
+      } else if (kp >= 7.0) {
         return `#${this.colorRedActive}`;
       }
       return 'white';

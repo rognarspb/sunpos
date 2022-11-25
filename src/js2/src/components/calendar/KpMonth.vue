@@ -34,6 +34,7 @@ export default {
     showYear: { type: Boolean, required: false, default: false },
     showNavigation: { type: Boolean, required: false, default: false }
   },
+  emits: ['date:selected', 'date:changed'],
   data() {
     return {
       dateYear: null,

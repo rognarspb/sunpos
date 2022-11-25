@@ -21,13 +21,17 @@ export class KpService {
     }
   }
 
-  findDate(dt) {
+  static findByDate(dt, kpData) {
     const momentObj = dt ? moment(dt) : moment();
-    const [first] = this.kpData.filter(x => momentObj.isSame(x.date, 'day'));
+    const [first] = kpData.filter(x => momentObj.isSame(x.date, 'day'));
     if (first) {
       return first;
     } else {
       return KpIndexDataSet.Empty(momentObj.toDate());
     }
+  }
+
+  getByDate(dt) {
+    return KpService.findByDate(dt, this.kpData);
   }
 }

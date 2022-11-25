@@ -13,18 +13,56 @@ export default class KpIndexParser {
     this.arrLines = strData.split('\n');
   }
 
-  static extractValues(strData, offset, name) {
+  static readNumber(strData, offset) {
+    // read number
+    let pos = offset;
+    let c = strData[pos];
+    let strNumber = '';
+
+    // skip leading spaces:
+    while(c === ' ') {
+      if (pos == strData.length) {
+        break;
+      }
+      c = strData[++pos];
+    }
+
+    // read sign of number
+    if (c == '-') {
+      strNumber += c;
+      c = strData[++pos];
+    }
+
+    // read number digits (with decimal sign):
+    while(c === '.' || (c >= '0' && c <= '9')) {
+      if (pos == strData.length) {
+        break;
+      }
+      strNumber += c;
+      c = strData[++pos];
+    }
+    return {
+      startPos: offset,
+      endPos: pos,
+      number: Number.parseFloat(strNumber)
+    };
+  }
+
+  static extractValues(strData, offset) {
     const ixCount = INDEX_COUNT;
     const values = [];
 
     // 0, 3, 6, 9, 12, 15, 18, 21
     const periods = [...Array(ixCount).keys()].map(x => x * 3);
 
-    let index = 0;
-    for (let i = offset; i < offset + 2 * ixCount; i += 2) {
-      const kpIndexValue = Number.parseInt(strData[i] + strData[i + 1]);
-      const periodStart = periods[index++];
-      values.push(new KpIndexValue(kpIndexValue, periodStart));
+    let numOffset = offset;
+    for(let nx=0; nx < ixCount; nx++) {
+      const { number, endPos } = this.readNumber(strData, numOffset);
+      const kpValue = new KpIndexValue(Number.isNaN(number) ? -1 : number, periods[nx]);
+      values.push(kpValue);
+
+      // move to next number
+      numOffset = endPos;
     }
     return values;
   }

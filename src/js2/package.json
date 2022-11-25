@@ -12,7 +12,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
-    "v-calendar": "^3.0.0-alpha.6",
+    "pinia": "^2.0.26",
     "vue": "^3.0.0"
   },
   "devDependencies": {
