@@ -88,7 +88,7 @@ export default {
     width: { type: [Number, String], required: false, default: 40 },
     height: { type: [Number, String], required: false, default: 360 },
     minHeight: { type: [Number, String], required: false, default: 10 },
-    fontSize: { type: [Number, String], required: false, default: 18 },
+    fontSize: { type: [Number, String], required: false, default: 14 },
     fontFamily: { type: String, required: false, default: 'Roboto Mono' }
   },
   data: function() {

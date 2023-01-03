@@ -5,17 +5,19 @@
     <label>по </label>
     <KpDatePicker v-model="finishDay" />
     <label>Набор данных:</label>
-    <select v-model="datasetName">
-      <option value="Estimated">
-        Estimated
-      </option>
-      <option value="High Latitude">
-        High Latitude
-      </option>
-      <option value="Middle Latitude">
-        Middle Latitude
-      </option>
-    </select>
+    <div class="settings__options">
+      <select v-model="datasetName">
+        <option value="Estimated">
+          Estimated
+        </option>
+        <option value="High Latitude">
+          High Latitude
+        </option>
+        <option value="Middle Latitude">
+          Middle Latitude
+        </option>
+      </select>
+    </div>
   </div>
   <div class="row">
     <template v-for="day in days" :key="day">
@@ -87,14 +89,38 @@ store.load();
   margin-bottom: 20px;
 }
 
+
+
 .settings label {
   margin-left: 15px;
   margin-right: 5px;
   font-weight: bold;
 }
 
+
+
+.settings__options {
+  border-radius: 4px 0 0 4px;
+  position: relative;
+}
+
+.settings__options::after {
+  content: '⭣';
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  color: gray;
+}
+
+
+.settings__options select:focus-visible {
+  outline-color: lightgray;
+  outline-width: 1px;
+}
+
+
 @supports(-webkit-appearance: none) or (-moz-appearance: none) {
-  select {
+  .settings__options select {
     -webkit-appearance: none;
     -moz-appearance: none;
     --active: #275EFE;
@@ -107,12 +133,9 @@ store.load();
     --disabled-inner: #E1E6F9;
     border-radius: 4px 0 0 4px;
     border: 1px solid lightgray;
-    padding: 5px;
+    padding: 5px 20px 5px 10px;
   }
 }
 
-select:focus-visible {
-  outline-color: lightgray;
-  outline-width: 1px;
-}
+
 </style>

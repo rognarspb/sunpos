@@ -1,0 +1,21 @@
+
+@font-face {
+  font-family: Roboto Mono;
+  src: url(../RobotoMono-Regular.ttf);
+}
+
+body {
+  font-family: Roboto Mono;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
+  color: #2c3e50;
+}
+
+
+
+
+
