@@ -19,7 +19,9 @@
     rx="4"
     ry="4"
   />
-  <text :style="textStyle" :x="textX" :y="textY">{{ valueText }}</text>
+  <text :style="textStyle" :x="textX" :y="textY">
+    {{ valueText }}
+  </text>
   <line
     :x1="x"
     :y1="lineY"
