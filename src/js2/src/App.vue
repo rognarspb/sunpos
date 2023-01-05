@@ -1,5 +1,6 @@
 <template>
   <div>
+    <SkyBar />
     <!-- <h4>Выбор даты</h4>
     <KpDatePicker />
     <h4>Режим: квартал</h4>
@@ -20,19 +21,12 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import KpIndexSet from './components/KpIndexSet.vue';
 import KpCalendar from './components/calendar/KpCalendar.vue';
 import KpDatePicker from './components/calendar/KpDatePicker.vue';
+import SkyBar from './components/SkyBar.vue';
 
-export default {
-  name: 'App',
-  components: {
-    KpIndexSet,
-    // KpCalendar,
-    // KpDatePicker
-  }
-};
 </script>
 
 <style>
