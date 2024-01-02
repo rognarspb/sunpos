@@ -18,27 +18,27 @@ export class JD {
         var minute = dt.getMinutes();
         var second = dt.getSeconds();
 
-        var jd = GetJDN(dt) + (hour - 12) / 24 + minute / 1440 + second / 86400;
+        var jd = JD.GetJDN(dt) + (hour - 12) / 24 + minute / 1440 + second / 86400;
         return jd;
     }
 
     static GetMJD(dt) {
-        var mjd = GetJD(dt) - 2400000.5;
+        var mjd = JD.GetJD(dt) - 2400000.5;
         return mjd;
     }
 
     static GetTruncatedJD(dt) {
-        var jd = GetJD(dt);
+        var jd = JD.GetJD(dt);
         return Math.floor(jd - 2440000.5);
     }
 
     static GetLilianDay(dt) {
-        var jd = GetJD(dt);
+        var jd = JD.GetJD(dt);
         return Math.floor(jd - 2299159.5);
     }
 
     static GetMarsSol(dt) {
-        var jd = GetJD(dt);
+        var jd = JD.GetJD(dt);
         var k = 0.00014; //correction
         var msd = (jd - 2451549.5 + k) / 1.02749125 + 44796.0;
         var msd_alt = (jd - 2405522) / 1.02749;
@@ -46,12 +46,12 @@ export class JD {
     }
 
     static GetUnixTime(dt) {
-        var jd = GetJD(dt);
+        var jd = JD.GetJD(dt);
         return (jd - 2440587.5) * 86400;
     }
 
     static GetDayOfWeek(dt) {
-        return GetJDN(dt) % 7;
+        return JD.GetJDN(dt) % 7;
     }
 
     static GetDateObject(jd) {
@@ -133,7 +133,7 @@ export class JD {
     // }
 
     static ToDate(jd) {
-        var dateObj = GetDateObject(jd);
+        var dateObj = JD.GetDateObject(jd);
         return new Date(dateObj.year, dateObj.month - 1, dateObj.day, dateObj.hours, dateObj.minutes, dateObj.seconds);
     }
 }

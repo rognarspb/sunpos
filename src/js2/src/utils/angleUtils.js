@@ -9,11 +9,11 @@ export function radToDegree(radValue){
 export class TimeStruct {
   constructor(h, m, s) {
     this.hours = h;
-    this.mins = m;
+    this.minutes = m;
     this.seconds = s;
   }
   hours = 0;
-  mins = 0;
+  minutes = 0;
   seconds = 0;
 }
 

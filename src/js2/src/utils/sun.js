@@ -12,7 +12,7 @@ function rad(degree){
 }
 
 // sun ecliptic longitude in degrees
-export function GetEclipticLongitude(dt){
+export function GetEclipticLongitude(dt) {
     var jd = JD.GetJD(dt);
     var n = jd - 2451545.0;
 
@@ -103,7 +103,7 @@ export function GetHourAngle(alpha, dt, lat){
     var a_rad = rad(alpha);
     var cosHourAngle = (Math.sin(a_rad) -  Math.sin(lat_rad) * Math.sin(dec_rad))/(Math.cos(lat_rad)*Math.cos(dec_rad));
     var res = Math.acos(cosHourAngle);
-    return Util.degree(res);
+    return AngleUtil.radToDegree(res);
 }
 
 // hour angle of sunrise/sunset:
@@ -168,8 +168,9 @@ export function GetDayLength(dt, lat, lon) {
 export function GetSolarNoon(currentDate, lat, lon) {
     var dt = new Date(); //now
 
-    var tzName = tzlookup(lat, lon);
-    var hourOffset = moment(dt).tz(tzName).utcOffset()/60;
+    //var tzName = tzlookup(lat, lon);
+    //var hourOffset = moment(dt).tz(tzName).utcOffset()/60;
+    const hourOffset = dt.getTimezoneOffset()/60;
 
     //var hourOffset = dt.getTimezoneOffset()/60;
     dt.setDate(currentDate.getDate());
@@ -253,17 +254,17 @@ export function GetAzimuthAngle(dt, lat, lon) {
 export function GetTwilightTime(alpha, dt, lat, lon){
 
     var ha = GetHourAngle(alpha, dt, lat);
-    var timeObj = Util.degreeToTime(ha);
+    var timeObj = AngleUtil.degreeToTime(ha);
     var sn =  GetSolarNoon(dt, lat, lon);
     var solarNoonObj = JD.GetDateObject(sn);
 
-    var noonSeconds = Util.getTotalSeconds(solarNoonObj);
-    var twilightSeconds = Util.getTotalSeconds(timeObj);
+    var noonSeconds = DateUtils.getTotalSeconds(solarNoonObj);
+    var twilightSeconds = DateUtils.getTotalSeconds(timeObj);
 
     var morningSeconds = noonSeconds - twilightSeconds;
     var eveningSeconds = noonSeconds + twilightSeconds;
-    var morning = Util.getTimeFromSeconds(morningSeconds);
-    var evening = Util.getTimeFromSeconds(eveningSeconds);
+    var morning = DateUtils.getTimeFromSeconds(morningSeconds);
+    var evening = DateUtils.getTimeFromSeconds(eveningSeconds);
 
     var res = {
         hourAngle: ha,
